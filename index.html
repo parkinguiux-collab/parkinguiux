@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1557e8">
+  <meta name="description" content="목적지 주변 주차장을 비교하고 출차 전 요금 결제를 체험하는 모바일형 주차 서비스.">
+  <title>주차 서비스 — 모바일 프로토타입</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+<div id="parking-design">
+  <div class="phone" aria-label="주차앱 모바일 디자인 시안">
+    <main class="app-content" aria-live="polite">
+      <section data-view="home">
+        <div class="brand"><span class="brand-mark">P</span><span>주차 서비스</span><button class="icon-button" type="button" aria-label="이용 현황 보기" data-screen="payment"><i data-lucide="bell" aria-hidden="true"></i></button></div>
+        <div class="greeting"><span class="eyebrow">주차 걱정은 가볍게</span><h2>어디에<br>주차하시나요?</h2></div>
+        <form class="search"><i data-lucide="search" aria-hidden="true"></i><input aria-label="목적지" placeholder="목적지나 주소를 검색하세요" value=""><button type="submit" aria-label="주차장 검색"><i data-lucide="arrow-right" aria-hidden="true"></i></button></form>
+        <button class="location" type="button" data-screen="compare"><i data-lucide="locate-fixed" aria-hidden="true"></i> 현재 위치 주변 찾기</button>
+        <div class="hero"><span class="yellow-label">출차도 편하게</span><h3>주차요금은 앱에서,<br>출차는 기다림 없이.</h3><p>나가기 전에<br>간편하게 결제하세요.</p><img class="hero-character" src="assets/quokka-car-ui.png" alt="파란 자동차를 운전하는 쿼카"></div>
+        <div class="section-heading"><h3>목적지 주변 주차장</h3><button type="button" data-screen="compare">전체 보기 <i data-lucide="chevron-right" aria-hidden="true"></i></button></div>
+        <button class="preview-parking" type="button" data-screen="compare"><div class="parking-symbol" aria-hidden="true"><i data-lucide="square-parking"></i></div><div><strong>시청 센트럴 주차장</strong><span>목적지까지 300m · 30분 2,000원</span></div><span class="availability">여유</span></button>
+        <div class="sample-note">주차장 이름·요금·여유 상태는 시안용 샘플입니다.</div>
+      </section>
+      <section data-view="compare" hidden>
+        <div class="page-title"><button class="icon-button" type="button" data-screen="home" aria-label="홈으로 돌아가기"><i data-lucide="arrow-left" aria-hidden="true"></i></button><h3>목적지 주변 주차장</h3></div>
+        <div class="destination"><i data-lucide="map-pin" aria-hidden="true"></i><div><span>목적지</span><strong class="destination-name">서울시청</strong></div><button type="button" data-screen="home">변경</button></div>
+        <div class="compare-intro"><h2>가까운 곳부터<br>편하게 비교하세요.</h2><span class="yellow-label">앱 정산 지원</span></div>
+        <div class="sort-row" role="group" aria-label="정렬 기준"><button type="button" data-sort="distance" aria-pressed="true">가까운 순</button><button type="button" data-sort="price" aria-pressed="false">요금 낮은 순</button></div>
+        <div class="parking-list">
+          <button type="button" class="parking-option selected" data-price="2000" data-distance="300" data-name="시청 센트럴 주차장"><div class="option-top"><span class="parking-mini">P</span><span class="availability">여유</span></div><strong>시청 센트럴 주차장</strong><div class="metrics"><div><span>목적지까지</span><b>300<span>m</span></b></div><div><span>30분 요금</span><b>2,000<span>원</span></b></div></div><div class="option-footer">앱 정산 가능 <i data-lucide="check-circle-2" aria-hidden="true"></i></div></button>
+          <button type="button" class="parking-option" data-price="1500" data-distance="450" data-name="광장 공영주차장"><div class="option-top"><span class="parking-mini">P</span><span class="availability amber">보통</span></div><strong>광장 공영주차장</strong><div class="metrics"><div><span>목적지까지</span><b>450<span>m</span></b></div><div><span>30분 요금</span><b>1,500<span>원</span></b></div></div><div class="option-footer">앱 정산 가능 <i data-lucide="check-circle-2" aria-hidden="true"></i></div></button>
+        </div>
+        <div class="sample-note">샘플 정보 · 실제 현장과 다를 수 있어요</div>
+        <button class="primary-action" type="button" data-screen="payment">선택한 주차장 이용 현황 보기 <i data-lucide="arrow-right" aria-hidden="true"></i></button>
+      </section>
+      <section data-view="payment" hidden>
+        <div class="page-title"><button class="icon-button" type="button" data-screen="compare" aria-label="비교 화면으로 돌아가기"><i data-lucide="arrow-left" aria-hidden="true"></i></button><h3>이용 현황</h3></div>
+        <div class="payment-body">
+          <span class="eyebrow">이제 출차하실 건가요?</span><h2>요금 확인하고<br>편하게 출차하세요.</h2>
+          <div class="fee-card"><div class="fee-top"><span class="fee-status">이용 중</span><i data-lucide="car-front" aria-hidden="true"></i></div><span>현재 주차요금</span><div class="fee-value">8,000<span>원</span></div><div class="fee-bottom"><span class="selected-name">시청 센트럴 주차장</span><span>2시간 이용</span></div></div>
+          <div class="receipt"><div><span>차량 번호</span><strong>12가 3456</strong></div><div><span>입차 시간</span><strong>오늘 14:00</strong></div><div><span>이용 시간</span><strong>2시간</strong></div></div>
+          <div class="section-heading"><h3>결제수단</h3><span class="small-blue">체험용</span></div><div class="payment-method"><div class="card-icon"><i data-lucide="credit-card" aria-hidden="true"></i></div><div><strong>샘플 카드</strong><span>실제 청구 없음</span></div><i data-lucide="circle-check" class="small-blue" aria-hidden="true"></i></div>
+          <div class="payment-note"><i data-lucide="info" aria-hidden="true"></i><span>결제 후 출차 가능 시간을 안내해드려요.</span></div>
+          <button class="primary-action" type="button" id="pay-demo">8,000원 결제 체험하기 <i data-lucide="arrow-right" aria-hidden="true"></i></button>
+          <div class="sample-note">샘플 이용 내역 · 실제 결제와 출차 연동 없음</div>
+        </div>
+        <div class="success-body" hidden><img class="success-character" src="assets/quokka-car-ui.png" alt="자동차를 타고 출차를 준비하는 쿼카"><span class="yellow-label">결제 체험 완료</span><h2>출차 준비가<br>끝났어요!</h2><p>주차장 출구로 이동해주세요.</p><div class="exit-time"><span>출차 가능 시각</span><strong>16:10까지</strong><span>유예 시간 10분 · 데모 설정</span></div><div class="sample-note">8,000원 결제 체험 · 실제 청구 없음</div><button class="primary-action" type="button" data-screen="home">홈으로 돌아가기</button></div>
+      </section>
+    </main>
+    <nav class="bottom-nav" aria-label="주 메뉴"><button type="button" data-screen="home" class="active"><i data-lucide="house" aria-hidden="true"></i><span>홈</span></button><button type="button" data-screen="payment"><i data-lucide="clock-3" aria-hidden="true"></i><span>이용 현황</span></button><button type="button" id="profile-button"><i data-lucide="user-round" aria-hidden="true"></i><span>마이페이지</span></button></nav>
+    <div class="profile-panel" hidden><div class="section-heading"><h3>마이페이지</h3><button type="button" id="close-profile">닫기</button></div><div class="receipt"><div><span>차량</span><strong>12가 3456</strong></div><div><span>결제수단</span><strong>샘플 카드</strong></div></div></div>
+    <div class="home-indicator" aria-hidden="true"></div>
+  </div>
+</div>
+
+</body>
+</html>

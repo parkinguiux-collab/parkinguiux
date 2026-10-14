@@ -1,0 +1,9 @@
+{
+  "name": "parking-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.cjs",
+    "dev": "python3 -m http.server 4173 --bind 127.0.0.1"
+  }
+}

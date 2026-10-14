@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.vercel/
+.env
+.env.*
+design-preview.html
+scripts/prepare-site.cjs

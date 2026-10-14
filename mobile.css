@@ -1,0 +1,20 @@
+html,body{margin:0;min-height:100%;background:#eef3ff}
+body{-webkit-font-smoothing:antialiased}
+#parking-design{padding:0}
+#parking-design .phone{max-width:480px;min-height:100dvh;border-radius:0;display:flex;flex-direction:column;box-shadow:0 0 45px #1d4fa918;overflow:visible}
+#parking-design .app-content{padding:24px 22px 20px;flex:1;min-height:0}
+#parking-design .bottom-nav{position:sticky;bottom:0;z-index:4;padding-bottom:max(14px,env(safe-area-inset-bottom));box-shadow:0 -5px 20px #17203308}
+#parking-design .home-indicator{display:none}
+#parking-design .search input{font-size:16px}
+#parking-design .preview-parking div>span,#parking-design .sample-note,#parking-design .option-footer{font-size:11px}
+#parking-design button{min-height:44px}
+#parking-design .hero-character{right:8px;bottom:10px;width:162px;height:162px}
+#parking-design .hero p{max-width:calc(100% - 162px)}
+#parking-design .hero h3{max-width:100%}
+#parking-design .hero{min-height:250px}
+#parking-design .profile-panel{position:fixed;left:50%;right:auto;bottom:95px;transform:translateX(-50%);width:calc(100% - 32px);max-width:440px}
+#parking-design .bottom-nav button{flex-direction:column;gap:5px;min-width:78px}
+#parking-design .bottom-nav svg{width:20px;height:20px}
+#parking-design .bottom-nav button.active{border-radius:18px}
+@media(min-width:481px){#parking-design{padding:24px 0}#parking-design .phone{min-height:calc(100dvh - 48px);border-radius:30px}#parking-design .bottom-nav{border-radius:0 0 30px 30px}}
+@media(max-width:360px){#parking-design .app-content{padding:20px 16px}#parking-design .hero-character{width:140px;height:140px}#parking-design .hero p{max-width:calc(100% - 140px)}#parking-design .preview-parking{flex-wrap:wrap}#parking-design .preview-parking>div:nth-child(2){flex:1}#parking-design .hero h3{font-size:20px}}
