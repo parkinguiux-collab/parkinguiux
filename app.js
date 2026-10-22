@@ -105,7 +105,6 @@
     $$('[data-vehicle]').forEach(element => { element.textContent = formatVehicle(); });
     $$('[data-card-name]').forEach(element => { element.textContent = preferences.card; });
     $('#history-count').textContent = preferences.history.length;
-    $('.notification-dot').hidden = !preferences.notifications;
     root.classList.toggle('motion-disabled', !preferences.motion);
   }
   function renderSession() {
@@ -299,5 +298,17 @@
   });
   $('#app-dialog').addEventListener('click', event => { if (event.target === $('#app-dialog')) { const rect = event.target.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) closeDialog(); } });
   setInterval(updateDeadline, 10000);
+  function playWelcome() {
+    const quokka = $('.home-quokka');
+    if (!allowMotion() || currentScreen !== 'home') return;
+    animate(quokka, [
+      { transform: 'translateX(155px) rotate(5deg)', opacity: 0 },
+      { transform: 'translateX(-7px) rotate(-2deg)', opacity: 1, offset: .78 },
+      { transform: 'translateX(2px) rotate(1deg)', opacity: 1, offset: .9 },
+      { transform: 'translateX(0) rotate(0)', opacity: 1 }
+    ], 850);
+  }
   icons(); renderProfile(); chooseLot(LOTS[0]); show('home');
+  if ($('.home-quokka').complete) requestAnimationFrame(playWelcome);
+  else $('.home-quokka').addEventListener('load', playWelcome, { once: true });
 })();
