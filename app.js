@@ -298,7 +298,8 @@
     stage = 'exited';
     entrySimulationDone = true;
     try { sessionStorage.setItem('parking-entry-simulated-v2', 'done'); } catch { /* Optional preview flag. */ }
-    saveSession(); renderSession(); renderProfile();
+    saveSession();
+    show('home');
     if (!root.classList.contains('is-welcome')) toast('출차가 확인되어 이용을 종료했어요.');
   }
   function openDialog(kind, opener) {
