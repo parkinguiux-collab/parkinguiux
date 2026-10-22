@@ -126,3 +126,6 @@
 .bottom-nav .nav-item>img{width:43px;height:43px}
 .bottom-nav .nav-item{min-height:65px}
 @media(max-width:375px){.home-content .quick-actions img,.home-content .quick-actions img[src*="team-icons"]{width:47px;height:47px}.home-content .quick-actions button{min-height:76px}.bottom-nav .nav-item>img{width:41px;height:41px}}
+
+/* A little more breathing room inside the nearby/favorite circles. */
+.home-content .quick-actions img[src$="nearby.png"],.home-content .quick-actions img[src$="favorite.png"]{padding:3px}
