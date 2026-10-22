@@ -59,10 +59,9 @@
 @media(prefers-reduced-motion:reduce){.lot-pin .parking-orbit::before{animation:none;transform:scale(1);opacity:.85}}
 .motion-disabled .lot-pin .parking-orbit::before{animation:none;transform:scale(1);opacity:.85}
 
-/* The greeting and car share a baseline and equal space above the search. */
+/* Align the greeting with the quokka's head, with a quiet shared top edge. */
 .home-header{overflow:hidden}
-.home-greeting{display:grid;grid-template-columns:minmax(0,1fr) 132px;grid-template-rows:auto auto;column-gap:4px;row-gap:7px;align-items:end;padding:12px 0 23px;min-height:0}
-.home-greeting .eyebrow{grid-column:1;grid-row:1;margin:0;align-self:end}
-.home-greeting h1{grid-column:1;grid-row:2;max-width:none;margin:0;font-size:27px;line-height:1.4}
-.home-quokka{position:relative;grid-column:2;grid-row:1 / 3;align-self:end;right:auto;bottom:auto;width:141px;height:141px;max-width:none;object-fit:contain;transform-origin:50% 85%}
-@media(max-width:375px){.home-greeting{grid-template-columns:minmax(0,1fr) 112px;min-height:0;padding:10px 0 23px}.home-greeting h1{font-size:24px;max-width:none}.home-quokka{width:122px;height:122px;right:auto;bottom:auto}}
+.home-greeting{display:grid;grid-template-columns:minmax(0,1fr) 132px;grid-template-rows:auto;column-gap:8px;align-items:start;padding:12px 0 23px;min-height:0}
+.home-greeting h1{grid-column:1;grid-row:1;align-self:start;max-width:none;margin:0;padding-top:5px;font-size:27px;line-height:1.4}
+.home-quokka{position:relative;grid-column:2;grid-row:1;align-self:start;right:auto;bottom:auto;width:141px;height:141px;max-width:none;object-fit:contain;transform-origin:50% 85%}
+@media(max-width:375px){.home-greeting{grid-template-columns:minmax(0,1fr) 112px;min-height:0;padding:10px 0 23px}.home-greeting h1{font-size:24px;max-width:none;padding-top:4px}.home-quokka{width:122px;height:122px;right:auto;bottom:auto}}

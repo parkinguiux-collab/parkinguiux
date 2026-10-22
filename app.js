@@ -306,7 +306,7 @@
       { transform: 'translateX(-7px) rotate(-2deg)', opacity: 1, offset: .78 },
       { transform: 'translateX(2px) rotate(1deg)', opacity: 1, offset: .9 },
       { transform: 'translateX(0) rotate(0)', opacity: 1 }
-    ], 850);
+    ], 1700);
   }
   icons(); renderProfile(); chooseLot(LOTS[0]); show('home');
   if ($('.home-quokka').complete) requestAnimationFrame(playWelcome);
