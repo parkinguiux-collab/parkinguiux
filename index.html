@@ -10,14 +10,64 @@
   <link rel="apple-touch-icon" href="assets/app-icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/vendor/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=20261022-v20">
+  <link rel="stylesheet" href="styles.css?v=20261023-v21">
+  <link rel="stylesheet" href="assets/onboarding.css?v=20261023-v21">
   <script defer src="assets/vendor/leaflet.js"></script>
   <script defer src="assets/vendor/ui-icons.js"></script>
   <script defer src="assets/nearby-map.js"></script>
-  <script defer src="app.js?v=20261022-v20"></script>
+  <script defer src="app.js?v=20261023-v21"></script>
+  <script defer src="assets/onboarding.js?v=20261023-v21"></script>
 </head>
 <body>
-<div class="app-shell" id="parking-app">
+<div class="app-shell is-welcome" id="parking-app">
+<div id="parking-first-visit" class="welcome-screen">
+  
+  <section class="pv-phone" aria-label="주차 서비스 처음 이용 안내">
+      <div class="pv-body">
+      <div class="pv-background" id="pv-background" aria-hidden="true" inert>
+        <span>주차 서비스</span><strong>오늘은 어디에<br>주차하시나요?</strong>
+        <div class="pv-ghost-search">목적지나 주소를 검색하세요</div>
+        <div class="pv-ghost-block">주차 중이신가요?<br>이용 요금 바로 확인</div>
+        <div class="pv-ghost-block">목적지 주변 주차장</div>
+      </div>
+      <div class="pv-layer" id="pv-onboarding">
+        <section class="pv-dialog" role="region" aria-labelledby="pv-title-0">
+          <div class="pv-dialog-head"><button class="pv-icon-button cursor-interaction" id="pv-prev" type="button" aria-label="이전 안내" disabled><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button><span>처음 이용 안내</span><span id="pv-count">1 / 4</span></div>
+          <div class="pv-slide" data-page="0">
+            <div class="pv-art" aria-hidden="true"><div class="pv-car-symbol"><img src="assets/team-icons/car.png" alt=""></div><span class="pv-parking-badge">P</span><span class="pv-art-caption">찾고 · 주차하고 · 가볍게 출발</span></div>
+            <div class="pv-eyebrow">앱 소개</div><h2 id="pv-title-0">주차 걱정 없이,<br>가볍게 출발해요</h2><p>주차장 찾기부터 요금 확인과 결제까지,<br>주차에 필요한 일을 한곳에서 해결해요.</p>
+          </div>
+          <div class="pv-slide" data-page="1" hidden>
+            <div class="pv-art" aria-label="목적지 검색과 주차장 정보 예시"><div class="pv-mini-stack"><div class="pv-mini-search"><i data-lucide="search" aria-hidden="true"></i><span>시청역</span></div><div class="pv-mini-result"><strong>시청 센트럴 주차장</strong><small>목적지까지 300m · 30분 2,000원</small></div></div></div>
+            <div class="pv-eyebrow">주차장 찾기</div><h2 id="pv-title-1">목적지 주변 주차장을<br>빠르게 찾아요</h2><p>목적지나 주소를 검색하고,<br>거리와 요금을 확인해 주차장을 골라요.</p>
+          </div>
+          <div class="pv-slide" data-page="2" hidden>
+            <div class="pv-art" aria-label="차량 및 결제수단 등록 예시"><div class="pv-mini-stack"><div class="pv-mini-result"><div class="pv-mini-top"><span class="pv-mini-plate">12가 3456</span><img src="assets/team-icons/car.png" alt=""></div><small>등록한 차량</small></div><div class="pv-mini-payment"><img src="assets/ui-icons/wallet.svg" alt=""><span>등록한 결제수단</span></div></div></div>
+            <div class="pv-eyebrow">이용 준비</div><h2 id="pv-title-2">내 차량을 등록하고<br>편하게 이용해요</h2><p>마이페이지에서 차량과 결제수단을<br>등록하고, 필요할 때 변경할 수 있어요.</p>
+          </div>
+          <div class="pv-slide" data-page="3" hidden>
+            <div class="pv-art" aria-label="주차요금 확인 및 출차 안내 예시"><div class="pv-receipt"><div class="pv-receipt-label">현재 주차요금</div><div class="pv-amount">8,000원</div><div class="pv-confirm"><i data-lucide="circle-check" aria-hidden="true"></i><span>결제 후 출차 안내 확인</span></div></div></div>
+            <div class="pv-eyebrow">요금 확인 · 출차</div><h2 id="pv-title-3">요금 확인부터 결제까지<br>간편하게 마무리해요</h2><p>이용 현황에서 주차 시간과 요금을 확인하고,<br>결제 후 출차 안내를 따라주세요.</p>
+          </div>
+          <div class="pv-dialog-foot"><div class="pv-dots" aria-label="안내 4장 중 1번째"><span class="pv-dot" aria-current="step"></span><span class="pv-dot"></span><span class="pv-dot"></span><span class="pv-dot"></span></div><button class="pv-primary cursor-interaction" id="pv-next" type="button">다음</button></div>
+        </section>
+      </div>
+      <section class="pv-auth" id="pv-auth" aria-labelledby="pv-auth-title" hidden>
+        <div class="pv-auth-head"><button type="button" class="pv-icon-button cursor-interaction" id="pv-auth-back" aria-label="마지막 안내로 돌아가기"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button><span>시작하기</span></div>
+        <div class="pv-auth-main"><div class="pv-auth-logo"><img src="assets/team-icons/car.png" alt=""></div><h2 id="pv-auth-title">이제, 편하게<br>주차해요</h2><p>내 차량과 이용 기록을<br>한곳에서 간편하게 관리하세요.</p></div>
+        <div class="pv-auth-actions"><button type="button" class="pv-primary cursor-interaction" data-auth="signup">회원가입</button><button type="button" class="pv-secondary cursor-interaction" data-auth="login">로그인</button></div>
+        <p class="pv-auth-preview-note">현재 계정 인증을 연결하기 전인 시안입니다.</p><button type="button" class="pv-preview-button" data-preview-enter>홈 화면 미리보기</button><div class="pv-auth-foot"><button class="cursor-interaction" type="button" id="pv-review">앱 이용 방법 다시 보기</button></div>
+      </section>
+      <section class="pv-auth pv-auth-connection" id="pv-auth-connection" aria-labelledby="pv-connection-title" hidden>
+        <div class="pv-auth-head"><button type="button" class="pv-icon-button" id="pv-connection-back" aria-label="로그인 선택으로 돌아가기">←</button><span id="pv-connection-label">로그인</span></div>
+        <div class="pv-auth-main"><div class="pv-auth-logo"><img src="assets/team-icons/profile-purple.png" alt=""></div><h2 id="pv-connection-title">로그인 연결을<br>준비하고 있어요</h2><p>현재는 계정 인증이 연결되지 않은 화면 시안이에요. 회원정보 입력 없이 홈과 주차 기능을 미리 살펴볼 수 있어요.</p></div>
+        <button type="button" class="pv-primary" data-preview-enter>홈 화면 미리보기</button>
+      </section>
+    </div>
+    </section>
+  
+</div>
+
   <main id="app-main">
     <section class="screen home-screen" data-view="home" aria-labelledby="home-title">
       <header class="home-header">
@@ -108,6 +158,7 @@
       <div class="settings-group"><h2>나의 이용</h2><button class="menu-row" type="button" data-dialog="history"><img src="assets/ui-icons/history.svg" alt=""><span>이용·결제 내역</span><span class="row-count" id="history-count">0</span><i data-lucide="chevron-right" aria-hidden="true"></i></button><button class="menu-row" type="button" data-dialog="notice"><img src="assets/ui-icons/bell.svg" alt=""><span>알림</span><i data-lucide="chevron-right" aria-hidden="true"></i></button></div>
       <div class="settings-group"><h2>도움이 필요하신가요?</h2><button class="menu-row" type="button" data-dialog="help"><img src="assets/ui-icons/help.svg" alt=""><span>이용 안내</span><i data-lucide="chevron-right" aria-hidden="true"></i></button><button class="menu-row" type="button" data-dialog="about"><img src="assets/ui-icons/app.svg" alt=""><span>앱 정보·아이콘</span><span class="row-caption">v0.2</span><i data-lucide="chevron-right" aria-hidden="true"></i></button></div>
       <p class="fine-print">차량·프로필 설정과 이용 내역은 이 브라우저에 저장됩니다.<br>실제 카드 정보는 입력받지 않습니다.</p>
+      <button class="welcome-return" type="button" data-preview-exit>미리보기 종료 · 시작 화면으로</button>
     </section>
   </main>
   <nav class="bottom-nav" aria-label="주 메뉴">

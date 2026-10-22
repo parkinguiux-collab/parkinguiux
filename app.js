@@ -392,7 +392,7 @@
   setInterval(() => { if (stage === 'active') renderSession(); else updateDeadline(); }, 10000);
   function playWelcome() {
     const quokka = $('.home-quokka');
-    if (!allowMotion() || currentScreen !== 'home') return;
+    if (!allowMotion() || currentScreen !== 'home' || root.classList.contains('is-welcome')) return;
     animate(quokka, [
       { transform: 'translateX(155px) rotate(5deg)', opacity: 0 },
       { transform: 'translateX(-7px) rotate(-2deg)', opacity: 1, offset: .78 },
@@ -401,6 +401,7 @@
     ], 1700);
   }
   icons(); renderProfile(); chooseLot(LOTS[0]); show('home');
+  root.addEventListener('parking-preview-enter', () => { show('home'); requestAnimationFrame(playWelcome); });
   if ($('.home-quokka').complete) requestAnimationFrame(playWelcome);
   else $('.home-quokka').addEventListener('load', playWelcome, { once: true });
 })();
