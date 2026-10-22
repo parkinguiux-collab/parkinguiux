@@ -12,14 +12,25 @@
 #parking-design .header-service-name{font-size:13px;font-weight:650;letter-spacing:-.3px;color:#34588c}
 #parking-design .notification-button{position:relative;margin-left:auto;background:#ffffffed;color:#23395a;box-shadow:0 4px 15px #3f6bb00b}
 #parking-design .notification-button:after{content:'';position:absolute;top:12px;right:12px;width:6px;height:6px;border-radius:50%;background:#ffd447;box-shadow:0 0 0 2px #fff}
-#parking-design .home-header .greeting{padding:27px 0 21px}
+#parking-design .home-header .greeting{position:relative;padding:27px 0 27px}
 #parking-design .home-header .eyebrow{font-size:12px;color:#4d6590;margin-bottom:8px}
-#parking-design .home-header h2{font-size:29px;line-height:1.4;letter-spacing:-1.1px;font-weight:650;color:#142945}
+#parking-design .home-header h2{position:relative;z-index:1;max-width:calc(100% - 130px);font-size:29px;line-height:1.4;letter-spacing:-1.1px;font-weight:650;color:#142945}
+#parking-design .home-header .header-character{position:absolute;right:-7px;bottom:2px;width:145px;height:145px;object-fit:contain;filter:drop-shadow(0 8px 8px #467cc91a);pointer-events:none}
 #parking-design .home-header .search{gap:7px;background:#fff;padding:7px;border-radius:30px;box-shadow:0 4px 14px #456ba409}
 #parking-design .search-symbol{display:grid;place-items:center;flex-shrink:0;width:39px;height:39px;background:#f3f7fd;border-radius:50%;color:#243b60}
 #parking-design .home-header .search input{font-size:16px;min-height:40px}
 #parking-design .home-header .search input::placeholder{color:#8290a5}
 #parking-design .home-header .search button{min-width:42px;min-height:42px;border-radius:50%;background:#edf3ff;color:#1557e8}
 #parking-design .location{padding-top:15px;padding-bottom:18px}
+#parking-design .parking-shortcut{display:flex;align-items:center;gap:13px;width:100%;padding:18px 16px;border-radius:24px;text-align:left;background:linear-gradient(105deg,#eef4ff,#e5eeff);color:#173763;box-shadow:0 6px 18px #2c61be08}
+#parking-design .shortcut-icon{display:grid;place-items:center;flex-shrink:0;width:48px;height:48px;border-radius:16px;background:#fff;color:#1557e8;box-shadow:0 4px 12px #1557e80a}
+#parking-design .shortcut-icon svg{width:24px;height:24px}
+#parking-design .shortcut-copy{display:grid;gap:6px;flex:1}
+#parking-design .shortcut-copy>span{font-size:12px;color:#5a7093}
+#parking-design .shortcut-copy strong{font-size:16px;font-weight:650;letter-spacing:-.4px}
+#parking-design .shortcut-arrow{display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border-radius:50%;background:#ffd447;color:#234170}
+#parking-design .parking-shortcut:active{transform:scale(.985)}
+#parking-design .home-header .eyebrow{position:relative;z-index:1}
 @media(min-width:481px){#parking-design .home-header{border-radius:30px}}
-@media(max-width:360px){#parking-design .home-header{margin:-20px -16px 0;padding:23px 16px 21px}#parking-design .home-header h2{font-size:27px}#parking-design .home-header .search{gap:4px}}
+@media(max-width:400px){#parking-design .home-header h2{font-size:26px;max-width:calc(100% - 115px)}#parking-design .home-header .header-character{width:128px;height:128px;right:-8px}}
+@media(max-width:360px){#parking-design .home-header{margin:-20px -16px 0;padding:23px 16px 21px}#parking-design .home-header h2{font-size:24px;max-width:calc(100% - 102px)}#parking-design .home-header .header-character{width:116px;height:116px;right:-9px;bottom:7px}#parking-design .home-header .search{gap:4px}#parking-design .shortcut-copy strong{font-size:14px}}
