@@ -10,11 +10,11 @@
   <link rel="apple-touch-icon" href="assets/app-icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/vendor/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=20261022-v16">
+  <link rel="stylesheet" href="styles.css?v=20261022-v17">
   <script defer src="assets/vendor/leaflet.js"></script>
   <script defer src="assets/vendor/ui-icons.js"></script>
   <script defer src="assets/nearby-map.js"></script>
-  <script defer src="app.js?v=20261022-v16"></script>
+  <script defer src="app.js?v=20261022-v17"></script>
 </head>
 <body>
 <div class="app-shell" id="parking-app">
@@ -34,7 +34,7 @@
       </header>
       <div class="home-content">
         <div class="quick-actions" aria-label="빠른 메뉴">
-          <button type="button" data-screen="map"><img src="assets/ui-icons/location.svg" alt=""><span>주변 주차장</span></button>
+          <button type="button" data-screen="map"><img src="assets/team-icons/nearby.png" alt=""><span>주변 주차장</span></button>
           <button type="button" data-dialog="favorites"><img src="assets/team-icons/favorite.png" alt=""><span>즐겨찾기</span></button>
           <button type="button" data-dialog="parking-spot"><img src="assets/team-icons/car.png" alt=""><span>주차 위치</span></button>
         </div>
@@ -114,7 +114,7 @@
   <nav class="bottom-nav" aria-label="주 메뉴">
     <button type="button" data-screen="benefits" class="nav-item"><img src="assets/team-icons/benefits.png" alt=""><span>혜택</span></button>
     <button type="button" data-screen="home" class="nav-item nav-home active" aria-current="page"><img src="assets/team-icons/home.png" alt=""><span>홈</span></button>
-    <button type="button" data-screen="profile" class="nav-item"><img src="assets/team-icons/profile.png" alt=""><span>마이페이지</span></button>
+    <button type="button" data-screen="profile" class="nav-item"><img src="assets/team-icons/profile-purple.png" alt=""><span>마이페이지</span></button>
   </nav>
   <div class="loading-overlay" id="loading-overlay" hidden role="status" aria-live="polite"><div class="loading-card"><div class="loading-scene"><img src="assets/quokka-car-ui.png" alt=""><div class="loading-road"></div></div><span class="loading-dots" aria-hidden="true"><i></i><i></i><i></i></span><h2 id="loading-title">잠시만 기다려주세요</h2><p id="loading-description">쿼카가 준비하고 있어요.</p></div></div>
   <dialog class="app-dialog" id="app-dialog" aria-labelledby="dialog-title"><header><h2 id="dialog-title">내 차량</h2><button class="round-button" type="button" id="close-dialog" aria-label="닫기"><i data-lucide="x" aria-hidden="true"></i></button></header><div id="dialog-content"></div></dialog>

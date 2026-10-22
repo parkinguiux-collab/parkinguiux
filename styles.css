@@ -119,3 +119,10 @@
 .bottom-nav .nav-item.active:before{content:'';position:absolute;top:0;bottom:0;width:68px;left:50%;transform:translateX(-50%);z-index:-1;border-radius:20px;background:#edf3ff}
 .favorite-toggle img[src*="team-icons"]{width:30px;height:30px}.favorite-toggle[aria-pressed="true"] img{filter:none}
 @media(max-width:375px){.home-content .quick-actions img[src*="team-icons"]{width:54px;height:54px}.bottom-nav .nav-item>img{width:48px;height:48px}}
+
+/* Refined team icons: smaller visuals, comfortable touch targets. */
+.home-content .quick-actions img,.home-content .quick-actions img[src*="team-icons"]{width:50px;height:50px;padding:0}
+.home-content .quick-actions button{min-height:80px;gap:6px}
+.bottom-nav .nav-item>img{width:43px;height:43px}
+.bottom-nav .nav-item{min-height:65px}
+@media(max-width:375px){.home-content .quick-actions img,.home-content .quick-actions img[src*="team-icons"]{width:47px;height:47px}.home-content .quick-actions button{min-height:76px}.bottom-nav .nav-item>img{width:41px;height:41px}}
