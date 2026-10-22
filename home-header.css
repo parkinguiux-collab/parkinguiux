@@ -1,0 +1,25 @@
+#parking-design .home-header{
+  margin:-24px -22px 0;
+  padding:26px 22px 23px;
+  padding-top:max(26px,env(safe-area-inset-top));
+  border-radius:0 0 30px 30px;
+  background:radial-gradient(ellipse at 104% -5%,#6c9dfc 0%,#98bbff70 25%,transparent 57%),linear-gradient(125deg,#dce9ff,#d3e1fd 62%,#e6efff);
+}
+#parking-design .header-toolbar{display:flex;align-items:center;gap:10px}
+#parking-design .profile-avatar,#parking-design .notification-button{display:grid;place-items:center;flex-shrink:0;width:46px;height:46px;border-radius:50%}
+#parking-design .profile-avatar{background:linear-gradient(145deg,#4b8cff,#1557e8);color:#fff;box-shadow:0 4px 12px #1557e81a}
+#parking-design .profile-avatar svg{width:23px;height:23px}
+#parking-design .header-service-name{font-size:13px;font-weight:650;letter-spacing:-.3px;color:#34588c}
+#parking-design .notification-button{position:relative;margin-left:auto;background:#ffffffed;color:#23395a;box-shadow:0 4px 15px #3f6bb00b}
+#parking-design .notification-button:after{content:'';position:absolute;top:12px;right:12px;width:6px;height:6px;border-radius:50%;background:#ffd447;box-shadow:0 0 0 2px #fff}
+#parking-design .home-header .greeting{padding:27px 0 21px}
+#parking-design .home-header .eyebrow{font-size:12px;color:#4d6590;margin-bottom:8px}
+#parking-design .home-header h2{font-size:29px;line-height:1.4;letter-spacing:-1.1px;font-weight:650;color:#142945}
+#parking-design .home-header .search{gap:7px;background:#fff;padding:7px;border-radius:30px;box-shadow:0 4px 14px #456ba409}
+#parking-design .search-symbol{display:grid;place-items:center;flex-shrink:0;width:39px;height:39px;background:#f3f7fd;border-radius:50%;color:#243b60}
+#parking-design .home-header .search input{font-size:16px;min-height:40px}
+#parking-design .home-header .search input::placeholder{color:#8290a5}
+#parking-design .home-header .search button{min-width:42px;min-height:42px;border-radius:50%;background:#edf3ff;color:#1557e8}
+#parking-design .location{padding-top:15px;padding-bottom:18px}
+@media(min-width:481px){#parking-design .home-header{border-radius:30px}}
+@media(max-width:360px){#parking-design .home-header{margin:-20px -16px 0;padding:23px 16px 21px}#parking-design .home-header h2{font-size:27px}#parking-design .home-header .search{gap:4px}}

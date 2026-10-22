@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 fs.mkdirSync('dist/assets', { recursive: true });
-for (const file of ['index.html', 'styles.css', 'app.js']) {
+for (const file of ['index.html', 'styles.css', 'home-header.css', 'app.js']) {
   fs.copyFileSync(file, path.join('dist', file));
 }
 fs.copyFileSync('assets/quokka-car-ui.png', 'dist/assets/quokka-car-ui.png');

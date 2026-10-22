@@ -1,6 +1,7 @@
 
 (()=>{
  const root=document.getElementById('parking-design');
+ window.lucide?.createIcons();
  let current='home';
  const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
  let searching=false;
@@ -39,6 +40,6 @@
   {transform:'translateX(80px) rotate(0)',opacity:0,offset:.56},
   {transform:'translateX(0) rotate(0)',opacity:1}
  ],{duration:1100});save();});
- root.querySelector('#profile-button').addEventListener('click',()=>root.querySelector('.profile-panel').hidden=false);root.querySelector('#close-profile').addEventListener('click',()=>root.querySelector('.profile-panel').hidden=true);
+ root.querySelectorAll('#profile-button, #header-profile').forEach(button=>button.addEventListener('click',()=>root.querySelector('.profile-panel').hidden=false));root.querySelector('#close-profile').addEventListener('click',()=>root.querySelector('.profile-panel').hidden=true);
  show(['home','compare','payment'].includes(current)?current:'home');
 })();
