@@ -164,7 +164,16 @@
   }
   function chooseLot(lot) {
     selectedLot = lot;
-    $('#parking-directions').href = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(lot.lat + ',' + lot.lon)}&travelmode=driving`;
+    const web = new URL('https://m.map.naver.com/route.nhn');
+    web.search = new URLSearchParams({ menu: 'route', ename: lot.name, ex: String(lot.lon), ey: String(lot.lat), pathType: '0', showMap: 'true' });
+    const query = new URLSearchParams({ dlat: String(lot.lat), dlng: String(lot.lon), dname: lot.name, appname: 'https://parkinguiux.vercel.app' });
+    const directions = $('#parking-directions');
+    const android = /Android/i.test(navigator.userAgent);
+    const ios = /iPhone|iPad|iPod/i.test(navigator.userAgent) || navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+    directions.href = android ? `intent://route/car?${query}#Intent;scheme=nmap;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=com.nhn.android.nmap;S.browser_fallback_url=${encodeURIComponent(web.href)};end` : ios ? `nmap://route/car?${query}` : web.href;
+    if (android || ios) directions.removeAttribute('target'); else directions.target = '_blank';
+    directions.dataset.webFallback = web.href;
+    $('#parking-directions-web').href = web.href;
     renderFavoriteToggle();
     $('#selected-lot-name').textContent = lot.name;
     $('#selected-lot-distance').textContent = `약 ${lot.distance}m`;
@@ -366,6 +375,25 @@
       maps.forEach((record, kind) => { $(`[data-map-fallback="${kind}"]`).hidden = true; record.map.invalidateSize(); });
       if (!window.L) toast('지도 라이브러리가 준비되지 않았어요. 페이지를 새로고침해주세요.');
     }
+  });
+  // NAVER's documented nmap route/car scheme; web fallback keeps the destination.
+  $('#parking-directions').addEventListener('click', event => {
+    const link = event.currentTarget;
+    if (!link.href.startsWith('nmap:')) return;
+    const started = Date.now();
+    let fallback;
+    const cancel = () => {
+      clearTimeout(fallback);
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('pagehide', cancel);
+    };
+    const onVisibility = () => { if (document.hidden) cancel(); };
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pagehide', cancel, { once: true });
+    fallback = setTimeout(() => {
+      cancel();
+      if (!document.hidden && Date.now() - started < 3500) window.location.assign(link.dataset.webFallback);
+    }, 1800);
   });
   $('#destination-search').addEventListener('submit', searchDestination);
   $('#dialog-content').addEventListener('submit', event => {

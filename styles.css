@@ -148,3 +148,5 @@
 .entry-notice>img{width:41px;height:41px;flex-shrink:0}.entry-notice>div{flex:1;min-width:0}.entry-notice small{display:block;font-size:9px;color:#8a9eb9;margin-bottom:4px}.entry-notice strong{font-size:13px;color:#315c9b}.entry-notice p{font-size:10px;color:#7b90ad;margin-top:4px;overflow-wrap:anywhere}.entry-notice>button{background:transparent;color:#8297b6;min-width:36px;min-height:40px;font-size:23px;font-weight:300}
 .home-parking-card.has-new-entry{animation:entry-card-arrive 550ms ease-out}
 @keyframes entry-card-arrive{from{transform:translateY(5px);box-shadow:0 0 0 3px #6a9cff40}to{transform:translateY(0);box-shadow:0 8px 26px #315a9910}}
+
+.naver-web-fallback{display:block;text-align:right;margin-top:12px;padding:4px 0;font-size:10px;color:#8a9ab1;text-underline-offset:3px}
