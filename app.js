@@ -6,6 +6,7 @@
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const CARD_NAMES = ['블루카드', '옐로카드'];
   const STORE_KEY = 'parking-demo-v2';
+  const EXIT_GRACE_MS = 3 * 60 * 1000;
   const DEFAULT_CENTER = [37.5665, 126.9780];
   const mapData = window.PARKING_MAP_DATA;
   const LOTS = mapData.parking.map((lot, index) => ({ ...lot,
@@ -122,6 +123,11 @@
     $$('[data-vehicle]').forEach(element => { element.textContent = formatVehicle(); });
     $$('[data-card-name]').forEach(element => { element.textContent = preferences.card; });
     $('#history-count').textContent = preferences.history.length;
+    $('#profile-saved-count').textContent = `${preferences.favorites.length}곳 저장`;
+    const recent = preferences.history[0];
+    $('#profile-recent-label').textContent = recent ? '최근 이용' : '이용 기록';
+    $('#profile-recent-name').textContent = recent ? recent.name : '아직 이용 기록이 없어요';
+    $('#profile-recent-detail').textContent = recent ? `${new Date(recent.date).toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit' })} · ${money(recent.amount)}원` : '주차 이용을 마치면 여기에서 확인할 수 있어요.';
     root.classList.toggle('motion-disabled', !preferences.motion);
   }
   function currentFee() {
@@ -154,7 +160,7 @@
   }
   function updateDeadline() {
     if (stage !== 'paid' || !paidAt) return;
-    const deadline = paidAt + 10 * 60 * 1000;
+    const deadline = paidAt + EXIT_GRACE_MS;
     const remaining = Math.max(0, deadline - Date.now());
     $('#exit-deadline').textContent = `${new Date(deadline).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false })}까지`;
     $('#exit-time-left').textContent = remaining > 0 ? `${Math.ceil(remaining / 60000)}분 안에 출차해주세요` : '유예 시간이 지났어요 · 추가 정산이 필요해요';
@@ -273,7 +279,7 @@
   }
   function completeExit() {
     if (busy || stage !== 'paid') return;
-    if (Date.now() > paidAt + 600000) {
+    if (Date.now() > paidAt + EXIT_GRACE_MS) {
       withLoading('추가 요금을 정산하고 있어요', '출차 가능 시간을 다시 확인하고 있어요.', () => {}, 650).then(() => { paidAt = Date.now(); saveSession(); updateDeadline(); toast('추가 정산이 완료됐어요.'); });
       return;
     }
@@ -345,11 +351,11 @@
     if (button.id === 'favorite-toggle') {
       const saved = preferences.favorites.includes(selectedLot.id);
       preferences.favorites = saved ? preferences.favorites.filter(id => id !== selectedLot.id) : [...preferences.favorites, selectedLot.id];
-      savePreferences(); renderFavoriteToggle(); toast(saved ? '즐겨찾기를 해제했어요.' : '즐겨찾기에 저장했어요.'); return;
+      savePreferences(); renderFavoriteToggle(); renderProfile(); toast(saved ? '즐겨찾기를 해제했어요.' : '즐겨찾기에 저장했어요.'); return;
     }
     if (button.dataset.removeFavorite) {
       preferences.favorites = preferences.favorites.filter(id => String(id) !== button.dataset.removeFavorite);
-      savePreferences(); renderFavoriteToggle(); openDialog('favorites', dialogOpener); toast('즐겨찾기를 해제했어요.'); return;
+      savePreferences(); renderFavoriteToggle(); renderProfile(); openDialog('favorites', dialogOpener); toast('즐겨찾기를 해제했어요.'); return;
     }
     if (button.dataset.openLot) {
       const lot = LOTS.find(item => String(item.id) === button.dataset.openLot);
