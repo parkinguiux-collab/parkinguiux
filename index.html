@@ -10,11 +10,11 @@
   <link rel="apple-touch-icon" href="assets/app-icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/vendor/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=20261022-v13">
+  <link rel="stylesheet" href="styles.css?v=20261022-v14">
   <script defer src="assets/vendor/leaflet.js"></script>
   <script defer src="assets/vendor/ui-icons.js"></script>
   <script defer src="assets/nearby-map.js"></script>
-  <script defer src="app.js?v=20261022-v13"></script>
+  <script defer src="app.js?v=20261022-v14"></script>
 </head>
 <body>
 <div class="app-shell" id="parking-app">
@@ -31,12 +31,12 @@
           <h1 id="home-title">오늘은 어디에<br>주차하시나요?</h1>
           <img class="home-quokka" src="assets/quokka-car-ui.png" alt="자동차를 탄 쿼카">
         </div>
+      </header>
+      <div class="home-content">
         <div class="quick-actions" aria-label="빠른 메뉴">
           <button type="button" data-screen="map"><img src="assets/ui-icons/location.svg" alt=""><span>주변 주차장</span></button>
           <button type="button" data-dialog="vehicle"><img src="assets/ui-icons/car.svg" alt=""><span>내 차량</span></button>
         </div>
-      </header>
-      <div class="home-content">
         <div class="home-status-heading"><h2>지금 내 주차</h2><span>제휴 연동 시연</span></div>
         <article class="home-parking-card" aria-label="현재 주차 상태">
           <div class="home-status-top"><span class="home-status-badge" id="home-parking-caption">주차 중</span><span class="home-status-vehicle" data-vehicle>12가 3456</span></div>
