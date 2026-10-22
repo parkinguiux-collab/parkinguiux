@@ -47,3 +47,14 @@
 .parking-location-detail{font-size:10px;color:#8795a8;margin:10px 0 15px}.parking-location-detail summary{cursor:pointer}.parking-location-detail p{line-height:1.8;margin-top:8px}
 .parking-card-bottom{display:flex;align-items:center;justify-content:space-between;gap:18px;border-top:1px solid #eff3f8;padding-top:14px}.parking-card-price{display:flex;flex-direction:column;gap:4px}.parking-card-price small{font-size:10px;color:#8795a8}.parking-card-price strong{font-size:18px;color:#2a5489}.parking-card-bottom .primary-button{width:auto;min-width:145px;min-height:45px;border-radius:23px;padding:12px 18px;font-size:12px}
 @media(max-width:360px){.map-selection{margin-left:13px;margin-right:13px}.parking-info-body{padding:13px}.parking-info-body .selection-heading h2{font-size:16px}.parking-card-bottom .primary-button{min-width:125px}}
+
+/* Keep the location dot fixed while its outer ring gently breathes. */
+.lot-pin .parking-orbit,.lot-pin.is-selected .parking-orbit{position:relative;border:0;background:transparent;box-shadow:none}
+.lot-pin .parking-orbit::before{content:"";position:absolute;inset:0;border:2px solid #80a8df;border-radius:50%;background:#89b3ed0c;transform:scale(.86);opacity:.6;animation:parking-ring-breathe 3.2s ease-in-out infinite;pointer-events:none}
+.lot-pin.is-selected .parking-orbit::before{border-color:#417fdb;background:#6298f016}
+.lot-pin .parking-core{position:relative;z-index:1}
+.lot-pin:nth-child(3n + 1) .parking-orbit::before{animation-delay:-1.05s}
+.lot-pin:nth-child(3n + 2) .parking-orbit::before{animation-delay:-2.1s}
+@keyframes parking-ring-breathe{0%,100%{transform:scale(.86);opacity:.6}50%{transform:scale(1.06);opacity:1}}
+@media(prefers-reduced-motion:reduce){.lot-pin .parking-orbit::before{animation:none;transform:scale(1);opacity:.85}}
+.motion-disabled .lot-pin .parking-orbit::before{animation:none;transform:scale(1);opacity:.85}
