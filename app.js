@@ -67,11 +67,11 @@
     setTimeout(() => button.classList.remove('is-tapped'), 330);
   }
   function show(screen) {
-    if (!['home', 'map', 'payment', 'profile', 'exit', 'benefits'].includes(screen)) return;
+    if (!['home', 'map', 'payment', 'profile', 'benefits'].includes(screen)) return;
     const oldScreen = currentScreen;
     currentScreen = screen;
     $$('.screen').forEach(section => { section.hidden = section.dataset.view !== screen; });
-    const navScreen = ['map', 'payment', 'exit'].includes(screen) ? 'home' : screen;
+    const navScreen = ['map', 'payment'].includes(screen) ? 'home' : screen;
     $$('.bottom-nav [data-screen]').forEach(button => {
       const active = button.dataset.screen === navScreen;
       button.classList.toggle('active', active);
@@ -81,7 +81,6 @@
     renderSession();
     if (oldScreen !== screen) window.scrollTo({ top: 0, behavior: 'instant' });
     if (screen === 'map') ensureMap('full');
-    if (screen === 'exit') playExit();
   }
   async function withLoading(title, description, task, duration = 500) {
     if (busy) return;
@@ -114,7 +113,7 @@
     $('#parking-empty').hidden = stage !== 'exited';
     $$('[data-fee]').forEach(element => { element.textContent = money(sessionLot.price * 4); });
     $$('[data-session-name]').forEach(element => { element.textContent = sessionLot.name; });
-    $('[data-pay-label]').textContent = `${money(sessionLot.price * 4)}원 결제 체험하기`;
+    $('[data-pay-label]').textContent = `${money(sessionLot.price * 4)}원 결제하기`;
     $('#home-parking-caption').textContent = stage === 'paid' ? '정산 완료' : stage === 'exited' ? '주차 전' : '주차 중';
     $('#home-parking-action').textContent = stage === 'paid' ? '출차 가능 시간 확인' : stage === 'exited' ? '주변 주차장 보기' : '주차요금 정산하기';
     $('#home-session-details').hidden = stage === 'exited';
@@ -131,7 +130,7 @@
     const remaining = Math.max(0, deadline - Date.now());
     $('#exit-deadline').textContent = `${new Date(deadline).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false })}까지`;
     $('#exit-time-left').textContent = remaining > 0 ? `${Math.ceil(remaining / 60000)}분 안에 출차해주세요` : '유예 시간이 지났어요 · 추가 정산이 필요해요';
-    $('#exit-button').textContent = remaining > 0 ? '출차 완료 체험' : '추가 정산 체험하기';
+    $('#exit-button').textContent = remaining > 0 ? '출차 확인하기' : '추가 정산하기';
     $('#home-exit-deadline').textContent = remaining > 0 ? `${$('#exit-deadline').textContent} 출차해주세요` : '추가 정산을 확인해주세요';
     $('#home-exit-note').textContent = $('#exit-time-left').textContent;
   }
@@ -225,7 +224,7 @@
       await withLoading('주차요금을 정산하고 있어요', '결제 체험 중이에요. 실제로 청구되지 않아요.', () => {}, 780);
       stage = 'paid'; paidAt = Date.now();
       renderSession();
-      animate($('#parking-paid .completion-check'), [{ transform: 'scale(.8)', opacity: .3 }, { transform: 'scale(1.04)', opacity: 1, offset: .7 }, { transform: 'scale(1)' }], 360);
+      playExit();
       window.scrollTo({ top: 0, behavior: 'instant' });
     } finally { button.disabled = false; }
   }
@@ -242,7 +241,7 @@
     }
     preferences.history.unshift({ name: sessionLot.name, amount: sessionLot.price * 4, date: new Date().toISOString() });
     preferences.history = preferences.history.slice(0, 30);
-    stage = 'exited'; savePreferences(); show('exit');
+    stage = 'exited'; savePreferences(); show('home'); toast('출차 확인 시연을 마쳤어요.');
   }
   function openDialog(kind, opener) {
     const dialog = $('#app-dialog');
@@ -308,7 +307,6 @@
     if (button.id === 'locate-button') locate();
     if (button.id === 'pay-button') pay();
     if (button.id === 'exit-button') completeExit();
-    if (button.id === 'replay-exit') playExit();
     if (button.id === 'use-parking') {
       if (stage === 'paid') { toast('현재 정산한 주차장의 출차 체험을 먼저 마쳐주세요.'); show('payment'); return; }
       sessionLot = selectedLot; stage = 'active'; show('payment'); toast('선택한 주차장 이용을 체험해요.');

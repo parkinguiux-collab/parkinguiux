@@ -10,11 +10,11 @@
   <link rel="apple-touch-icon" href="assets/app-icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/vendor/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=20261022-v18">
+  <link rel="stylesheet" href="styles.css?v=20261022-v19">
   <script defer src="assets/vendor/leaflet.js"></script>
   <script defer src="assets/vendor/ui-icons.js"></script>
   <script defer src="assets/nearby-map.js"></script>
-  <script defer src="app.js?v=20261022-v18"></script>
+  <script defer src="app.js?v=20261022-v19"></script>
 </head>
 <body>
 <div class="app-shell" id="parking-app">
@@ -78,19 +78,18 @@
         <div class="section-heading compact"><h2>결제수단</h2><button class="text-button" type="button" data-dialog="payment">변경</button></div>
         <button class="payment-method" type="button" data-dialog="payment"><img src="assets/ui-icons/wallet.svg" alt=""><span><strong data-card-name>샘플 블루카드</strong><small>실제 청구 없는 체험용 카드</small></span><i data-lucide="circle-check" aria-hidden="true"></i></button>
         <p class="gentle-note"><i data-lucide="info" aria-hidden="true"></i>결제 후 출차 가능 시간을 알려드려요.</p>
-        <button class="primary-button" type="button" id="pay-button"><span data-pay-label>8,000원 결제 체험하기</span><i data-lucide="arrow-right" aria-hidden="true"></i></button>
+        <button class="primary-button" type="button" id="pay-button"><span data-pay-label>8,000원 결제하기</span><i data-lucide="arrow-right" aria-hidden="true"></i></button>
         <p class="fine-print">샘플 이용 내역 · 실제 결제 및 출차 연동 없음</p>
       </div>
-      <div id="parking-paid" class="completion-panel" hidden><div class="completion-check"><i data-lucide="check" aria-hidden="true"></i></div><span class="demo-badge">결제 체험 완료</span><h2>출차 준비가<br>끝났어요!</h2><p>주차장 출구로 이동해주세요.</p><div class="exit-countdown"><span>출차 가능 시각</span><strong id="exit-deadline">16:10까지</strong><small id="exit-time-left">10분 안에 출차해주세요</small></div><p class="fine-print">유예 시간 10분은 데모 설정입니다.</p><button class="primary-button" type="button" id="exit-button">출차 완료 체험 <i data-lucide="arrow-right" aria-hidden="true"></i></button><button class="text-button centered" type="button" data-screen="home">홈으로 돌아가기</button></div>
+      <div id="parking-paid" class="completion-panel" hidden>
+        <span class="demo-badge">정산 완료</span><h2>출차 준비가<br>끝났어요!</h2><p>주차장 출구로 이동해주세요.</p>
+        <div class="exit-scene" aria-label="쿼카 자동차가 출발하는 모션"><span class="exit-spark spark-one"></span><span class="exit-spark spark-two"></span><span class="exit-spark spark-three"></span><div class="exit-glow"></div><div class="exit-road"></div><img class="exit-quokka" src="assets/quokka-car-ui.png" alt="자동차를 타고 출발하는 쿼카"><span class="vroom" aria-hidden="true">붕~</span></div>
+        <div class="exit-countdown"><span>출차 가능 시각</span><strong id="exit-deadline">16:10까지</strong><small id="exit-time-left">10분 안에 출차해주세요</small></div>
+        <button class="primary-button" type="button" data-screen="home">홈으로 돌아가기</button>
+        <p class="fine-print">실제 청구 없는 시연 화면 · 출차 유예 시간 10분</p>
+        <details class="exit-demo-controls"><summary>출차 확인 시연</summary><p>실제 서비스에서는 제휴 주차장의 출차 확인을 받아 이용을 종료해요.</p><button class="text-button centered" type="button" id="exit-button">출차 확인하기</button></details>
+      </div>
       <div id="parking-empty" class="empty-state" hidden><img src="assets/team-icons/car.png" alt=""><h2>지금은 주차 중이 아니에요</h2><p>주변 주차장을 찾아 새로운 이용을 시작해보세요.</p><button class="primary-button" type="button" data-screen="map">주변 주차장 찾기</button><button class="text-button centered" type="button" data-dialog="history">지난 체험 내역 보기</button></div>
-    </section>
-
-    <section class="screen exit-screen padded-screen" data-view="exit" hidden aria-labelledby="exit-title">
-      <header class="screen-header"><span class="demo-badge">출차 체험 완료</span><button class="round-button" type="button" id="replay-exit" aria-label="출차 모션 다시 보기"><i data-lucide="rotate-ccw" aria-hidden="true"></i></button></header>
-      <div class="exit-scene" aria-label="쿼카 자동차가 출발하는 모션"><span class="exit-spark spark-one"></span><span class="exit-spark spark-two"></span><span class="exit-spark spark-three"></span><div class="exit-glow"></div><div class="exit-road"></div><img class="exit-quokka" src="assets/quokka-car-ui.png" alt="자동차를 타고 출발하는 쿼카"><span class="vroom" aria-hidden="true">붕~</span></div>
-      <div class="exit-message"><span class="completion-check small"><i data-lucide="check" aria-hidden="true"></i></span><h1 id="exit-title">주차는 여기까지,<br>이제 가볍게 출발!</h1><p>오늘도 안전하게 이동하세요.</p></div>
-      <div class="exit-summary"><span data-session-name>시청 센트럴 주차장</span><strong><span data-fee>8,000</span>원 <small>체험</small></strong><span>이용 시간 2시간 · 실제 청구 없음</span></div>
-      <button class="primary-button" type="button" data-screen="home">홈으로 돌아가기</button><button class="text-button centered" type="button" data-dialog="history">이용 내역 확인</button>
     </section>
 
     <section class="screen benefits-screen padded-screen" data-view="benefits" hidden aria-labelledby="benefits-title">
