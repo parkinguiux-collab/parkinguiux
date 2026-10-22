@@ -5,3 +5,6 @@ dist/
 .env.*
 design-preview.html
 scripts/prepare-site.cjs
+data/*.osm
+assets/app-icons/app-icon-master.png
+assets/vendor/lucide.js
