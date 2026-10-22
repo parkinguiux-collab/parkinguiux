@@ -10,11 +10,11 @@
   <link rel="apple-touch-icon" href="assets/app-icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/vendor/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=20261022-v9">
+  <link rel="stylesheet" href="styles.css?v=20261022-v10">
   <script defer src="assets/vendor/leaflet.js"></script>
   <script defer src="assets/vendor/ui-icons.js"></script>
   <script defer src="assets/nearby-map.js"></script>
-  <script defer src="app.js?v=20261022-v9"></script>
+  <script defer src="app.js?v=20261022-v10"></script>
 </head>
 <body>
 <div class="app-shell" id="parking-app">
@@ -38,20 +38,18 @@
           <button type="button" data-dialog="vehicle"><img src="assets/ui-icons/car.svg" alt=""><span>내 차량</span></button>
           <button type="button" data-dialog="history"><img src="assets/ui-icons/history.svg" alt=""><span>이용 내역</span></button>
         </div>
-        <button class="parking-shortcut" type="button" data-screen="payment">
-          <img src="assets/ui-icons/wallet.svg" alt="">
-          <span><small id="home-parking-caption">주차 중이신가요?</small><strong id="home-parking-action">이용 요금 바로 확인</strong></span>
-          <span class="yellow-arrow"><i data-lucide="arrow-up-right" aria-hidden="true"></i></span>
-        </button>
-        <div class="section-heading"><div><p class="eyebrow">가까운 곳부터, 편하게</p><h2>주변 주차장</h2></div><button class="text-button" type="button" data-screen="map">지도 크게 <i data-lucide="arrow-up-right" aria-hidden="true"></i></button></div>
-        <div class="map-preview-frame">
-          <div id="home-map" class="home-map" role="region" aria-label="서울시청 주변 주차장 위치 지도"></div>
-          <span class="map-area-label"><span class="location-dot"></span><span data-area-label>서울시청 주변</span></span>
-          <button class="map-expand" type="button" data-screen="map" aria-label="주차장 지도 크게 보기"><i data-lucide="expand" aria-hidden="true"></i></button>
-          <div class="map-fallback" data-map-fallback="home" hidden><i data-lucide="map-pin" aria-hidden="true"></i><strong>지도를 불러오지 못했어요</strong><button type="button" data-retry-map>다시 불러오기</button></div>
-        </div>
-        <p class="map-caption"><span class="map-key"><b class="legend-orbit" aria-hidden="true"></b> 주차장 위치</span><span>실제 위치 · 요금은 체험용</span></p>
-        <div class="home-footnote"><i data-lucide="shield-check" aria-hidden="true"></i><span>비교부터 출차 전 정산까지, 간편하게.</span></div>
+        <div class="home-status-heading"><h2>지금 내 주차</h2><span>제휴 연동 시연</span></div>
+        <article class="home-parking-card" aria-label="현재 주차 상태">
+          <div class="home-status-top"><span class="home-status-badge" id="home-parking-caption">주차 중</span><span class="home-status-vehicle" data-vehicle>12가 3456</span></div>
+          <div id="home-session-details"><h3 data-session-name>주차장</h3><p class="home-entry-note">입차 정보가 연결되었어요 <span>· 시연</span></p>
+            <div class="home-session-metrics" id="home-active-metrics"><div><span>이용 시간</span><strong>2시간</strong></div><div><span>현재 주차요금</span><strong><span data-fee>8,000</span><small>원</small></strong></div></div>
+            <div class="home-paid-message" id="home-paid-message" hidden><strong id="home-exit-deadline">정산이 끝났어요</strong><p id="home-exit-note">출차 가능 시간을 확인해주세요.</p></div>
+          </div>
+          <div class="home-idle-message" id="home-idle-message" hidden><img src="assets/ui-icons/car.svg" alt=""><h3>현재 이용 중인 주차장이 없어요</h3><p>제휴 주차장에 입차하면<br>이곳에서 이용 현황을 확인할 수 있어요.</p></div>
+          <button class="primary-button" id="home-session-button" type="button" data-screen="payment"><span id="home-parking-action">주차요금 정산하기</span><i data-lucide="arrow-right" aria-hidden="true"></i></button>
+        </article>
+        <div class="home-auto-guide"><img src="assets/ui-icons/check.svg" alt=""><div><strong>입차부터 출차까지, 자연스럽게</strong><p>제휴 주차장 입차 → 앱에서 정산 → 출차</p><small>예약이나 입·출차 버튼 없이 이용하는 서비스예요.</small></div></div>
+        <p class="home-demo-note">현재 이용 정보는 시연용이며 실제 주차장과 연동되지 않습니다.</p>
       </div>
     </section>
 

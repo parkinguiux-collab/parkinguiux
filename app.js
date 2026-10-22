@@ -78,7 +78,6 @@
     renderProfile();
     renderSession();
     if (oldScreen !== screen) window.scrollTo({ top: 0, behavior: 'instant' });
-    if (screen === 'home') ensureMap('home');
     if (screen === 'map') ensureMap('full');
     if (screen === 'exit') playExit();
   }
@@ -114,8 +113,14 @@
     $$('[data-fee]').forEach(element => { element.textContent = money(sessionLot.price * 4); });
     $$('[data-session-name]').forEach(element => { element.textContent = sessionLot.name; });
     $('[data-pay-label]').textContent = `${money(sessionLot.price * 4)}원 결제 체험하기`;
-    $('#home-parking-caption').textContent = stage === 'paid' ? '정산이 끝났어요' : stage === 'exited' ? '다음 주차도 편하게' : '주차 중이신가요?';
-    $('#home-parking-action').textContent = stage === 'paid' ? '출차 가능 시간 확인' : stage === 'exited' ? '주변 주차장 찾아보기' : '이용 요금 바로 확인';
+    $('#home-parking-caption').textContent = stage === 'paid' ? '정산 완료' : stage === 'exited' ? '주차 전' : '주차 중';
+    $('#home-parking-action').textContent = stage === 'paid' ? '출차 가능 시간 확인' : stage === 'exited' ? '주변 주차장 보기' : '주차요금 정산하기';
+    $('#home-session-details').hidden = stage === 'exited';
+    $('#home-active-metrics').hidden = stage !== 'active';
+    $('#home-paid-message').hidden = stage !== 'paid';
+    $('#home-idle-message').hidden = stage !== 'exited';
+    $('#home-session-button').dataset.screen = stage === 'exited' ? 'map' : 'payment';
+    $('.home-parking-card').dataset.stage = stage;
     updateDeadline();
   }
   function updateDeadline() {
@@ -125,6 +130,8 @@
     $('#exit-deadline').textContent = `${new Date(deadline).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false })}까지`;
     $('#exit-time-left').textContent = remaining > 0 ? `${Math.ceil(remaining / 60000)}분 안에 출차해주세요` : '유예 시간이 지났어요 · 추가 정산이 필요해요';
     $('#exit-button').textContent = remaining > 0 ? '출차 완료 체험' : '추가 정산 체험하기';
+    $('#home-exit-deadline').textContent = remaining > 0 ? `${$('#exit-deadline').textContent} 출차해주세요` : '추가 정산을 확인해주세요';
+    $('#home-exit-note').textContent = $('#exit-time-left').textContent;
   }
   function chooseLot(lot) {
     selectedLot = lot;
