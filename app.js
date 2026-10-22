@@ -65,11 +65,11 @@
     setTimeout(() => button.classList.remove('is-tapped'), 330);
   }
   function show(screen) {
-    if (!['home', 'map', 'payment', 'profile', 'exit'].includes(screen)) return;
+    if (!['home', 'map', 'payment', 'profile', 'exit', 'benefits'].includes(screen)) return;
     const oldScreen = currentScreen;
     currentScreen = screen;
     $$('.screen').forEach(section => { section.hidden = section.dataset.view !== screen; });
-    const navScreen = screen === 'map' ? 'home' : screen === 'exit' ? 'payment' : screen;
+    const navScreen = ['map', 'payment', 'exit'].includes(screen) ? 'home' : screen;
     $$('.bottom-nav [data-screen]').forEach(button => {
       const active = button.dataset.screen === navScreen;
       button.classList.toggle('active', active);
@@ -240,11 +240,12 @@
     const dialog = $('#app-dialog');
     dialogOpener = opener || document.activeElement;
     const content = $('#dialog-content');
-    const titles = { vehicle: '내 차량 관리', payment: '결제수단 관리', history: '이용·결제 내역', notice: '알림', settings: '설정', nickname: '프로필 수정', help: '이용 안내', about: '앱 정보·아이콘' };
+    const titles = { benefit: '혜택 이용 안내', vehicle: '내 차량 관리', payment: '결제수단 관리', history: '이용·결제 내역', notice: '알림', settings: '설정', nickname: '프로필 수정', help: '이용 안내', about: '앱 정보·아이콘' };
     $('#dialog-title').textContent = titles[kind] || '안내';
     if (kind === 'vehicle') content.innerHTML = `<p class="dialog-description">주차요금 확인에 사용할 차량을 등록해요.</p><form id="vehicle-form"><label class="field-label" for="vehicle-input">차량 번호<input class="field-input" id="vehicle-input" autocomplete="off" value="${escape(formatVehicle())}" maxlength="12" required></label><p class="field-error" role="alert" id="vehicle-error" hidden>차량 번호를 확인해주세요. 예: 12가 3456</p><button class="primary-button" type="submit">차량 저장하기</button></form><p class="fine-print">이 브라우저에만 저장되는 체험용 설정입니다.</p>`;
     if (kind === 'nickname') content.innerHTML = `<form id="nickname-form"><label class="field-label" for="nickname-input">닉네임<input class="field-input" id="nickname-input" value="${escape(preferences.name)}" maxlength="12" required></label><button class="primary-button" type="submit">프로필 저장하기</button></form>`;
     if (kind === 'payment') content.innerHTML = `<p class="dialog-description">실제 카드 정보 없이 결제수단 선택을 체험해요.</p><form id="card-form">${CARD_NAMES.map((name, index) => `<label class="choice-row"><input type="radio" name="demo-card" value="${index}" ${preferences.card === name ? 'checked' : ''}><span>${name}<small>체험 전용 · 실제 청구 없음</small></span></label>`).join('')}<button class="primary-button" type="submit">선택한 카드로 설정</button></form>`;
+    if (kind === 'benefit') content.innerHTML = '<p class="dialog-description">제휴 주차장 할인 혜택을 보여주는 디자인 예시입니다. 실제로 발급하거나 사용할 수 있는 쿠폰은 아닙니다.</p><div class="notice-item"><img src="assets/ui-icons/gift.svg" alt=""><div><h3>정산할 때 혜택을 확인해요</h3><p>실제 서비스에서는 참여 주차장, 사용 기간, 최소 결제 금액 등 혜택별 조건을 안내할 예정이에요.</p></div></div>';
     if (kind === 'history') content.innerHTML = preferences.history.length ? `<p class="dialog-description">출차까지 마친 체험 기록이에요. 실제 결제 내역이 아닙니다.</p><div class="dialog-list">${preferences.history.map(item => `<article class="history-item"><header><span>${escape(item.name)}</span><strong>${money(item.amount)}원</strong></header><p>${new Date(item.date).toLocaleString('ko-KR')} · 출차 체험 완료</p></article>`).join('')}</div>` : '<div class="history-empty"><img src="assets/ui-icons/history.svg" alt=""><h3>아직 이용 내역이 없어요</h3><p>결제와 출차 체험을 마치면<br>여기에서 다시 확인할 수 있어요.</p></div>';
     if (kind === 'notice') content.innerHTML = `<div class="notice-item"><img src="assets/ui-icons/bell.svg" alt=""><div><h3>${stage === 'paid' ? '출차 준비가 끝났어요' : '쿼카와 편안하게 주차해요'}</h3><p>${stage === 'paid' ? '이용 현황에서 출차 가능 시간을 확인해주세요.' : '주변 주차장 위치를 확인하고, 앱 정산을 체험해보세요.'}</p></div></div><p class="fine-print">현재는 체험용 안내만 표시됩니다.</p>`;
     if (kind === 'settings') content.innerHTML = `<form id="settings-form"><label class="toggle-row">캐릭터·아이콘 모션<input type="checkbox" name="motion" ${preferences.motion ? 'checked' : ''}></label><label class="toggle-row">앱 내 안내 표시<input type="checkbox" name="notifications" ${preferences.notifications ? 'checked' : ''}></label><p class="dialog-description">휴대폰에서 ‘동작 줄이기’를 사용하면 모션은 자동으로 생략돼요.</p><button class="primary-button" type="submit">설정 저장하기</button></form>`;
