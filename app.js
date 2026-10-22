@@ -21,9 +21,11 @@
         card: CARD_NAMES.includes(value.card) ? value.card : CARD_NAMES[0],
         motion: value.motion !== false,
         notifications: value.notifications !== false,
+        favorites: Array.isArray(value.favorites) ? [...new Set(value.favorites.filter(id => LOTS.some(lot => lot.id === id)))] : [],
+        parkingSpot: Object.fromEntries(['floor', 'zone', 'pillar', 'note'].map(key => [key, typeof value.parkingSpot?.[key] === 'string' ? value.parkingSpot[key].slice(0, key === 'note' ? 120 : 20) : ''])),
         history: Array.isArray(value.history) ? value.history.filter(item => item && typeof item.name === 'string' && Number.isFinite(item.amount) && typeof item.date === 'string' && !Number.isNaN(Date.parse(item.date))).slice(0, 30) : []
       };
-    } catch { return { name: '주차 메이트', vehicle: '12가3456', card: CARD_NAMES[0], motion: true, notifications: true, history: [] }; }
+    } catch { return { name: '주차 메이트', vehicle: '12가3456', card: CARD_NAMES[0], motion: true, notifications: true, favorites: [], parkingSpot: { floor: '', zone: '', pillar: '', note: '' }, history: [] }; }
   }
   const preferences = readStored();
   let currentScreen = 'home';
@@ -135,6 +137,7 @@
   }
   function chooseLot(lot) {
     selectedLot = lot;
+    renderFavoriteToggle();
     $('#selected-lot-name').textContent = lot.name;
     $('#selected-lot-distance').textContent = `약 ${lot.distance}m`;
     $('#selected-lot-price').textContent = `${money(lot.price)}원`;
@@ -147,6 +150,11 @@
       element?.setAttribute('aria-pressed', String(LOTS[index].id === lot.id));
     }));
     animate($('#map-selection'), [{ transform: 'translateY(3px)', opacity: .85 }, { transform: 'translateY(0)', opacity: 1 }], 220);
+  }
+  function renderFavoriteToggle() {
+    const saved = preferences.favorites.includes(selectedLot.id);
+    $('#favorite-toggle').setAttribute('aria-pressed', String(saved));
+    $('#favorite-toggle-label').textContent = saved ? '즐겨찾기 저장됨' : '즐겨찾기에 저장';
   }
   function mapFailure(kind) { $(`[data-map-fallback="${kind}"]`).hidden = false; }
   function ensureMap(kind) {
@@ -240,20 +248,29 @@
     const dialog = $('#app-dialog');
     dialogOpener = opener || document.activeElement;
     const content = $('#dialog-content');
-    const titles = { benefit: '혜택 이용 안내', vehicle: '내 차량 관리', payment: '결제수단 관리', history: '이용·결제 내역', notice: '알림', settings: '설정', nickname: '프로필 수정', help: '이용 안내', about: '앱 정보·아이콘' };
+    const titles = { favorites: '즐겨찾기', 'parking-spot': '주차 위치', benefit: '혜택 이용 안내', vehicle: '내 차량 관리', payment: '결제수단 관리', history: '이용·결제 내역', notice: '알림', settings: '설정', nickname: '프로필 수정', help: '이용 안내', about: '앱 정보·아이콘' };
     $('#dialog-title').textContent = titles[kind] || '안내';
+    if (kind === 'favorites') {
+      const savedLots = LOTS.filter(lot => preferences.favorites.includes(lot.id));
+      content.innerHTML = savedLots.length ? `<p class="dialog-description">자주 가는 주차장을 모아두고 바로 찾아보세요.</p><div class="favorite-list">${savedLots.map(lot => `<article class="favorite-item"><button class="favorite-open" type="button" data-open-lot="${escape(lot.id)}"><img src="assets/ui-icons/location.svg" alt=""><span><strong>${escape(lot.name)}</strong><small>서울시청 인근 · 지도에서 보기</small></span></button><button class="favorite-remove" type="button" data-remove-favorite="${escape(lot.id)}" aria-label="${escape(lot.name)} 즐겨찾기 해제">해제</button></article>`).join('')}</div><p class="fine-print">즐겨찾기는 이 브라우저에 저장돼요.</p>` : '<div class="history-empty"><img src="assets/team-icons/favorite.png" alt=""><h3>자주 가는 주차장을 저장해보세요</h3><p>주차장 정보에서 즐겨찾기를 누르면<br>이곳에서 바로 확인할 수 있어요.</p><button class="primary-button favorite-find" type="button" id="find-favorite-parking">주변 주차장 보기</button></div>';
+    }
+    if (kind === 'parking-spot') {
+      const spot = preferences.parkingSpot;
+      content.innerHTML = `<p class="dialog-description">내 차를 찾기 쉽게 층·구역·기둥 번호를 기록해요.<br>직접 남기는 메모이며 자동 위치 추적은 하지 않아요.</p><form id="parking-spot-form"><div class="spot-fields"><label class="field-label">층<input class="field-input" name="floor" placeholder="예: B2" maxlength="20" value="${escape(spot.floor)}"></label><label class="field-label">구역<input class="field-input" name="zone" placeholder="예: C구역" maxlength="20" value="${escape(spot.zone)}"></label></div><label class="field-label">기둥 번호<input class="field-input" name="pillar" placeholder="예: 12번 기둥" maxlength="20" value="${escape(spot.pillar)}"></label><label class="field-label">추가 메모<textarea class="field-input spot-note" name="note" placeholder="예: 엘리베이터 오른쪽" maxlength="120" rows="3">${escape(spot.note)}</textarea></label><button class="primary-button" type="submit">주차 위치 저장하기</button><button class="text-button centered" id="clear-parking-spot" type="button">메모 비우기</button></form><p class="fine-print">이 브라우저에 저장되며 출차 후에도 직접 지우기 전까지 유지돼요.</p>`;
+    }
     if (kind === 'vehicle') content.innerHTML = `<p class="dialog-description">주차요금 확인에 사용할 차량을 등록해요.</p><form id="vehicle-form"><label class="field-label" for="vehicle-input">차량 번호<input class="field-input" id="vehicle-input" autocomplete="off" value="${escape(formatVehicle())}" maxlength="12" required></label><p class="field-error" role="alert" id="vehicle-error" hidden>차량 번호를 확인해주세요. 예: 12가 3456</p><button class="primary-button" type="submit">차량 저장하기</button></form><p class="fine-print">이 브라우저에만 저장되는 체험용 설정입니다.</p>`;
     if (kind === 'nickname') content.innerHTML = `<form id="nickname-form"><label class="field-label" for="nickname-input">닉네임<input class="field-input" id="nickname-input" value="${escape(preferences.name)}" maxlength="12" required></label><button class="primary-button" type="submit">프로필 저장하기</button></form>`;
     if (kind === 'payment') content.innerHTML = `<p class="dialog-description">실제 카드 정보 없이 결제수단 선택을 체험해요.</p><form id="card-form">${CARD_NAMES.map((name, index) => `<label class="choice-row"><input type="radio" name="demo-card" value="${index}" ${preferences.card === name ? 'checked' : ''}><span>${name}<small>체험 전용 · 실제 청구 없음</small></span></label>`).join('')}<button class="primary-button" type="submit">선택한 카드로 설정</button></form>`;
-    if (kind === 'benefit') content.innerHTML = '<p class="dialog-description">제휴 주차장 할인 혜택을 보여주는 디자인 예시입니다. 실제로 발급하거나 사용할 수 있는 쿠폰은 아닙니다.</p><div class="notice-item"><img src="assets/ui-icons/gift.svg" alt=""><div><h3>정산할 때 혜택을 확인해요</h3><p>실제 서비스에서는 참여 주차장, 사용 기간, 최소 결제 금액 등 혜택별 조건을 안내할 예정이에요.</p></div></div>';
+    if (kind === 'benefit') content.innerHTML = '<p class="dialog-description">제휴 주차장 할인 혜택을 보여주는 디자인 예시입니다. 실제로 발급하거나 사용할 수 있는 쿠폰은 아닙니다.</p><div class="notice-item"><img src="assets/team-icons/benefits.png" alt=""><div><h3>정산할 때 혜택을 확인해요</h3><p>실제 서비스에서는 참여 주차장, 사용 기간, 최소 결제 금액 등 혜택별 조건을 안내할 예정이에요.</p></div></div>';
     if (kind === 'history') content.innerHTML = preferences.history.length ? `<p class="dialog-description">출차까지 마친 체험 기록이에요. 실제 결제 내역이 아닙니다.</p><div class="dialog-list">${preferences.history.map(item => `<article class="history-item"><header><span>${escape(item.name)}</span><strong>${money(item.amount)}원</strong></header><p>${new Date(item.date).toLocaleString('ko-KR')} · 출차 체험 완료</p></article>`).join('')}</div>` : '<div class="history-empty"><img src="assets/ui-icons/history.svg" alt=""><h3>아직 이용 내역이 없어요</h3><p>결제와 출차 체험을 마치면<br>여기에서 다시 확인할 수 있어요.</p></div>';
     if (kind === 'notice') content.innerHTML = `<div class="notice-item"><img src="assets/ui-icons/bell.svg" alt=""><div><h3>${stage === 'paid' ? '출차 준비가 끝났어요' : '쿼카와 편안하게 주차해요'}</h3><p>${stage === 'paid' ? '이용 현황에서 출차 가능 시간을 확인해주세요.' : '주변 주차장 위치를 확인하고, 앱 정산을 체험해보세요.'}</p></div></div><p class="fine-print">현재는 체험용 안내만 표시됩니다.</p>`;
     if (kind === 'settings') content.innerHTML = `<form id="settings-form"><label class="toggle-row">캐릭터·아이콘 모션<input type="checkbox" name="motion" ${preferences.motion ? 'checked' : ''}></label><label class="toggle-row">앱 내 안내 표시<input type="checkbox" name="notifications" ${preferences.notifications ? 'checked' : ''}></label><p class="dialog-description">휴대폰에서 ‘동작 줄이기’를 사용하면 모션은 자동으로 생략돼요.</p><button class="primary-button" type="submit">설정 저장하기</button></form>`;
-    if (kind === 'help') content.innerHTML = '<div class="help-list"><div><span><strong>주변 주차장 위치 확인</strong><p>지도에서 P 핀을 눌러 주차장을 골라요. 현재는 서울시청 주변 위치를 제공합니다.</p></span></div><div><span><strong>현장 방식으로 입차·주차</strong><p>앱에서 QR을 찍을 필요가 없어요. 선택한 주차장의 이용 체험을 시작해보세요.</p></span></div><div><span><strong>출차 전에 앱에서 정산</strong><p>이용 현황에서 샘플 요금을 확인하고 결제 체험을 해요.</p></span></div><div><span><strong>출차 완료 체험</strong><p>실제 서비스의 출차 확인은 제휴 시스템 연동이 필요해요. 현재는 버튼으로 체험합니다.</p></span></div></div>';
+    if (kind === 'help') content.innerHTML = '<div class="help-list"><div><span><strong>주변 주차장 위치 확인</strong><p>지도에서 원형 표시를 눌러 주차장을 골라요. 현재는 서울시청 주변 위치를 제공합니다.</p></span></div><div><span><strong>현장 방식으로 입차·주차</strong><p>앱에서 QR을 찍을 필요가 없어요. 선택한 주차장의 이용 체험을 시작해보세요.</p></span></div><div><span><strong>출차 전에 앱에서 정산</strong><p>이용 현황에서 샘플 요금을 확인하고 결제 체험을 해요.</p></span></div><div><span><strong>출차 완료 체험</strong><p>실제 서비스의 출차 확인은 제휴 시스템 연동이 필요해요. 현재는 버튼으로 체험합니다.</p></span></div></div>';
     if (kind === 'about') content.innerHTML = '<div class="about-content"><img class="about-icon" src="assets/app-icons/icon-192.png" alt="쿼카와 P로 만든 앱 아이콘"><h3>주차 서비스</h3><p>쿼카와 함께, 편안한 주차의 시작.<br>모바일 프로토타입 v0.2<br>앱 이름과 아이콘은 팀 검토용입니다.</p><a href="assets/app-icons/icon-512.png" download="parking-app-icon.png">앱 아이콘 원본 저장</a></div><p class="fine-print">지도: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> · 라이브러리: Leaflet, Lucide<br>실제 결제·실시간 자리 정보·예약 기능은 포함되지 않습니다.</p>';
     if (kind === 'notice' && !preferences.notifications) content.innerHTML = '<p class="dialog-description">앱 내 안내 표시가 꺼져 있어요. 마이페이지 설정에서 변경할 수 있습니다.</p>';
     icons();
     if (!dialog.open) dialog.showModal();
+    else $('#close-dialog').focus();
   }
   function closeDialog() {
     $('#app-dialog').close();
@@ -263,6 +280,24 @@
     const button = event.target.closest('button');
     if (!button || button.disabled || busy) return;
     tap(button);
+    if (button.id === 'favorite-toggle') {
+      const saved = preferences.favorites.includes(selectedLot.id);
+      preferences.favorites = saved ? preferences.favorites.filter(id => id !== selectedLot.id) : [...preferences.favorites, selectedLot.id];
+      savePreferences(); renderFavoriteToggle(); toast(saved ? '즐겨찾기를 해제했어요.' : '즐겨찾기에 저장했어요.'); return;
+    }
+    if (button.dataset.removeFavorite) {
+      preferences.favorites = preferences.favorites.filter(id => String(id) !== button.dataset.removeFavorite);
+      savePreferences(); renderFavoriteToggle(); openDialog('favorites', dialogOpener); toast('즐겨찾기를 해제했어요.'); return;
+    }
+    if (button.dataset.openLot) {
+      const lot = LOTS.find(item => String(item.id) === button.dataset.openLot);
+      if (lot) { closeDialog(); chooseLot(lot); show('map'); } return;
+    }
+    if (button.id === 'find-favorite-parking') { closeDialog(); show('map'); return; }
+    if (button.id === 'clear-parking-spot') {
+      preferences.parkingSpot = { floor: '', zone: '', pillar: '', note: '' };
+      savePreferences(); openDialog('parking-spot', dialogOpener); toast('주차 위치 메모를 비웠어요.'); return;
+    }
     if (button.dataset.dialog) { openDialog(button.dataset.dialog, button); return; }
     if (button.dataset.screen) {
       if (button.classList.contains('parking-shortcut') && stage === 'exited') show('map');
@@ -287,7 +322,9 @@
   $('#dialog-content').addEventListener('submit', event => {
     event.preventDefault();
     const form = event.target;
-    if (form.id === 'vehicle-form') {
+    if (form.id === 'parking-spot-form') {
+      preferences.parkingSpot = Object.fromEntries(['floor', 'zone', 'pillar', 'note'].map(key => [key, form.elements[key].value.trim().slice(0, key === 'note' ? 120 : 20)]));
+    } else if (form.id === 'vehicle-form') {
       const vehicle = $('#vehicle-input').value.replace(/\s/g, '');
       if (!/^\d{2,3}[가-힣]\d{4}$/.test(vehicle)) { $('#vehicle-error').hidden = false; $('#vehicle-input').setAttribute('aria-invalid', 'true'); $('#vehicle-input').focus(); return; }
       preferences.vehicle = vehicle;

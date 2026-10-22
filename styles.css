@@ -104,3 +104,18 @@
 .home-content .quick-actions img{width:58px;height:58px;padding:8px;border-radius:50%;background:#deE9ff;object-fit:contain}
 .home-content .home-status-heading{margin-top:12px}
 @media(max-width:375px){.home-content .quick-actions{padding:13px 12px 6px}.home-content .quick-actions button{min-height:82px;font-size:10px;gap:6px}.home-content .quick-actions img{width:54px;height:54px;padding:7px}.home-content .home-status-heading{margin-top:10px}}
+
+/* Three everyday parking tools, with saved places and a private local memo. */
+.home-content .quick-actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding-left:0;padding-right:0}.home-content .quick-actions button{padding:0 3px}
+.favorite-toggle{display:inline-flex;align-items:center;gap:6px;margin-top:7px;padding:7px 10px;background:#f2f6ff;border-radius:12px;font-size:11px;color:#6480aa}.favorite-toggle img{width:22px;height:22px}.favorite-toggle[aria-pressed="true"]{background:#fff5cf;color:#8c6b19}.favorite-toggle[aria-pressed="true"] img{filter:saturate(1.25)}
+.favorite-list{display:grid;gap:10px}.favorite-item{display:flex;align-items:center;gap:5px;padding:8px;background:#f4f7fe;border-radius:18px}.favorite-open{display:flex;align-items:center;gap:8px;min-width:0;flex:1;background:transparent;text-align:left;padding:7px 3px;min-height:59px}.favorite-open img{width:34px;height:34px;flex-shrink:0}.favorite-open span{display:grid;gap:6px;min-width:0}.favorite-open strong{font-size:12px;overflow-wrap:anywhere}.favorite-open small{font-size:10px;color:#899ab3}.favorite-remove{font-size:10px;color:#8395b0;min-width:42px;min-height:42px;background:white;border-radius:12px}.favorite-find{margin-top:20px}
+.spot-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.spot-note{resize:vertical;min-height:84px;line-height:1.6}textarea{font:inherit}textarea:focus-visible{outline:3px solid #f5c532;outline-offset:4px}
+
+/* Team-supplied PNG icons retain their original colors and transparency. */
+.home-content .quick-actions img[src*="team-icons"]{padding:0;width:58px;height:58px}
+.bottom-nav .nav-item>img{width:51px;height:51px;object-fit:contain;opacity:.74;filter:none}
+.bottom-nav .nav-item.active>img{opacity:1;filter:none}
+.bottom-nav .nav-item{gap:0;padding:2px 8px;min-height:65px}
+.bottom-nav .nav-item.active:before{content:'';position:absolute;top:0;bottom:0;width:68px;left:50%;transform:translateX(-50%);z-index:-1;border-radius:20px;background:#edf3ff}
+.favorite-toggle img[src*="team-icons"]{width:30px;height:30px}.favorite-toggle[aria-pressed="true"] img{filter:none}
+@media(max-width:375px){.home-content .quick-actions img[src*="team-icons"]{width:54px;height:54px}.bottom-nav .nav-item>img{width:48px;height:48px}}
