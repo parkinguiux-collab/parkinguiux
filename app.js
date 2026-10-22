@@ -35,7 +35,10 @@
   let stage = 'exited';
   let sessionStartedAt = 0;
   let settledFee = 0;
-  let pendingEntryLot = null;
+  let entrySimulationTimer;
+  let entryNoticeTimer;
+  let entrySimulationDone = false;
+  try { entrySimulationDone = sessionStorage.getItem('parking-entry-simulated-v1') === 'done'; } catch { /* Optional preview preference. */ }
   let paidAt = 0;
   let busy = false;
   let areaName = '서울시청 주변';
@@ -94,6 +97,7 @@
     renderSession();
     if (oldScreen !== screen) window.scrollTo({ top: 0, behavior: 'instant' });
     if (screen === 'map') ensureMap('full');
+    if (screen === 'home') scheduleEntrySimulation();
   }
   async function withLoading(title, description, task, duration = 500) {
     if (busy) return;
@@ -160,6 +164,7 @@
   }
   function chooseLot(lot) {
     selectedLot = lot;
+    $('#parking-directions').href = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(lot.lat + ',' + lot.lon)}&travelmode=driving`;
     renderFavoriteToggle();
     $('#selected-lot-name').textContent = lot.name;
     $('#selected-lot-distance').textContent = `약 ${lot.distance}m`;
@@ -271,9 +276,8 @@
     const dialog = $('#app-dialog');
     dialogOpener = opener || document.activeElement;
     const content = $('#dialog-content');
-    const titles = { arrival: '입차 후 이용 시작', favorites: '즐겨찾기', 'parking-spot': '주차 위치', benefit: '혜택 이용 안내', vehicle: '내 차량 관리', payment: '결제수단 관리', history: '이용·결제 내역', notice: '알림', settings: '설정', nickname: '프로필 수정', help: '이용 안내', about: '앱 정보·아이콘' };
+    const titles = { favorites: '즐겨찾기', 'parking-spot': '주차 위치', benefit: '혜택 이용 안내', vehicle: '내 차량 관리', payment: '결제수단 관리', history: '이용·결제 내역', notice: '알림', settings: '설정', nickname: '프로필 수정', help: '이용 안내', about: '앱 정보·아이콘' };
     $('#dialog-title').textContent = titles[kind] || '안내';
-    if (kind === 'arrival') content.innerHTML = `<p class="dialog-description">${escape(pendingEntryLot.name)}을 선택했어요.<br>입차 후 차량을 주차하셨다면 이용을 시작해주세요.</p><div class="arrival-vehicle"><img src="assets/team-icons/car.png" alt=""><span>${escape(formatVehicle())}</span></div><p class="arrival-location" id="arrival-location" role="status">현재 위치를 확인하면 선택한 주차장까지의 거리를 안내해드려요.</p><button class="arrival-locate" id="check-arrival" type="button">현재 위치 확인</button><p class="fine-print arrival-explain">위치는 거리 안내에만 사용되며, 입차 여부를 확정하지 않아요.</p><button class="primary-button" id="confirm-entry" type="button">입차했어요 · 이용 시작</button>`;
     if (kind === 'favorites') {
       const savedLots = LOTS.filter(lot => preferences.favorites.includes(lot.id));
       content.innerHTML = savedLots.length ? `<p class="dialog-description">자주 가는 주차장을 모아두고 바로 찾아보세요.</p><div class="favorite-list">${savedLots.map(lot => `<article class="favorite-item"><button class="favorite-open" type="button" data-open-lot="${escape(lot.id)}"><img src="assets/team-icons/nearby.png" alt=""><span><strong>${escape(lot.name)}</strong><small>서울시청 인근 · 지도에서 보기</small></span></button><button class="favorite-remove" type="button" data-remove-favorite="${escape(lot.id)}" aria-label="${escape(lot.name)} 즐겨찾기 해제">해제</button></article>`).join('')}</div><p class="fine-print">즐겨찾기는 이 브라우저에 저장돼요.</p>` : '<div class="history-empty"><img src="assets/team-icons/favorite.png" alt=""><h3>자주 가는 주차장을 저장해보세요</h3><p>주차장 정보에서 즐겨찾기를 누르면<br>이곳에서 바로 확인할 수 있어요.</p><button class="primary-button favorite-find" type="button" id="find-favorite-parking">주변 주차장 보기</button></div>';
@@ -289,34 +293,41 @@
     if (kind === 'history') content.innerHTML = preferences.history.length ? `<p class="dialog-description">이용을 마친 주차 기록을 확인하세요.</p><div class="dialog-list">${preferences.history.map(item => `<article class="history-item"><header><span>${escape(item.name)}</span><strong>${money(item.amount)}원</strong></header><p>${new Date(item.date).toLocaleString('ko-KR')} · 이용 종료</p></article>`).join('')}</div>` : '<div class="history-empty"><img src="assets/ui-icons/history.svg" alt=""><h3>아직 이용 내역이 없어요</h3><p>주차 이용을 마치면<br>여기에서 다시 확인할 수 있어요.</p></div>';
     if (kind === 'notice') content.innerHTML = `<div class="notice-item"><img src="assets/ui-icons/bell.svg" alt=""><div><h3>${stage === 'paid' ? '출차 준비가 끝났어요' : '쿼카와 편안하게 주차해요'}</h3><p>${stage === 'paid' ? '이용 현황에서 출차 가능 시간을 확인해주세요.' : '주변 주차장을 선택하고 이용 정보를 확인하세요.'}</p></div></div><p class="fine-print">주차 및 정산 관련 안내를 확인하세요.</p>`;
     if (kind === 'settings') content.innerHTML = `<form id="settings-form"><label class="toggle-row">캐릭터·아이콘 모션<input type="checkbox" name="motion" ${preferences.motion ? 'checked' : ''}></label><label class="toggle-row">앱 내 안내 표시<input type="checkbox" name="notifications" ${preferences.notifications ? 'checked' : ''}></label><p class="dialog-description">휴대폰에서 ‘동작 줄이기’를 사용하면 모션은 자동으로 생략돼요.</p><button class="primary-button" type="submit">설정 저장하기</button></form>`;
-    if (kind === 'help') content.innerHTML = '<div class="help-list"><div><span><strong>주변 주차장 위치 확인</strong><p>지도에서 원형 표시를 눌러 주차장을 골라요. 현재는 서울시청 주변 위치를 제공합니다.</p></span></div><div><span><strong>현장 방식으로 입차·주차</strong><p>앱에서 QR을 찍을 필요가 없어요. 입차 후 이용 시작을 눌러주세요.</p></span></div><div><span><strong>출차 전에 앱에서 정산</strong><p>이용 현황에서 주차요금을 확인하고 정산해요.</p></span></div><div><span><strong>출차 확인</strong><p>실제 서비스의 출차 확인은 제휴 시스템 연동이 필요해요. 현재 시안에서는 직접 출차 확인을 눌러 이용을 마칩니다.</p></span></div></div>';
-    if (kind === 'about') content.innerHTML = '<div class="about-content"><img class="about-icon" src="assets/app-icons/icon-192.png" alt="쿼카와 P로 만든 앱 아이콘"><h3>주차 서비스</h3><p>쿼카와 함께, 편안한 주차의 시작.<br>모바일 프로토타입 v0.2<br>앱 이름과 아이콘은 팀 검토용입니다.</p><a href="assets/app-icons/icon-512.png" download="parking-app-icon.png">앱 아이콘 원본 저장</a></div><p class="fine-print">지도: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> · 라이브러리: Leaflet, Lucide<br>실제 결제·실시간 자리 정보·예약 기능은 포함되지 않습니다.</p>';
+    if (kind === 'help') content.innerHTML = '<div class="help-list"><div><span><strong>주변 주차장 위치 확인</strong><p>지도에서 원형 표시를 눌러 주차장을 골라요. 현재는 서울시청 주변 위치를 제공합니다.</p></span></div><div><span><strong>현장 방식으로 입차·주차</strong><p>앱에서 QR을 찍을 필요가 없어요. 등록된 차량이 입차하면 이용 현황이 자동으로 연결돼요.</p></span></div><div><span><strong>출차 전에 앱에서 정산</strong><p>이용 현황에서 주차요금을 확인하고 정산해요.</p></span></div><div><span><strong>출차 확인</strong><p>실제 서비스의 출차 확인은 제휴 시스템 연동이 필요해요. 현재 시안에서는 직접 출차 확인을 눌러 이용을 마칩니다.</p></span></div></div>';
+    if (kind === 'about') content.innerHTML = '<div class="about-content"><img class="about-icon" src="assets/app-icons/icon-192.png" alt="쿼카와 P로 만든 앱 아이콘"><h3>주차 서비스</h3><p>쿼카와 함께, 편안한 주차의 시작.<br>모바일 프로토타입 v0.2<br>앱 이름과 아이콘은 팀 검토용입니다.</p><a href="assets/app-icons/icon-512.png" download="parking-app-icon.png">앱 아이콘 원본 저장</a></div><p class="fine-print">지도: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> · 라이브러리: Leaflet, Lucide<br>실제 결제·제휴 시스템·실시간 자리 정보는 연결되지 않습니다.<br>홈 진입 후 잠시 뒤 입차 이벤트를 한 번 시뮬레이션합니다. 위치 확인이나 길찾기로 입차가 확정되지는 않습니다.</p>';
     if (kind === 'notice' && !preferences.notifications) content.innerHTML = '<p class="dialog-description">앱 내 안내 표시가 꺼져 있어요. 마이페이지 설정에서 변경할 수 있습니다.</p>';
     icons();
     if (!dialog.open) dialog.showModal();
     else $('#close-dialog').focus();
   }
-  async function checkArrival() {
-    const target = pendingEntryLot;
-    const button = $('#check-arrival');
-    const status = $('#arrival-location');
-    if (!navigator.geolocation || !window.isSecureContext) { status.textContent = '현재 위치를 사용할 수 없어요. 입차 후 이용을 시작해주세요.'; return; }
-    button.disabled = true; status.textContent = '현재 위치를 확인하고 있어요…';
-    try {
-      const position = await new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }));
-      if (pendingEntryLot !== target || !status.isConnected) return;
-      const rad = n => n * Math.PI / 180;
-      const lat = position.coords.latitude, lon = position.coords.longitude;
-      const dlat = rad(target.lat - lat), dlon = rad(target.lon - lon);
-      const h = Math.sin(dlat / 2) ** 2 + Math.cos(rad(lat)) * Math.cos(rad(target.lat)) * Math.sin(dlon / 2) ** 2;
-      const distance = Math.round(6371000 * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(Math.max(0, 1 - h))));
-      status.textContent = distance <= 150 ? '선택한 주차장 주변이에요. 입차 후 이용을 시작해주세요.' : `선택한 주차장까지 직선거리 약 ${distance >= 1000 ? (distance / 1000).toFixed(1) + 'km' : distance + 'm'}예요. 입차 후 이용을 시작해주세요.`;
-    } catch { if (status.isConnected) status.textContent = '위치를 확인하지 못했어요. 주차장에 입차하셨다면 직접 이용을 시작할 수 있어요.'; }
-    finally { if (button.isConnected) button.disabled = false; }
+  function receiveEntry(lot, entryTime) {
+    if (stage !== 'exited') return;
+    sessionLot = lot; sessionStartedAt = entryTime; settledFee = 0; paidAt = 0; stage = 'active';
+    saveSession(); renderSession();
+    $('#entry-notice-detail').textContent = `${lot.name} · ${formatVehicle()}`;
+    $('#entry-notice').hidden = false;
+    $('.home-parking-card').classList.remove('has-new-entry');
+    if (allowMotion()) { void $('.home-parking-card').offsetWidth; $('.home-parking-card').classList.add('has-new-entry'); }
+    clearTimeout(entryNoticeTimer);
+    entryNoticeTimer = setTimeout(() => { $('#entry-notice').hidden = true; }, 12000);
   }
+  function scheduleEntrySimulation() {
+    clearTimeout(entrySimulationTimer);
+    if (stage !== 'exited' || entrySimulationDone || root.classList.contains('is-welcome') || currentScreen !== 'home') return;
+    entrySimulationTimer = setTimeout(() => {
+      if (stage !== 'exited' || root.classList.contains('is-welcome') || currentScreen !== 'home' || $('#app-dialog').open) return;
+      entrySimulationDone = true;
+      try { sessionStorage.setItem('parking-entry-simulated-v1', 'done'); } catch { /* Once per page without storage. */ }
+      // Preview only: a real service must receive an authenticated partner entry event.
+      // Looking at a lot or requesting directions never starts a parking session.
+      receiveEntry(LOTS[0], Date.now());
+    }, 4000);
+  }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) scheduleEntrySimulation(); });
   function closeDialog() {
     $('#app-dialog').close();
     if (dialogOpener?.isConnected) dialogOpener.focus({ preventScroll: true });
+    scheduleEntrySimulation();
   }
   root.addEventListener('click', event => {
     const button = event.target.closest('button');
@@ -350,16 +361,7 @@
     if (button.id === 'locate-button') locate();
     if (button.id === 'pay-button') pay();
     if (button.id === 'exit-button') completeExit();
-    if (button.id === 'use-parking') {
-      if (stage !== 'exited') { toast('현재 이용 중인 주차장 정보를 확인해주세요.'); show('payment'); return; }
-      pendingEntryLot = selectedLot; openDialog('arrival', button); return;
-    }
-    if (button.id === 'check-arrival') { checkArrival(); return; }
-    if (button.id === 'confirm-entry') {
-      if (!pendingEntryLot || stage !== 'exited') return;
-      sessionLot = pendingEntryLot; sessionStartedAt = Date.now(); settledFee = 0; stage = 'active';
-      saveSession(); closeDialog(); show('home'); toast('주차 이용을 시작했어요.'); return;
-    }
+    if (button.id === 'dismiss-entry-notice') { $('#entry-notice').hidden = true; return; }
     if (button.hasAttribute('data-retry-map')) {
       maps.forEach((record, kind) => { $(`[data-map-fallback="${kind}"]`).hidden = true; record.map.invalidateSize(); });
       if (!window.L) toast('지도 라이브러리가 준비되지 않았어요. 페이지를 새로고침해주세요.');

@@ -141,3 +141,10 @@
 .exit-demo-controls{margin-top:19px;text-align:center;color:#91a0b5;font-size:10px}.exit-demo-controls summary{cursor:pointer}.exit-demo-controls p{font-size:10px;line-height:1.7;margin:10px 0}.exit-demo-controls .text-button{font-size:11px}
 
 .arrival-vehicle{display:flex;align-items:center;gap:10px;padding:10px;background:#f2f6ff;border-radius:16px;font-size:15px;font-weight:600}.arrival-vehicle img{width:52px;height:52px}.arrival-location{font-size:12px;color:#6f83a2;line-height:1.8;margin:16px 0 10px}.arrival-locate{display:block;width:100%;min-height:44px;background:#edf3ff;color:#386bc2;border-radius:13px;font-size:12px}.arrival-explain{font-size:10px;margin:12px 0 20px}
+
+/* Partner entry notification updates the home card without a confirmation step. */
+.parking-directions{text-decoration:none}
+.entry-notice{display:flex;align-items:center;gap:9px;padding:13px 11px;margin:3px 0 16px;border:1px solid #dce8fb;background:#edf4ff;border-radius:19px}
+.entry-notice>img{width:41px;height:41px;flex-shrink:0}.entry-notice>div{flex:1;min-width:0}.entry-notice small{display:block;font-size:9px;color:#8a9eb9;margin-bottom:4px}.entry-notice strong{font-size:13px;color:#315c9b}.entry-notice p{font-size:10px;color:#7b90ad;margin-top:4px;overflow-wrap:anywhere}.entry-notice>button{background:transparent;color:#8297b6;min-width:36px;min-height:40px;font-size:23px;font-weight:300}
+.home-parking-card.has-new-entry{animation:entry-card-arrive 550ms ease-out}
+@keyframes entry-card-arrive{from{transform:translateY(5px);box-shadow:0 0 0 3px #6a9cff40}to{transform:translateY(0);box-shadow:0 8px 26px #315a9910}}
