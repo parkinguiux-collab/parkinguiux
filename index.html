@@ -10,11 +10,11 @@
   <link rel="apple-touch-icon" href="assets/app-icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/vendor/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=20261022-v5">
+  <link rel="stylesheet" href="styles.css?v=20261022-v6">
   <script defer src="assets/vendor/leaflet.js"></script>
   <script defer src="assets/vendor/ui-icons.js"></script>
   <script defer src="assets/nearby-map.js"></script>
-  <script defer src="app.js?v=20261022-v5"></script>
+  <script defer src="app.js?v=20261022-v6"></script>
 </head>
 <body>
 <div class="app-shell" id="parking-app">
@@ -56,7 +56,7 @@
           <button class="map-expand" type="button" data-screen="map" aria-label="주차장 지도 크게 보기"><i data-lucide="expand" aria-hidden="true"></i></button>
           <div class="map-fallback" data-map-fallback="home" hidden><i data-lucide="map-pin" aria-hidden="true"></i><strong>지도를 불러오지 못했어요</strong><button type="button" data-retry-map>다시 불러오기</button></div>
         </div>
-        <p class="map-caption"><span class="map-key"><b>P</b> 주차장 위치</span><span>실제 위치 · 요금은 체험용</span></p>
+        <p class="map-caption"><span class="map-key"><b class="legend-orbit" aria-hidden="true"></b> 주차장 위치</span><span>실제 위치 · 요금은 체험용</span></p>
         <div class="home-footnote"><i data-lucide="shield-check" aria-hidden="true"></i><span>비교부터 출차 전 정산까지, 간편하게.</span></div>
       </div>
     </section>
@@ -66,7 +66,14 @@
       <div class="map-context"><span class="location-dot"></span><strong data-area-label>서울시청 주변</strong><span class="demo-badge">OSM 위치 정보</span></div>
       <p class="section-description">가까운 주차장의 위치만 한눈에 확인하세요.</p>
       <div class="full-map-frame"><div id="full-map" role="region" aria-label="주변 주차장 위치 지도"></div><div class="map-fallback" data-map-fallback="full" hidden><i data-lucide="map-pin" aria-hidden="true"></i><strong>지도 연결을 확인해주세요</strong><button type="button" data-retry-map>다시 불러오기</button></div></div>
-      <div class="map-selection" id="map-selection"><div class="selection-heading"><span class="parking-mark">P</span><div><span class="eyebrow">선택한 주차장</span><h2 id="selected-lot-name">시청 센트럴 주차장</h2></div><span class="availability" id="selected-lot-status">여유</span></div><div class="selection-metrics"><span>기준 위치에서 <strong id="selected-lot-distance">300m</strong></span><span>30분 체험 요금 <strong id="selected-lot-price">2,000원</strong></span></div><button class="primary-button" type="button" id="use-parking">이 주차장 이용 체험 <i data-lucide="arrow-right" aria-hidden="true"></i></button></div>
+      <article class="map-selection" id="map-selection" aria-label="선택한 주차장 정보">
+        <div class="parking-cover" aria-hidden="true"><div class="parking-building"><span></span><span></span><span></span><span></span></div><div class="parking-cover-road"></div><img src="assets/ui-icons/car.svg" alt=""><span class="cover-label">주차장 안내 이미지</span></div>
+        <div class="parking-info-body"><span class="parking-category">주변 주차장</span><div class="selection-heading"><div><h2 id="selected-lot-name">주차장 위치</h2></div><span class="availability" id="selected-lot-status">위치 정보</span></div>
+        <p class="parking-info-line"><i data-lucide="map-pin" aria-hidden="true"></i><span>서울시청 인근 · 직선거리 <strong id="selected-lot-distance">—</strong></span></p>
+        <p class="parking-info-line"><i data-lucide="info" aria-hidden="true"></i><span>운영시간·이용 가능 여부 확인 필요</span></p>
+        <details class="parking-location-detail"><summary>위치 정보 자세히</summary><p>등록 좌표 <span id="selected-lot-coordinates"></span><br>등록된 이름이 없는 곳은 주변 위치로 표시해요.</p></details>
+        <div class="parking-card-bottom"><div class="parking-card-price"><small>30분 체험 요금</small><strong id="selected-lot-price">2,000원</strong></div><button class="primary-button" type="button" id="use-parking">이용 체험 <i data-lucide="arrow-right" aria-hidden="true"></i></button></div></div>
+      </article>
       <p class="fine-print">도로·주차장 좌표는 OpenStreetMap 등록 정보입니다.<br>핀을 누르면 간단한 정보만 표시해요. 요금·결제는 체험용입니다.</p>
     </section>
 

@@ -133,6 +133,7 @@
     $('#selected-lot-distance').textContent = `약 ${lot.distance}m`;
     $('#selected-lot-price').textContent = `${money(lot.price)}원`;
     $('#selected-lot-status').textContent = lot.status;
+    $('#selected-lot-coordinates').textContent = `${lot.lat.toFixed(5)}, ${lot.lon.toFixed(5)}`;
     $('#selected-lot-status').classList.toggle('is-busy', lot.status === '보통');
     maps.forEach(record => record.markers.forEach((marker, index) => {
       const element = marker.getElement();
@@ -151,10 +152,12 @@
     L.geoJSON(mapData.geometry, { interactive:false, filter:feature=>feature.properties.kind==='park', style:{color:'#e5eee9',weight:1,fillColor:'#e5eee9',fillOpacity:.85} }).addTo(map);
     L.geoJSON(mapData.geometry, { interactive:false, filter:feature=>feature.properties.kind==='road', style:feature=>({color:'#dce4ee',weight:major(feature)?10:5,opacity:.9,lineCap:'round'}) }).addTo(map);
     L.geoJSON(mapData.geometry, { interactive:false, filter:feature=>feature.properties.kind==='road', style:feature=>({color:'#fff',weight:major(feature)?7:3,opacity:1,lineCap:'round'}) }).addTo(map);
+    map.attributionControl.setPrefix(false);
+    map.attributionControl.setPosition('topright');
     map.attributionControl.addAttribution('&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>');
     const point = L.marker(center, { interactive: false, keyboard: false, icon: L.divIcon({ className: 'center-point', iconSize: [14, 14], iconAnchor: [7, 7] }) }).addTo(map);
     const markers = LOTS.map(lot => {
-      const marker = L.marker([lot.lat, lot.lon], { title: lot.name, alt: lot.name, icon: L.divIcon({ className: `lot-pin${lot.id === selectedLot.id ? ' is-selected' : ''}`, html: '<span>P</span>', iconSize: [36, 42], iconAnchor: [18, 42] }) }).addTo(map);
+      const marker = L.marker([lot.lat, lot.lon], { title: lot.name, alt: lot.name, icon: L.divIcon({ className: `lot-pin${lot.id === selectedLot.id ? ' is-selected' : ''}`, html: '<span class="parking-orbit"><span class="parking-core"></span></span>', iconSize: [66, 66], iconAnchor: [33, 33] }) }).addTo(map);
       marker.on('click', () => { chooseLot(lot); if (kind === 'home') show('map'); });
       marker.getElement()?.setAttribute('aria-label', `${lot.name} · 직선거리 약 ${lot.distance}m · OSM 주차장 위치`);
       marker.getElement()?.setAttribute('aria-pressed', String(lot.id === selectedLot.id));

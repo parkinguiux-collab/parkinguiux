@@ -25,3 +25,25 @@
 .map-preview-frame,.full-map-frame{background:#f0f3f8}
 .lot-pin span{width:32px;height:37px;font-size:18px;border-radius:12px 12px 12px 4px;border-width:2px}
 .availability{background:#edf3ff;color:#5278b4}
+
+/* Quiet circular map markers and an overlapping parking information card. */
+.lot-pin .parking-orbit{display:grid;place-items:center;box-sizing:border-box;width:66px;height:66px;border:2px solid #80a8df;border-radius:50%;background:#89b3ed0c;box-shadow:none;transform:none;transition:background .2s,border-color .2s}
+.lot-pin .parking-core{display:block;box-sizing:border-box;width:15px;height:15px;border:4px solid #7ba6e0;border-radius:50%;background:white;box-shadow:0 0 0 8px #80aaf02b;transform:none}
+.lot-pin.is-selected .parking-orbit{background:#6298f016;border-color:#417fdb;box-shadow:none}
+.lot-pin.is-selected .parking-core{background:white;border-color:#427fe1;box-shadow:0 0 0 9px #669bea38}
+.lot-pin:focus-visible{outline:3px solid #f5cc47;border-radius:50%;outline-offset:3px}
+.map-key .legend-orbit{width:13px;height:13px;border:2px solid #7ba6e0;border-radius:50%;background:#e3edff;box-shadow:inset 0 0 0 2px white}
+.full-map-frame{height:clamp(310px,42dvh,400px);margin:0;border-radius:0}
+.map-selection{position:relative;z-index:401;margin:-38px 20px 0;padding:6px;background:#fff;border:1px solid #eef2f9;border-radius:29px;box-shadow:0 10px 35px #31548116;overflow:hidden}
+.parking-cover{height:145px;position:relative;overflow:hidden;border-radius:23px;background:linear-gradient(125deg,#d8eafa,#89b8e1)}
+.parking-building{position:absolute;left:25%;top:25px;width:52%;height:140px;background:linear-gradient(110deg,#7cadd5,#407eb7);transform:skewY(-10deg);border:5px solid #b9d5ed;display:flex;gap:9px;padding:14px;box-shadow:-26px 18px 0 #94badc}
+.parking-building span{flex:1;background:repeating-linear-gradient(0deg,#c8e0f2 0 12px,#739ec7 12px 18px)}
+.parking-cover-road{position:absolute;bottom:0;left:0;right:0;height:29px;background:#abc3db;border-top:4px solid #deebf6}
+.parking-cover>img{position:absolute;bottom:6px;right:25px;width:76px;height:76px;filter:drop-shadow(0 4px 3px #2c5d9225)}
+.cover-label{position:absolute;top:10px;left:12px;font-size:9px;color:#43678c;background:#ffffffc9;border-radius:20px;padding:5px 8px}
+.parking-info-body{padding:15px 15px 14px}.parking-category{display:inline-block;background:#e7f3ed;color:#4b866b;padding:5px 12px;border-radius:20px;font-size:10px;margin-bottom:10px}
+.parking-info-body .selection-heading{margin-bottom:13px}.parking-info-body .selection-heading h2{font-size:18px;letter-spacing:-.6px}.parking-info-body .availability{background:#eff4fd;color:#6483ae;font-size:9px;padding:5px 7px}
+.parking-info-line{display:flex;align-items:center;gap:7px;font-size:11px;color:#7e8c9e;margin:8px 0}.parking-info-line svg{width:14px;height:14px;flex-shrink:0}.parking-info-line strong{font-weight:500;color:#65758b}
+.parking-location-detail{font-size:10px;color:#8795a8;margin:10px 0 15px}.parking-location-detail summary{cursor:pointer}.parking-location-detail p{line-height:1.8;margin-top:8px}
+.parking-card-bottom{display:flex;align-items:center;justify-content:space-between;gap:18px;border-top:1px solid #eff3f8;padding-top:14px}.parking-card-price{display:flex;flex-direction:column;gap:4px}.parking-card-price small{font-size:10px;color:#8795a8}.parking-card-price strong{font-size:18px;color:#2a5489}.parking-card-bottom .primary-button{width:auto;min-width:145px;min-height:45px;border-radius:23px;padding:12px 18px;font-size:12px}
+@media(max-width:360px){.map-selection{margin-left:13px;margin-right:13px}.parking-info-body{padding:13px}.parking-info-body .selection-heading h2{font-size:16px}.parking-card-bottom .primary-button{min-width:125px}}
