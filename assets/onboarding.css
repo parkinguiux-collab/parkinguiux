@@ -1,70 +1,70 @@
 
-    #parking-first-visit { --park-bg:light-dark(#f3f8ff,#111d30); --park-paper:light-dark(#ffffff,#1b2a40); --park-ink:light-dark(#152444,#edf4ff); --park-sub:light-dark(#637693,#b4c4da); --park-blue:light-dark(#2375f5,#7db0ff); --park-button:light-dark(#2375f5,#377ef0); --park-soft:light-dark(#eaf3ff,#223d61); --park-line:light-dark(#dce7f5,#344862); --park-overlay:light-dark(#172b4b55,#060f20aa); color:var(--park-ink); padding:36px 12px 20px; font-family:Pretendard,"Noto Sans KR",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    #parking-first-visit { --park-bg:light-dark(#f3f8ff,#111d30); --park-paper:light-dark(#ffffff,#1b2a40); --park-ink:light-dark(#152444,#edf4ff); --park-sub:#52627a; --park-blue:light-dark(#2375f5,#7db0ff); --park-button:light-dark(#2375f5,#377ef0); --park-soft:light-dark(#eaf3ff,#223d61); --park-line:light-dark(#dce7f5,#344862); --park-overlay:light-dark(#172b4b55,#060f20aa); color:var(--park-ink); padding:36px 12px 20px; font-family:Pretendard,"Noto Sans KR",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
     #parking-first-visit * { box-sizing:border-box; }
     #parking-first-visit [hidden] { display:none !important; }
     #parking-first-visit button { font:inherit; }
-    #parking-first-visit .pv-caption { max-width:390px; margin:0 auto 14px; font-size:12px; color:var(--park-sub); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    #parking-first-visit .pv-caption { max-width:390px; margin:0 auto 14px; font-size:var(--type-caption-size); color:var(--park-sub); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; ;line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
     #parking-first-visit .pv-phone { max-width:390px; margin:auto; background:var(--park-bg); border:1px solid var(--park-line); border-radius:32px; overflow:hidden; }
-    #parking-first-visit .pv-status { padding:17px 25px 12px; display:flex; align-items:center; justify-content:space-between; font-size:14px; font-weight:600; }
+    #parking-first-visit .pv-status { padding:17px 25px 12px; display:flex; align-items:center; justify-content:space-between; font-size:var(--type-body-sm-size); font-weight:600; ;line-height:var(--type-body-sm-line);letter-spacing:var(--type-body-sm-tracking);}
     #parking-first-visit .pv-signals { display:flex; gap:6px; align-items:center; }
     #parking-first-visit .pv-signals svg { width:15px; height:15px; }
     #parking-first-visit .pv-body { min-height:655px; position:relative; display:grid; }
     #parking-first-visit .pv-background { grid-area:1 / 1; padding:24px 23px; filter:blur(2px); user-select:none; }
-    #parking-first-visit .pv-background strong { display:block; font-size:26px; line-height:1.45; margin:22px 0; }
-    #parking-first-visit .pv-ghost-search { background:var(--park-paper); border-radius:24px; padding:16px; font-size:13px; color:var(--park-sub); margin:30px 0; }
-    #parking-first-visit .pv-ghost-block { background:var(--park-soft); border-radius:22px; padding:24px 18px; margin:18px 0; font-size:14px; line-height:1.8; }
+    #parking-first-visit .pv-background strong { display:block; font-size:var(--type-title-lg-size);  margin:22px 0; ;line-height:var(--type-title-lg-line);letter-spacing:var(--type-title-lg-tracking);font-weight:700;}
+    #parking-first-visit .pv-ghost-search { background:var(--park-paper); border-radius:24px; padding:16px; font-size:var(--type-body-sm-size); color:var(--park-sub); margin:30px 0; ;line-height:var(--type-body-sm-line);letter-spacing:var(--type-body-sm-tracking);font-weight:400;}
+    #parking-first-visit .pv-ghost-block { background:var(--park-soft); border-radius:22px; padding:24px 18px; margin:18px 0; font-size:var(--type-body-sm-size);  ;line-height:var(--type-body-sm-line);letter-spacing:var(--type-body-sm-tracking);font-weight:400;}
     #parking-first-visit .pv-layer { position:relative; grid-area:1 / 1; background:var(--park-overlay); display:flex; align-items:center; padding:20px 15px; }
     #parking-first-visit .pv-dialog { width:100%; min-height:596px; border-radius:28px; background:var(--park-paper); padding:16px 24px 24px; display:flex; flex-direction:column; }
-    #parking-first-visit .pv-dialog-head { display:flex; align-items:center; justify-content:space-between; gap:8px; color:var(--park-sub); font-size:12px; }
+    #parking-first-visit .pv-dialog-head { display:flex; align-items:center; justify-content:space-between; gap:8px; color:var(--park-sub); font-size:var(--type-caption-size); ;line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
     #parking-first-visit .pv-icon-button { background:transparent; border:0; color:var(--park-sub); padding:10px; min-width:44px; min-height:44px; display:grid; place-items:center; border-radius:12px; }
     #parking-first-visit .pv-icon-button:disabled { opacity:.24; }
     #parking-first-visit .pv-slide { flex:1; }
     #parking-first-visit .pv-art { height:184px; margin:13px 0 22px; background:var(--park-soft); border-radius:24px; display:flex; justify-content:center; align-items:center; position:relative; padding:18px; }
     #parking-first-visit .pv-car-symbol { width:102px; height:102px; color:var(--park-blue); background:var(--park-paper); border-radius:30px; display:grid; place-items:center; transform:rotate(-7deg); }
     #parking-first-visit .pv-car-symbol svg { width:62px; height:62px; stroke-width:1.7; }
-    #parking-first-visit .pv-parking-badge { position:absolute; right:38px; top:26px; background:var(--park-blue); color:var(--park-paper); border-radius:13px; width:39px; height:39px; display:grid; place-items:center; font-size:24px; font-weight:700; transform:rotate(8deg); }
-    #parking-first-visit .pv-art-caption { position:absolute; bottom:14px; color:var(--park-sub); font-size:11px; }
+    #parking-first-visit .pv-parking-badge { position:absolute; right:38px; top:26px; background:var(--park-blue); color:var(--park-paper); border-radius:13px; width:39px; height:39px; display:grid; place-items:center; font-size:var(--type-title-size); font-weight:700; transform:rotate(8deg); ;line-height:var(--type-title-line);letter-spacing:var(--type-title-tracking);}
+    #parking-first-visit .pv-art-caption { position:absolute; bottom:14px; color:var(--park-sub); font-size:var(--type-caption-size); ;line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
     #parking-first-visit .pv-mini-stack { width:100%; display:grid; gap:10px; }
-    #parking-first-visit .pv-mini-search { background:var(--park-paper); border-radius:14px; padding:11px 12px; display:flex; align-items:center; gap:9px; font-size:13px; }
+    #parking-first-visit .pv-mini-search { background:var(--park-paper); border-radius:14px; padding:11px 12px; display:flex; align-items:center; gap:9px; font-size:var(--type-body-sm-size); ;line-height:var(--type-body-sm-line);letter-spacing:var(--type-body-sm-tracking);font-weight:400;}
     #parking-first-visit .pv-mini-search svg { width:18px; height:18px; color:var(--park-blue); }
-    #parking-first-visit .pv-mini-result { background:var(--park-paper); border-radius:14px; padding:14px 12px; font-size:12px; line-height:1.6; }
-    #parking-first-visit .pv-mini-result strong { display:block; font-size:14px; font-weight:600; }
-    #parking-first-visit .pv-mini-result small { color:var(--park-sub); font-size:11px; }
+    #parking-first-visit .pv-mini-result { background:var(--park-paper); border-radius:14px; padding:14px 12px; font-size:var(--type-caption-size);  ;line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
+    #parking-first-visit .pv-mini-result strong { display:block; font-size:var(--type-body-sm-size); font-weight:600; ;line-height:var(--type-body-sm-line);letter-spacing:var(--type-body-sm-tracking);}
+    #parking-first-visit .pv-mini-result small { color:var(--park-sub); font-size:var(--type-caption-size); ;line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
     #parking-first-visit .pv-mini-top { display:flex; justify-content:space-between; align-items:center; gap:9px; }
     #parking-first-visit .pv-mini-top svg { width:26px; height:26px; color:var(--park-blue); }
-    #parking-first-visit .pv-mini-plate { font-size:23px; font-weight:700; letter-spacing:-.6px; }
-    #parking-first-visit .pv-mini-payment { background:var(--park-paper); border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:9px; font-size:12px; }
+    #parking-first-visit .pv-mini-plate { font-size:var(--type-title-size); font-weight:700;  ;line-height:var(--type-title-line);letter-spacing:var(--type-title-tracking);}
+    #parking-first-visit .pv-mini-payment { background:var(--park-paper); border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:9px; font-size:var(--type-caption-size); ;line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
     #parking-first-visit .pv-mini-payment svg { width:18px; height:18px; color:var(--park-blue); }
     #parking-first-visit .pv-receipt { width:100%; background:var(--park-paper); border-radius:18px; padding:17px; }
-    #parking-first-visit .pv-receipt-label { font-size:12px; color:var(--park-sub); }
-    #parking-first-visit .pv-amount { font-size:29px; font-weight:700; padding:8px 0 12px; }
-    #parking-first-visit .pv-confirm { color:var(--park-blue); font-size:12px; display:flex; align-items:center; gap:7px; }
+    #parking-first-visit .pv-receipt-label { font-size:var(--type-caption-size); color:var(--park-sub); ;line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
+    #parking-first-visit .pv-amount { font-size:var(--type-display-size); font-weight:700; padding:8px 0 12px; ;line-height:var(--type-display-line);letter-spacing:var(--type-display-tracking);}
+    #parking-first-visit .pv-confirm { color:var(--park-blue); font-size:var(--type-caption-size); display:flex; align-items:center; gap:7px; ;line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
     #parking-first-visit .pv-confirm svg { width:18px; height:18px; }
-    #parking-first-visit .pv-eyebrow { color:var(--park-blue); font-size:12px; font-weight:600; margin-bottom:11px; }
-    #parking-first-visit .pv-dialog h2 { color:var(--park-ink); font-size:25px; line-height:1.4; font-weight:700; letter-spacing:-.9px; margin:0 0 13px; word-break:keep-all; }
-    #parking-first-visit .pv-dialog p { color:var(--park-sub); font-size:14px; line-height:1.75; margin:0; word-break:keep-all; }
+    #parking-first-visit .pv-eyebrow { color:var(--park-blue); font-size:var(--type-caption-size); font-weight:600; margin-bottom:11px; ;line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);}
+    #parking-first-visit .pv-dialog h2 { color:var(--park-ink); font-size:var(--type-title-lg-size);  font-weight:700;  margin:0 0 13px; word-break:keep-all; ;line-height:var(--type-title-lg-line);letter-spacing:var(--type-title-lg-tracking);}
+    #parking-first-visit .pv-dialog p { color:var(--park-sub); font-size:var(--type-body-sm-size);  margin:0; word-break:keep-all; ;line-height:var(--type-body-sm-line);letter-spacing:var(--type-body-sm-tracking);font-weight:400;}
     #parking-first-visit .pv-dialog-foot { margin-top:25px; }
     #parking-first-visit .pv-dots { display:flex; justify-content:center; gap:7px; margin-bottom:20px; }
     #parking-first-visit .pv-dot { display:block; width:6px; height:6px; border-radius:8px; background:var(--park-line); transition:width .18s ease; }
     #parking-first-visit .pv-dot[aria-current="step"] { width:22px; background:var(--park-blue); }
-    #parking-first-visit .pv-primary, #parking-first-visit .pv-secondary { width:100%; min-height:50px; padding:13px 16px; border-radius:15px; font-size:15px; font-weight:600; text-align:center; }
+    #parking-first-visit .pv-primary, #parking-first-visit .pv-secondary { width:100%; min-height:50px; padding:13px 16px; border-radius:15px; font-size:var(--type-body-size); font-weight:600; text-align:center; ;line-height:var(--type-body-line);letter-spacing:var(--type-body-tracking);}
     #parking-first-visit .pv-primary { background:var(--park-button); color:#fff; border:1px solid var(--park-button); }
     #parking-first-visit .pv-secondary { background:var(--park-paper); color:var(--park-ink); border:1px solid var(--park-line); }
     #parking-first-visit .pv-secondary[aria-pressed="true"] { border-color:var(--park-blue); color:var(--park-blue); }
     #parking-first-visit .pv-safe { height:28px; background:var(--park-bg); display:flex; align-items:center; justify-content:center; }
     #parking-first-visit .pv-safe span { width:112px; height:4px; background:var(--park-ink); border-radius:6px; }
     #parking-first-visit .pv-auth { grid-area:1 / 1; padding:8px 26px 24px; display:flex; flex-direction:column; min-height:655px; background:var(--park-paper); }
-    #parking-first-visit .pv-auth-head { display:flex; align-items:center; gap:8px; font-size:14px; }
+    #parking-first-visit .pv-auth-head { display:flex; align-items:center; gap:8px; font-size:var(--type-body-sm-size); ;line-height:var(--type-body-sm-line);letter-spacing:var(--type-body-sm-tracking);font-weight:400;}
     #parking-first-visit .pv-auth-main { flex:1; padding-top:54px; }
     #parking-first-visit .pv-auth-logo { display:grid; place-items:center; width:72px; height:72px; border-radius:23px; background:var(--park-soft); color:var(--park-blue); margin-bottom:26px; }
     #parking-first-visit .pv-auth-logo svg { width:38px; height:38px; }
-    #parking-first-visit .pv-auth h2 { font-size:30px; line-height:1.4; font-weight:700; letter-spacing:-1px; margin:0 0 14px; }
-    #parking-first-visit .pv-auth p { color:var(--park-sub); font-size:14px; line-height:1.8; margin:0; word-break:keep-all; }
+    #parking-first-visit .pv-auth h2 { font-size:var(--type-display-size);  font-weight:700;  margin:0 0 14px; ;line-height:var(--type-display-line);letter-spacing:var(--type-display-tracking);}
+    #parking-first-visit .pv-auth p { color:var(--park-sub); font-size:var(--type-body-sm-size);  margin:0; word-break:keep-all; ;line-height:var(--type-body-sm-line);letter-spacing:var(--type-body-sm-tracking);font-weight:400;}
     #parking-first-visit .pv-auth-actions { display:grid; gap:10px; padding-top:32px; }
-    #parking-first-visit .pv-auth-foot { font-size:12px; color:var(--park-sub); text-align:center; padding:24px 0 4px; }
+    #parking-first-visit .pv-auth-foot { font-size:var(--type-caption-size); color:var(--park-sub); text-align:center; padding:24px 0 4px; ;line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
     #parking-first-visit .pv-auth-foot button { border:0; background:transparent; color:inherit; padding:10px; text-decoration:underline; text-underline-offset:3px; }
-    #parking-first-visit .pv-path { max-width:390px; margin:12px auto 0; min-height:19px; color:var(--park-sub); font-size:12px; text-align:center; }
-    @media(max-width:370px) { #parking-first-visit { padding:32px 0 16px; } #parking-first-visit .pv-dialog { padding:14px 20px 22px; } #parking-first-visit .pv-dialog h2 { font-size:23px; } #parking-first-visit .pv-art { padding:13px; } #parking-first-visit .pv-auth { padding-inline:22px; } }
+    #parking-first-visit .pv-path { max-width:390px; margin:12px auto 0; min-height:19px; color:var(--park-sub); font-size:var(--type-caption-size); text-align:center; ;line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
+    @media(max-width:370px) { #parking-first-visit { padding:32px 0 16px; } #parking-first-visit .pv-dialog { padding:14px 20px 22px; } #parking-first-visit .pv-dialog h2 { font-size:var(--type-title-size); ;line-height:var(--type-title-line);letter-spacing:var(--type-title-tracking);font-weight:700;} #parking-first-visit .pv-art { padding:13px; } #parking-first-visit .pv-auth { padding-inline:22px; } }
     @media(prefers-reduced-motion:reduce) { #parking-first-visit .pv-dot { transition:none; } }
   
 #parking-first-visit{padding:0;min-height:100dvh;color-scheme:light}
@@ -79,10 +79,10 @@
 #parking-first-visit .pv-mini-top img{width:40px;height:40px;object-fit:contain}
 #parking-first-visit .pv-mini-payment img{width:26px;height:26px;object-fit:contain}
 #parking-first-visit .pv-auth-logo img{width:62px;height:62px;object-fit:contain}
-#parking-first-visit .pv-auth-preview-note{font-size:10px;text-align:center;margin:18px 0 2px;color:#91a0b5}
-#parking-first-visit .pv-preview-button{background:transparent;color:var(--park-blue);min-height:44px;font-size:12px}
+#parking-first-visit .pv-auth-preview-note{font-size:var(--type-caption-size);text-align:center;margin:18px 0 2px;color:var(--text-secondary);line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
+#parking-first-visit .pv-preview-button{background:transparent;color:var(--park-blue);min-height:44px;font-size:var(--type-caption-size);line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
 .is-welcome #app-main,.is-welcome>.bottom-nav{display:none!important}
 #parking-app:not(.is-welcome)>#parking-first-visit{display:none!important}
-.welcome-return{display:block;margin:22px auto 0;min-height:44px;color:#8193ad;background:transparent;font-size:12px}
+.welcome-return{display:block;margin:22px auto 0;min-height:44px;color:var(--text-secondary);background:transparent;font-size:var(--type-caption-size);line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
 @media(min-width:500px){#parking-first-visit,#parking-first-visit .pv-phone,#parking-first-visit .pv-body,#parking-first-visit .pv-auth{min-height:calc(100dvh - 48px)}}
-@media(max-width:375px){#parking-first-visit .pv-layer{padding:14px 12px}#parking-first-visit .pv-dialog{padding:12px 20px 20px}#parking-first-visit .pv-art{height:155px;margin-bottom:18px}#parking-first-visit .pv-dialog h2{font-size:23px}#parking-first-visit .pv-dialog p{font-size:13px}}
+@media(max-width:375px){#parking-first-visit .pv-layer{padding:14px 12px}#parking-first-visit .pv-dialog{padding:12px 20px 20px}#parking-first-visit .pv-art{height:155px;margin-bottom:18px}#parking-first-visit .pv-dialog h2{font-size:var(--type-title-size);line-height:var(--type-title-line);letter-spacing:var(--type-title-tracking);font-weight:700;}#parking-first-visit .pv-dialog p{font-size:var(--type-body-sm-size);line-height:var(--type-body-sm-line);letter-spacing:var(--type-body-sm-tracking);font-weight:400;}}

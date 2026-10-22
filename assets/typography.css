@@ -1,0 +1,43 @@
+/* Shared typography: 390px mobile baseline. Text metrics only. */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+:root{
+ --font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,sans-serif;
+ --text-primary:#182c48;--text-secondary:#52627a;--text-action:#1557e8;--text-on-action:#fff;
+ --muted:var(--text-secondary);
+ --type-caption-size:12px;--type-caption-line:18px;--type-caption-weight:500;--type-caption-tracking:0px;
+ --type-body-sm-size:14px;--type-body-sm-line:22px;--type-body-sm-weight:400;--type-body-sm-tracking:-0.1px;
+ --type-body-size:16px;--type-body-line:24px;--type-body-weight:400;--type-body-tracking:-0.2px;
+ --type-subtitle-size:18px;--type-subtitle-line:26px;--type-subtitle-weight:600;--type-subtitle-tracking:-0.3px;
+ --type-title-size:22px;--type-title-line:30px;--type-title-weight:700;--type-title-tracking:-0.4px;
+ --type-title-lg-size:26px;--type-title-lg-line:36px;--type-title-lg-weight:700;--type-title-lg-tracking:-0.5px;
+ --type-display-size:32px;--type-display-line:40px;--type-display-weight:700;--type-display-tracking:-0.6px;
+}
+body,#parking-app,#parking-first-visit{font-family:var(--font-family);font-size:var(--type-body-size);line-height:var(--type-body-line);letter-spacing:var(--type-body-tracking);color:var(--text-primary)}
+#parking-app :is(button,input,select,textarea){font-family:var(--font-family)}
+.type-caption{font-size:var(--type-caption-size);line-height:var(--type-caption-line);font-weight:var(--type-caption-weight);letter-spacing:var(--type-caption-tracking)}
+.type-body-sm{font-size:var(--type-body-sm-size);line-height:var(--type-body-sm-line);font-weight:var(--type-body-sm-weight);letter-spacing:var(--type-body-sm-tracking)}
+.type-body{font-size:var(--type-body-size);line-height:var(--type-body-line);font-weight:var(--type-body-weight);letter-spacing:var(--type-body-tracking)}
+.type-subtitle{font-size:var(--type-subtitle-size);line-height:var(--type-subtitle-line);font-weight:var(--type-subtitle-weight);letter-spacing:var(--type-subtitle-tracking)}
+.type-title{font-size:var(--type-title-size);line-height:var(--type-title-line);font-weight:var(--type-title-weight);letter-spacing:var(--type-title-tracking)}
+.type-title-lg{font-size:var(--type-title-lg-size);line-height:var(--type-title-lg-line);font-weight:var(--type-title-lg-weight);letter-spacing:var(--type-title-lg-tracking)}
+.type-display{font-size:var(--type-display-size);line-height:var(--type-display-line);font-weight:var(--type-display-weight);letter-spacing:var(--type-display-tracking)}
+
+#parking-app .home-greeting h1,#parking-first-visit .pv-dialog h2,#parking-first-visit .pv-auth h2{font-size:var(--type-title-lg-size);line-height:var(--type-title-lg-line);font-weight:700;letter-spacing:var(--type-title-lg-tracking)}
+#parking-app .screen-header h1{font-size:var(--type-title-size);line-height:var(--type-title-line);font-weight:700;letter-spacing:var(--type-title-tracking)}
+#parking-app :is(.section-heading h2,.home-status-heading h2,.profile-block>h2,.profile-block-top h2,.selection-heading h2,.home-parking-card h3){font-size:var(--type-subtitle-size);line-height:var(--type-subtitle-line);font-weight:600;letter-spacing:var(--type-subtitle-tracking)}
+#parking-app :is(.home-session-metrics>div:last-child strong,.fee-card h2,.profile-vehicle-main strong,.exit-countdown strong,.benefit-coupon-main>strong){font-size:var(--type-display-size);line-height:var(--type-display-line);font-weight:700;letter-spacing:var(--type-display-tracking)}
+#parking-app :is(.destination-search input,.primary-button,.field-input,.profile-payment-row strong,.home-session-metrics>div:first-child strong){font-size:var(--type-body-size);line-height:var(--type-body-line);letter-spacing:var(--type-body-tracking)}
+#parking-app :is(.primary-button,.profile-payment-row strong,.home-session-metrics strong){font-weight:600}
+#parking-app .destination-search input::placeholder{font-size:var(--type-body-size);line-height:var(--type-body-line);font-weight:400;letter-spacing:var(--type-body-tracking);color:var(--text-secondary);opacity:1}
+#parking-app :is(.fine-print,.dialog-description,.gentle-note,.section-description,.parking-info-line,.parking-location-detail,.home-entry-note,.home-paid-message>p,.home-idle-message p,.home-auto-guide p,.home-auto-guide small,.home-demo-note,.profile-payment-row small,.profile-row-action,.profile-record-heading>span>small,.profile-recent>small,.session-details,.exit-demo-controls p,.exit-demo-controls summary,.naver-web-fallback,.history-item p,.help-list p,.about-content p,.notice-item p,.benefit-coupon p,.benefits-note p,.benefits-note p span){font-size:var(--type-body-sm-size);line-height:var(--type-body-sm-line);letter-spacing:var(--type-body-sm-tracking);color:var(--text-secondary)}
+#parking-app :is(.home-content .quick-actions button,.bottom-nav .nav-item,.bottom-nav .nav-item>span,.demo-badge,.home-status-badge,.availability){font-size:var(--type-caption-size);line-height:var(--type-caption-line);letter-spacing:0;font-weight:500}
+#parking-app .bottom-nav .nav-item>span{color:var(--text-secondary)}
+#parking-app .bottom-nav .nav-item.active>span{color:var(--text-action);font-weight:600}
+#parking-app .home-header{color:var(--text-primary)}
+#parking-first-visit :is(.pv-dialog p,.pv-auth p){font-size:var(--type-body-size);line-height:var(--type-body-line);letter-spacing:var(--type-body-tracking);color:var(--text-secondary)}
+#parking-first-visit :is(.pv-auth-preview-note,.pv-auth-foot,.pv-art-caption){font-size:var(--type-caption-size);line-height:var(--type-caption-line);letter-spacing:0;color:var(--text-secondary)}
+#parking-app .toast{font-size:var(--type-body-sm-size);line-height:var(--type-body-sm-line);color:var(--text-on-action)}
+#parking-app :is(.demo-badge,.availability,.home-status-badge){color:var(--text-secondary)}
+#parking-app .home-session-metrics>div:last-child strong{font-weight:700}
+/* Use the app's existing action blue for AA on onboarding controls, too. */
+#parking-first-visit{--park-blue:var(--text-action);--park-button:var(--text-action)}
