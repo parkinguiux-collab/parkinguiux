@@ -163,3 +163,52 @@
 .profile-recent{display:grid;gap:6px;text-align:left;width:100%;padding:14px;margin-top:13px;border-radius:16px;background:#f0f5ff}.profile-recent>span{font-size:var(--type-caption-size);color:var(--text-secondary);line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}.profile-recent>strong{font-size:var(--type-body-sm-size);color:#38567f;overflow-wrap:anywhere;line-height:var(--type-body-sm-line);letter-spacing:var(--type-body-sm-tracking);font-weight:400;}.profile-recent>small{font-size:var(--type-caption-size);color:var(--text-secondary);line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
 .profile-footer-links{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:4px;color:var(--text-secondary)}.profile-footer-links button{min-height:42px;font-size:var(--type-caption-size);background:transparent;color:var(--text-secondary);line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}.profile-footer-links>span{font-size:var(--type-caption-size);color:var(--text-secondary);line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}.profile-secondary-links{display:flex;justify-content:center;gap:16px}.profile-secondary-links button{min-height:34px;font-size:var(--type-caption-size);background:transparent;color:var(--text-secondary);line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
 @media(max-width:375px){.profile-vehicle-main strong{font-size:var(--type-title-lg-size);line-height:var(--type-title-lg-line);letter-spacing:var(--type-title-lg-tracking);font-weight:700;}.profile-vehicle-main>img{width:67px;height:67px}.profile-block{padding:17px}.profile-header-actions{gap:5px}}
+
+/* Let text determine card height and allow flex/grid items to shrink safely. */
+#parking-app :is(.screen,.home-content,.padded-screen,.home-parking-card,.profile-block,.profile-vehicle-card,.map-selection,.fee-card,.completion-panel,.benefit-coupon,.app-dialog){min-width:0}
+#parking-app :is(h1,h2,h3,p,strong,small,.primary-button,.text-button,.home-status-vehicle,.profile-row-action){overflow-wrap:anywhere;word-break:normal}
+#parking-app :is(.primary-button,.text-button){white-space:normal;height:auto}
+#parking-app :is(.primary-button,.home-auto-guide,.profile-card,.payment-method,.choice-row,.notice-item,.help-list>div)>:is(div,span){min-width:0}
+#parking-app :is(.home-status-top,.home-status-heading,.section-heading,.screen-header,.profile-block-top,.fee-card-heading,.fee-card-bottom,.parking-card-bottom,.history-item header){flex-wrap:wrap}
+#parking-app .home-status-vehicle{margin-left:auto;text-align:right}
+#parking-app .home-session-metrics{grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);align-items:start}
+#parking-app .home-session-metrics>div{min-width:0;align-content:start}
+#parking-app .home-session-metrics strong{display:block;max-width:100%}
+#parking-app .home-session-metrics>div:last-child strong{display:flex;align-items:baseline;flex-wrap:wrap;column-gap:3px}
+#parking-app .home-session-metrics small{margin-left:0}
+#parking-app .home-parking-card{height:auto;min-height:0}
+#parking-app .home-greeting{grid-template-columns:minmax(0,1fr) minmax(0,132px)}
+#parking-app .home-quokka{max-width:100%;height:auto;aspect-ratio:1}
+#parking-app .home-greeting h1{min-width:0}
+#parking-app .quick-actions button{min-width:0;flex-wrap:wrap}
+#parking-app .home-auto-guide>img{flex-shrink:0}
+#parking-app .profile-vehicle-main{flex-wrap:wrap}
+#parking-app .profile-vehicle-main>div{min-width:0;flex:1 1 180px}
+#parking-app .profile-vehicle-main>img{flex-shrink:0}
+#parking-app .profile-payment-row{display:grid;grid-template-columns:43px minmax(0,1fr);align-items:center}
+#parking-app .profile-payment-row .profile-row-action{grid-column:2;justify-self:start;margin-left:0;white-space:normal}
+#parking-app .profile-card>div{min-width:0;flex:1}
+#parking-app .profile-footer-links,#parking-app .profile-secondary-links{flex-wrap:wrap}
+#parking-app .session-details>div{gap:12px;align-items:flex-start}
+#parking-app .session-details>div>span{flex:0 0 auto;max-width:45%}
+#parking-app .session-details strong{min-width:0;text-align:right}
+#parking-app .parking-card-price{min-width:0;flex:1 1 110px}
+#parking-app .parking-card-bottom .primary-button{flex:1 1 145px;min-width:0}
+#parking-app .parking-info-body,.selection-heading>div{min-width:0}
+#parking-app .spot-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+#parking-app .app-dialog{overflow-y:auto;overflow-x:auto}
+#parking-app .bottom-nav{flex-shrink:0;grid-template-columns:repeat(3,minmax(0,1fr))}
+#parking-app .bottom-nav .nav-item{min-width:0}
+#app-main{padding-bottom:24px}
+@media(max-width:375px){
+ #parking-app .home-greeting{grid-template-columns:minmax(0,1fr) minmax(0,112px)}
+ #parking-app .home-session-metrics{gap:12px}
+ #parking-app .profile-vehicle-main>div{flex-basis:150px}
+}
+@media(max-width:340px){
+ #parking-app .home-session-metrics{grid-template-columns:minmax(0,1fr)}
+ #parking-app .home-session-metrics>div{gap:4px}
+ #parking-app .home-session-metrics>div+div{margin-top:4px}
+ #parking-app .home-greeting{grid-template-columns:minmax(0,1fr) 92px}
+ #parking-app .spot-fields{grid-template-columns:minmax(0,1fr)}
+}
