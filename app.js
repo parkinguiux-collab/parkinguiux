@@ -122,7 +122,7 @@
   function renderHomeTitle() {
     $('#home-title').innerHTML = stage === 'exited'
       ? '오늘은 어디에<br>주차하시나요?'
-      : `${escape(formatVehicle())}<br>주차 중이에요`;
+      : `${escape(formatVehicle())}<br><span class="home-parking-title-status">주차 중이에요</span>`;
   }
   function renderProfile() {
     renderHomeTitle();

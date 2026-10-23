@@ -213,3 +213,6 @@
  #parking-app .home-greeting{grid-template-columns:minmax(0,1fr) 92px}
  #parking-app .spot-fields{grid-template-columns:minmax(0,1fr)}
 }
+
+/* Match the parking heading to the app action blue. */
+.home-greeting .home-parking-title-status{color:var(--blue)}
