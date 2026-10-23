@@ -49,3 +49,5 @@ body,#parking-app,#parking-first-visit{font-family:var(--font-family);font-size:
 #parking-app #home-active-metrics>div:first-child strong{font-size:22px;line-height:40px;font-weight:600;letter-spacing:-.4px;color:var(--text-primary);font-variant-numeric:tabular-nums}
 #parking-app #home-active-metrics>div:last-child strong{font-size:28px;line-height:40px;font-weight:700;letter-spacing:-.5px;color:var(--text-action);font-variant-numeric:tabular-nums}
 #parking-app #home-active-metrics small{font-size:16px;line-height:24px;font-weight:500;letter-spacing:-.2px;color:var(--text-action)}
+
+#parking-app #home-session-details>.home-entry-note{font-size:var(--type-caption-size);line-height:var(--type-caption-line);font-weight:400;letter-spacing:var(--type-caption-tracking)}
