@@ -18,7 +18,7 @@
       const value = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
       return {
         name: typeof value.name === 'string' ? value.name.slice(0, 12) : '주차 메이트',
-        vehicle: typeof value.vehicle === 'string' && /^\d{2,3}[가-힣]\d{4}$/.test(value.vehicle.replace(/\s/g, '')) ? value.vehicle.replace(/\s/g, '') : '12가3456',
+        vehicle: typeof value.vehicle === 'string' && /^\d{2,3}[가-힣]\d{4}$/.test(value.vehicle.replace(/\s/g, '')) ? value.vehicle.replace(/\s/g, '') : '32가4321',
         card: CARD_NAMES.includes(value.card) ? value.card : CARD_NAMES[0],
         motion: value.motion !== false,
         notifications: value.notifications !== false,
@@ -27,7 +27,7 @@
         parkingSpot: Object.fromEntries(['floor', 'zone', 'pillar', 'note'].map(key => [key, typeof value.parkingSpot?.[key] === 'string' ? value.parkingSpot[key].slice(0, key === 'note' ? 120 : 20) : ''])),
         history: Array.isArray(value.history) ? value.history.filter(item => item && typeof item.name === 'string' && Number.isFinite(item.amount) && typeof item.date === 'string' && !Number.isNaN(Date.parse(item.date))).slice(0, 30) : []
       };
-    } catch { return { name: '주차 메이트', vehicle: '12가3456', card: CARD_NAMES[0], motion: true, notifications: true, favorites: [], parkingSpot: { floor: '', zone: '', pillar: '', note: '' }, history: [] }; }
+    } catch { return { name: '주차 메이트', vehicle: '32가4321', card: CARD_NAMES[0], motion: true, notifications: true, favorites: [], parkingSpot: { floor: '', zone: '', pillar: '', note: '' }, history: [] }; }
   }
   const preferences = readStored();
   let currentScreen = 'home';
@@ -119,7 +119,13 @@
       if (focused?.isConnected && !focused.closest('[hidden]')) focused.focus({ preventScroll: true });
     }
   }
+  function renderHomeTitle() {
+    $('#home-title').innerHTML = stage === 'exited'
+      ? '오늘은 어디에<br>주차하시나요?'
+      : `${escape(formatVehicle())}<br>주차 중이에요`;
+  }
   function renderProfile() {
+    renderHomeTitle();
     $('#profile-name').textContent = preferences.name;
     $$('[data-vehicle]').forEach(element => { element.textContent = formatVehicle(); });
     $$('[data-card-name]').forEach(element => { element.textContent = preferences.card; });
@@ -141,6 +147,7 @@
     return minutes >= 60 ? `${Math.floor(minutes / 60)}시간 ${minutes % 60}분` : `${minutes}분`;
   }
   function renderSession() {
+    renderHomeTitle();
     $$('[data-duration]').forEach(element => { element.textContent = sessionStartedAt ? formatDuration() : '0분'; });
     $$('[data-entry-time]').forEach(element => { element.textContent = sessionStartedAt ? new Date(sessionStartedAt).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false }) : '—'; });
     $('#parking-active').hidden = stage !== 'active';
