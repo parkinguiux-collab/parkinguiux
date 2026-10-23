@@ -192,7 +192,6 @@
     directions.href = android ? `intent://route/car?${query}#Intent;scheme=nmap;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=com.nhn.android.nmap;S.browser_fallback_url=${encodeURIComponent(web.href)};end` : ios ? `nmap://route/car?${query}` : web.href;
     if (android || ios) directions.removeAttribute('target'); else directions.target = '_blank';
     directions.dataset.webFallback = web.href;
-    $('#parking-directions-web').href = web.href;
     renderFavoriteToggle();
     $('#selected-lot-name').textContent = lot.name;
     $('#selected-lot-distance').textContent = `약 ${lot.distance}m`;
