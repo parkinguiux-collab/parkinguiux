@@ -93,19 +93,18 @@
 @keyframes pv-slide-arrive{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
 @media(prefers-reduced-motion:reduce){#parking-first-visit .pv-slide:not([hidden]){animation:none}}
 
-/* A small reversing car, open floor markings and a separate parking sign. */
+/* Quick entrance and a short braking rebound, with only the mascot visible. */
 #parking-first-visit .pv-quokka-hero{height:224px;isolation:isolate;background:linear-gradient(155deg,#f0f6ff,#deebfc);overflow:hidden}
-#parking-first-visit .pv-parking-floor{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
-#parking-first-visit .pv-parking-sign{position:absolute;right:24px;top:25px;width:34px;height:37px;background:#2365dc;border:3px solid #fff;border-radius:9px;color:#fff;display:grid;place-items:center;font-size:23px;font-weight:700;line-height:30px;box-shadow:0 4px 9px #3469b21c}
-#parking-first-visit .pv-parking-sign:after{content:'';position:absolute;top:34px;left:13px;width:3px;height:32px;background:#93a9c4;border-radius:2px}
-#parking-first-visit .pv-reverse-car{position:absolute;width:43%;aspect-ratio:1;left:7%;bottom:43px;transform-origin:50% 85%;filter:drop-shadow(0 6px 4px #426ca318)}
-#parking-first-visit .pv-reverse-car img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-#parking-first-visit .pv-quokka-welcome{position:absolute;bottom:13px;left:12px;right:12px;text-align:center;color:var(--text-secondary);font-size:var(--type-caption-size);line-height:var(--type-caption-line);font-weight:600}
-#parking-first-visit .pv-slide:not([hidden]) .pv-reverse-car{animation:pv-reverse-park 3200ms cubic-bezier(.35,0,.2,1) both}
-#parking-first-visit .pv-slide:not([hidden]) .pv-car-looking-back{animation:pv-look-back 3200ms linear both}
-#parking-first-visit .pv-slide:not([hidden]) .pv-car-looking-forward{animation:pv-look-forward 3200ms linear both}
-@keyframes pv-reverse-park{0%,18%{transform:translateX(0) rotate(-3deg)}75%{transform:translateX(89%) rotate(1deg)}90%,100%{transform:translateX(87%) rotate(0)}}
-@keyframes pv-look-back{0%,6%{opacity:0}18%,100%{opacity:1}}
-@keyframes pv-look-forward{0%,6%{opacity:1}18%,100%{opacity:0}}
-@media(max-width:375px){#parking-first-visit .pv-quokka-hero{height:204px}#parking-first-visit .pv-parking-sign{right:20px;top:22px}}
-@media(prefers-reduced-motion:reduce){#parking-first-visit .pv-slide:not([hidden]) .pv-reverse-car{animation:none;transform:translateX(87%)}#parking-first-visit .pv-slide:not([hidden]) .pv-car-looking-back{animation:none;opacity:1}#parking-first-visit .pv-slide:not([hidden]) .pv-car-looking-forward{animation:none;opacity:0}}
+#parking-first-visit .pv-arriving-car{position:absolute;width:43%;max-width:145px;aspect-ratio:1;left:50%;top:50%;transform:translate(-50%,-50%);transform-origin:75% 85%;filter:drop-shadow(0 6px 4px #426ca318)}
+#parking-first-visit .pv-arriving-car img{width:100%;height:100%;object-fit:contain;transform:scaleX(-1)}
+#parking-first-visit .pv-slide:not([hidden]) .pv-arriving-car{animation:pv-arrive-brake 1250ms 250ms both}
+@keyframes pv-arrive-brake{
+ 0%{opacity:0;transform:translate(-245%,-50%) rotate(-2deg);animation-timing-function:cubic-bezier(.3,0,.65,1)}
+ 8%{opacity:1}
+ 55%{opacity:1;transform:translate(-42%,-50%) rotate(0);animation-timing-function:ease-out}
+ 66%{transform:translate(-40%,-48%) rotate(6deg)}
+ 81%{transform:translate(-53%,-50%) rotate(-2deg)}
+ 100%{opacity:1;transform:translate(-50%,-50%) rotate(0)}
+}
+@media(max-width:375px){#parking-first-visit .pv-quokka-hero{height:204px}}
+@media(prefers-reduced-motion:reduce){#parking-first-visit .pv-slide:not([hidden]) .pv-arriving-car{animation:none;transform:translate(-50%,-50%)}}

@@ -14,7 +14,7 @@
   const scheduleSlides = () => {
     clearTimeout(slideTimer);
     if (view !== 'intro' || !app.classList.contains('is-welcome') || document.hidden) return;
-    slideTimer = setTimeout(() => { page = (page + 1) % slides.length; render(); }, page === 0 ? 6500 : 4500);
+    slideTimer = setTimeout(() => { page = (page + 1) % slides.length; render(); }, 4500);
   };
   let page = 0;
   let view = read(localStorage, SEEN_KEY) ? 'auth' : 'intro';
