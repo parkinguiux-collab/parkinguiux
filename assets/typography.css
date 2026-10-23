@@ -41,3 +41,11 @@ body,#parking-app,#parking-first-visit{font-family:var(--font-family);font-size:
 #parking-app .home-session-metrics>div:last-child strong{font-weight:700}
 /* Use the app's existing action blue for AA on onboarding controls, too. */
 #parking-first-visit{--park-blue:var(--text-action);--park-button:var(--text-action)}
+
+/* Home parking card: fee first, location second, duration as supporting detail. */
+#parking-app #home-session-details>h3{font-size:20px;line-height:28px;font-weight:600;letter-spacing:-.4px;color:var(--text-primary)}
+#parking-app #home-active-metrics>div{gap:6px}
+#parking-app #home-active-metrics>div>span{font-size:14px;line-height:22px;font-weight:400;letter-spacing:-.1px;color:var(--text-secondary)}
+#parking-app #home-active-metrics>div:first-child strong{font-size:18px;line-height:40px;font-weight:500;letter-spacing:-.3px;color:var(--text-secondary);font-variant-numeric:tabular-nums}
+#parking-app #home-active-metrics>div:last-child strong{font-size:28px;line-height:40px;font-weight:700;letter-spacing:-.5px;color:var(--text-action);font-variant-numeric:tabular-nums}
+#parking-app #home-active-metrics small{font-size:16px;line-height:24px;font-weight:500;letter-spacing:-.2px;color:var(--text-action)}
