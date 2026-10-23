@@ -13,8 +13,8 @@
   let slideTimer;
   const scheduleSlides = () => {
     clearTimeout(slideTimer);
-    if (view !== 'intro' || !app.classList.contains('is-welcome') || document.hidden) return;
-    slideTimer = setTimeout(() => { page = (page + 1) % slides.length; render(); }, 4500);
+    if (view !== 'intro' || !app.classList.contains('is-welcome') || document.hidden || page === slides.length - 1) return;
+    slideTimer = setTimeout(() => { page += 1; render(); }, 4500);
   };
   let page = 0;
   let view = read(localStorage, SEEN_KEY) ? 'auth' : 'intro';
@@ -30,7 +30,7 @@
     $('.pv-dialog').setAttribute('aria-labelledby', `pv-title-${page}`);
     $('#pv-count').textContent = `${page + 1} / 4`;
     $('#pv-prev').disabled = page === 0;
-    $('#pv-next').textContent = '시작하기';
+    $('#pv-next').textContent = page === slides.length - 1 ? '시작하기' : '다음';
     scheduleSlides();
   };
   const gate = () => {
@@ -50,6 +50,11 @@
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
   $('#pv-next').addEventListener('click', () => {
+    if (page < slides.length - 1) {
+      page += 1;
+      render();
+      return;
+    }
     view = 'auth';
     try { localStorage.setItem(SEEN_KEY, 'seen'); } catch { /* Optional preference. */ }
     render();

@@ -15,7 +15,9 @@
     #parking-first-visit .pv-ghost-block { background:var(--park-soft); border-radius:22px; padding:24px 18px; margin:18px 0; font-size:var(--type-body-sm-size);  ;line-height:var(--type-body-sm-line);letter-spacing:var(--type-body-sm-tracking);font-weight:400;}
     #parking-first-visit .pv-layer { position:relative; grid-area:1 / 1; background:var(--park-overlay); display:flex; align-items:center; padding:20px 15px; }
     #parking-first-visit .pv-dialog { width:100%; min-height:596px; border-radius:28px; background:var(--park-paper); padding:16px 24px 24px; display:flex; flex-direction:column; }
-    #parking-first-visit .pv-dialog-head { display:flex; align-items:center; justify-content:space-between; gap:8px; color:var(--park-sub); font-size:var(--type-caption-size); ;line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
+    #parking-first-visit .pv-dialog-head { display:grid; grid-template-columns:44px minmax(0,1fr) auto; align-items:center; gap:8px; }
+    #parking-first-visit .pv-guide-title { color:var(--park-ink); font-size:18px; line-height:26px; font-weight:700; letter-spacing:-.3px; }
+    #parking-first-visit #pv-count { padding:5px 9px; border-radius:20px; background:#edf3fc; color:#52627a; font-size:12px; line-height:18px; font-weight:600; letter-spacing:0; white-space:nowrap; font-variant-numeric:tabular-nums; }
     #parking-first-visit .pv-icon-button { background:transparent; border:0; color:var(--park-sub); padding:10px; min-width:44px; min-height:44px; display:grid; place-items:center; border-radius:12px; }
     #parking-first-visit .pv-icon-button:disabled { opacity:.24; }
     #parking-first-visit .pv-slide { flex:1; }
