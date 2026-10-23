@@ -86,3 +86,9 @@
 .welcome-return{display:block;margin:22px auto 0;min-height:44px;color:var(--text-secondary);background:transparent;font-size:var(--type-caption-size);line-height:var(--type-caption-line);letter-spacing:var(--type-caption-tracking);font-weight:500;}
 @media(min-width:500px){#parking-first-visit,#parking-first-visit .pv-phone,#parking-first-visit .pv-body,#parking-first-visit .pv-auth{min-height:calc(100dvh - 48px)}}
 @media(max-width:375px){#parking-first-visit .pv-layer{padding:14px 12px}#parking-first-visit .pv-dialog{padding:12px 20px 20px}#parking-first-visit .pv-art{height:155px;margin-bottom:18px}#parking-first-visit .pv-dialog h2{font-size:var(--type-title-size);line-height:var(--type-title-line);letter-spacing:var(--type-title-tracking);font-weight:700;}#parking-first-visit .pv-dialog p{font-size:var(--type-body-sm-size);line-height:var(--type-body-sm-line);letter-spacing:var(--type-body-sm-tracking);font-weight:400;}}
+
+/* Automatic intro: a short, quiet slide between the four guide panels. */
+#parking-first-visit .pv-slide:not([hidden]){animation:pv-slide-arrive 520ms cubic-bezier(.22,.61,.36,1) both}
+#parking-first-visit .pv-dialog{overflow:hidden}
+@keyframes pv-slide-arrive{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+@media(prefers-reduced-motion:reduce){#parking-first-visit .pv-slide:not([hidden]){animation:none}}

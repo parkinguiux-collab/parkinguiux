@@ -10,6 +10,12 @@
   const ACCESS_KEY = 'parking-preview-access-v1';
   const SEEN_KEY = 'parking-onboarding-seen-v1';
   const read = (storage, key) => { try { return storage.getItem(key); } catch { return null; } };
+  let slideTimer;
+  const scheduleSlides = () => {
+    clearTimeout(slideTimer);
+    if (view !== 'intro' || !app.classList.contains('is-welcome') || document.hidden) return;
+    slideTimer = setTimeout(() => { page = (page + 1) % slides.length; render(); }, 4500);
+  };
   let page = 0;
   let view = read(localStorage, SEEN_KEY) ? 'auth' : 'intro';
   const render = () => {
@@ -24,7 +30,8 @@
     $('.pv-dialog').setAttribute('aria-labelledby', `pv-title-${page}`);
     $('#pv-count').textContent = `${page + 1} / 4`;
     $('#pv-prev').disabled = page === 0;
-    $('#pv-next').textContent = page === 3 ? '시작하기' : '다음';
+    $('#pv-next').textContent = '시작하기';
+    scheduleSlides();
   };
   const gate = () => {
     app.classList.add('is-welcome');
@@ -34,6 +41,7 @@
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
   const enterPreview = () => {
+    clearTimeout(slideTimer);
     try { sessionStorage.setItem(ACCESS_KEY, 'preview'); } catch { /* Current page still works without storage. */ }
     app.classList.remove('is-welcome');
     document.getElementById('app-main').inert = false;
@@ -42,8 +50,8 @@
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
   $('#pv-next').addEventListener('click', () => {
-    if (page < 3) page++;
-    else { view = 'auth'; try { localStorage.setItem(SEEN_KEY, 'seen'); } catch { /* Optional preference. */ } }
+    view = 'auth';
+    try { localStorage.setItem(SEEN_KEY, 'seen'); } catch { /* Optional preference. */ }
     render();
   });
   $('#pv-prev').addEventListener('click', () => { page = Math.max(0, page - 1); render(); });
@@ -61,5 +69,6 @@
     try { sessionStorage.removeItem(ACCESS_KEY); } catch { /* Return works without storage. */ }
     view = 'auth'; gate();
   });
+  document.addEventListener('visibilitychange', scheduleSlides);
   if (read(sessionStorage, ACCESS_KEY) === 'preview') enterPreview(); else gate();
 })();
