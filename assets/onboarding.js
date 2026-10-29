@@ -27,6 +27,7 @@
     $('.pv-dialog').setAttribute('aria-labelledby', `pv-title-${page}`);
     $('#pv-count').textContent = `${page + 1} / 4`;
     $('#pv-prev').disabled = page === 0;
+    $('#pv-slide-next').disabled = page === slides.length - 1;
     $('#pv-next').textContent = page === slides.length - 1 ? '시작하기' : '다음';
     scheduleSlides();
   };
@@ -54,6 +55,7 @@
     view = 'auth';
     render();
   });
+  $('#pv-slide-next').addEventListener('click', () => { page = Math.min(slides.length - 1, page + 1); render(); });
   $('#pv-prev').addEventListener('click', () => { page = Math.max(0, page - 1); render(); });
   $('#pv-auth-back').addEventListener('click', () => { view = 'intro'; page = 3; render(); });
   $('#pv-review').addEventListener('click', () => { view = 'intro'; page = 0; render(); });

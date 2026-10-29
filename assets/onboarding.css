@@ -15,7 +15,7 @@
     #parking-first-visit .pv-ghost-block { background:var(--park-soft); border-radius:22px; padding:24px 18px; margin:18px 0; font-size:var(--type-body-sm-size);  ;line-height:var(--type-body-sm-line);letter-spacing:var(--type-body-sm-tracking);font-weight:400;}
     #parking-first-visit .pv-layer { position:relative; grid-area:1 / 1; background:var(--park-overlay); display:flex; align-items:center; padding:20px 15px; }
     #parking-first-visit .pv-dialog { width:100%; min-height:596px; border-radius:28px; background:var(--park-paper); padding:16px 24px 24px; display:flex; flex-direction:column; }
-    #parking-first-visit .pv-dialog-head { display:grid; grid-template-columns:44px minmax(0,1fr) auto; align-items:center; gap:8px; }
+    #parking-first-visit .pv-dialog-head { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:8px; }
     #parking-first-visit .pv-guide-title { color:var(--park-ink); font-size:18px; line-height:26px; font-weight:700; letter-spacing:-.3px; }
     #parking-first-visit #pv-count { padding:5px 9px; border-radius:20px; background:#edf3fc; color:#52627a; font-size:12px; line-height:18px; font-weight:600; letter-spacing:0; white-space:nowrap; font-variant-numeric:tabular-nums; }
     #parking-first-visit .pv-icon-button { background:transparent; border:0; color:var(--park-sub); padding:10px; min-width:44px; min-height:44px; display:grid; place-items:center; border-radius:12px; }
@@ -110,3 +110,12 @@
 }
 @media(max-width:375px){#parking-first-visit .pv-quokka-hero{height:204px}}
 @media(prefers-reduced-motion:reduce){#parking-first-visit .pv-slide:not([hidden]) .pv-arriving-car{animation:none;transform:translate(-50%,-50%)}}
+
+/* Keep the guide heading aligned to the card content, with slide controls at each side. */
+#parking-first-visit .pv-dialog-head{min-height:44px}
+#parking-first-visit .pv-slide-stage{position:relative;flex:1;min-width:0}
+#parking-first-visit .pv-slide-arrow{position:absolute;top:103px;z-index:2;background:var(--park-paper);color:var(--park-blue);border-radius:50%;width:44px;height:44px;box-shadow:0 3px 12px #182c4812}
+#parking-first-visit .pv-slide-arrow-prev{left:-22px}
+#parking-first-visit .pv-slide-arrow-next{right:-22px}
+#parking-first-visit .pv-slide-arrow:disabled{cursor:default;box-shadow:none}
+@media(max-width:375px){#parking-first-visit .pv-slide-arrow{top:92px}#parking-first-visit .pv-slide-arrow-prev{left:-20px}#parking-first-visit .pv-slide-arrow-next{right:-20px}}
