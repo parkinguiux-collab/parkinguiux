@@ -152,3 +152,12 @@
 #parking-first-visit .account-inbox{border:1px solid #d8e3f2;border-radius:18px;padding:18px;background:#f0f6ff}
 #parking-first-visit .account-inbox>strong{display:block;font-size:16px;line-height:24px;margin-bottom:8px}
 #parking-first-visit .account-inbox>p{font-size:14px;line-height:22px}
+
+/* Auth welcome: align the heading to the content and anchor primary actions below support links. */
+#parking-first-visit #pv-auth>.pv-auth-head{display:grid;justify-items:start;gap:12px}
+#parking-first-visit #pv-auth #pv-auth-back{margin-left:-12px}
+#parking-first-visit #pv-auth>.pv-auth-head>span{font-size:18px;line-height:26px;font-weight:700;letter-spacing:-.3px}
+#parking-first-visit #pv-auth>.pv-auth-main{padding-top:32px;min-height:300px}
+#parking-first-visit #pv-auth>.pv-auth-support{display:flex;flex-direction:column;align-items:center;margin-top:auto;padding-top:20px}
+#parking-first-visit #pv-auth .pv-auth-foot{padding:0 0 4px}
+#parking-first-visit #pv-auth>.pv-auth-actions{padding-top:18px;flex-shrink:0}
