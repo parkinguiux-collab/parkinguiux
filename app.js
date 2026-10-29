@@ -332,7 +332,7 @@
     maps.forEach(record=>record.map.panTo([next.lat,next.lon],{animate:allowMotion(),duration:.35}));
   }
   function locationIcon() {
-    return L.divIcon({className:'gps-location-point',iconSize:[14,14],iconAnchor:[7,7]});
+    return L.divIcon({className:'gps-navigation-point',html:'<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 28 27 16 22 4 27Z" fill="#ffd447" stroke="#936900" stroke-width="1.5" stroke-linejoin="round"/></svg>',iconSize:[32,32],iconAnchor:[16,16]});
   }
   function renderFavoriteToggle() {
     const saved = preferences.favorites.includes(selectedLot.id);
@@ -355,7 +355,7 @@
     const map=L.map($('#full-map'),{zoomControl:true,attributionControl:false,scrollWheelZoom:false,minZoom:14,maxZoom:18,maxBounds:[[32.8,123.8],[39.1,132.1]],zoomSnap:.25,zoomAnimation:allowMotion(),fadeAnimation:allowMotion()}).setView(center,15);
     const credits=L.control({position:'bottomright'});
     credits.onAdd=()=>{const box=L.DomUtil.create('div','map-source-control');box.innerHTML='<details><summary aria-label="지도 출처 보기">ⓘ</summary><span><a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> · © <a href="https://openmaptiles.org" target="_blank" rel="noopener">OpenMapTiles</a> · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></span></details>';L.DomEvent.disableClickPropagation(box);return box;};credits.addTo(map);
-    const point=L.marker(gpsLocation||center,{interactive:false,keyboard:false,zIndexOffset:2000,icon:gpsLocation?locationIcon():L.divIcon({className:'search-center-point',iconSize:[14,14],iconAnchor:[7,7]})}).addTo(map);
+    const point=L.marker(gpsLocation||center,{interactive:false,keyboard:false,zIndexOffset:2000,icon:locationIcon()}).addTo(map);
     const record={map,point,markers:[],layers:[]};maps.set(kind,record);drawRoads(record,mapData.geometry);
     map.on('dragend',()=>{$('#search-this-area').hidden=false;});
     requestAnimationFrame(()=>map.invalidateSize({pan:false}));
