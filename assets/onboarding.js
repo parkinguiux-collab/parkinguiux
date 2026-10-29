@@ -59,16 +59,17 @@
   $('#pv-prev').addEventListener('click', () => { page = Math.max(0, page - 1); render(); });
   $('#pv-auth-back').addEventListener('click', () => { view = 'intro'; page = 3; render(); });
   $('#pv-review').addEventListener('click', () => { view = 'intro'; page = 0; render(); });
-  $('#pv-connection-back').addEventListener('click', () => { view = 'auth'; render(); });
+  $('#pv-connection-back').addEventListener('click', () => { if (window.ParkingAccount.pending) return; if (window.ParkingAccount.editing) { enterPreview(); return; } view = 'auth'; render(); });
   root.querySelectorAll('[data-auth]').forEach(button => button.addEventListener('click', () => {
-    const signup = button.dataset.auth === 'signup';
-    $('#pv-connection-label').textContent = signup ? '회원가입' : '로그인';
-    $('#pv-connection-title').innerHTML = signup ? '회원가입 연결을<br>준비하고 있어요' : '로그인 연결을<br>준비하고 있어요';
     view = 'connection'; render();
+    window.ParkingAccount.open(button.dataset.auth);
   }));
   root.querySelectorAll('[data-preview-enter]').forEach(button => button.addEventListener('click', enterPreview));
-  app.querySelector('[data-preview-exit]').addEventListener('click', () => {
-    view = 'auth'; gate();
+  app.addEventListener('parking-account-enter', enterPreview);
+  app.addEventListener('parking-account-edit', () => { view = 'connection'; gate(); });
+  app.querySelector('[data-preview-exit]').addEventListener('click', async () => {
+    try { if (window.ParkingAccount.signedIn) await window.ParkingAccount.logout(); view = 'auth'; gate(); }
+    catch { const toast = document.getElementById('toast'); toast.textContent = '로그아웃하지 못했어요. 다시 시도해 주세요.'; toast.hidden = false; }
   });
   document.addEventListener('visibilitychange', scheduleSlides);
   gate();

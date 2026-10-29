@@ -78,7 +78,9 @@
   const formatVehicle = () => preferences.vehicle.replace(/(\d{2,3}[가-힣])(\d{4})/, '$1 $2');
   const allowMotion = () => !reducedMotion.matches && preferences.motion;
   const delay = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+  let accountActive = false;
   function savePreferences() {
+    if (accountActive) return;
     try { localStorage.setItem(STORE_KEY, JSON.stringify(preferences)); }
     catch { toast('브라우저 저장 공간을 사용할 수 없어 이번 이용에만 반영돼요.'); }
   }
@@ -642,6 +644,15 @@
     ], 1700);
   }
   icons(); renderProfile(); chooseLot(LOTS[0]); show('home');
+  root.addEventListener('parking-account-change', event => {
+    clearTimeout(entrySimulationTimer); clearTimeout(entryNoticeTimer);
+    accountActive = !!event.detail;
+    const fresh = accountActive ? { savedLots: [], coupons: [], name: event.detail.name, vehicle: event.detail.plate, card: CARD_NAMES[0], motion: true, notifications: true, favorites: [], parkingSpot: { floor: '', zone: '', pillar: '', note: '' }, history: [] } : readStored();
+    Object.keys(preferences).forEach(key => delete preferences[key]); Object.assign(preferences, fresh);
+    stage = 'exited'; sessionStartedAt = 0; settledFee = 0; paidAt = 0; exitedAt = 0; settlement = null; selectedCouponId = null;
+    knownLots.clear(); [...LOTS, ...preferences.savedLots].forEach(lot => knownLots.set(lot.id, lot));
+    renderProfile(); renderSession(); renderBenefits();
+  });
   root.addEventListener('parking-preview-enter', () => { show('home'); requestAnimationFrame(playWelcome); });
   if ($('.home-quokka').complete) requestAnimationFrame(playWelcome);
   else $('.home-quokka').addEventListener('load', playWelcome, { once: true });
