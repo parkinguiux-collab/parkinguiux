@@ -204,7 +204,6 @@
     $('#selected-lot-distance').textContent = `약 ${lot.distance}m`;
     $('#selected-lot-price').textContent = `${money(lot.price)}원`;
     $('#selected-lot-status').textContent = lot.status;
-    $('#selected-lot-coordinates').textContent = `${lot.lat.toFixed(5)}, ${lot.lon.toFixed(5)}`;
     $('#selected-lot-status').classList.toggle('is-busy', lot.status === '보통');
     maps.forEach(record => record.markers.forEach((marker, index) => {
       const element = marker.getElement();
