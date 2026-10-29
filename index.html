@@ -10,15 +10,15 @@
   <link rel="apple-touch-icon" href="assets/app-icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/vendor/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=20261029-v55">
-  <link rel="stylesheet" href="assets/onboarding.css?v=20261029-v55">
+  <link rel="stylesheet" href="styles.css?v=20261029-v56">
+  <link rel="stylesheet" href="assets/onboarding.css?v=20261029-v56">
   <script defer src="assets/vendor/leaflet.js"></script>
   <script defer src="assets/vendor/ui-icons.js"></script>
   <script defer src="assets/nearby-map.js"></script>
-  <script defer src="assets/benefits.js?v=20261029-v55"></script>
-  <script defer src="app.js?v=20261029-v55"></script>
-  <script defer src="assets/onboarding.js?v=20261029-v55"></script>
-  <link rel="stylesheet" href="assets/typography.css?v=20261029-v55">
+  <script defer src="assets/benefits.js?v=20261029-v56"></script>
+  <script defer src="app.js?v=20261029-v56"></script>
+  <script defer src="assets/onboarding.js?v=20261029-v56"></script>
+  <link rel="stylesheet" href="assets/typography.css?v=20261029-v56">
 </head>
 <body>
 <div class="app-shell is-welcome" id="parking-app">
@@ -36,8 +36,6 @@
         <section class="pv-dialog" role="region" aria-labelledby="pv-title-0">
           <div class="pv-dialog-head"><span class="pv-guide-title">처음 이용 안내</span><span id="pv-count">1 / 4</span></div>
           <div class="pv-slide-stage">
-            <button class="pv-icon-button pv-slide-arrow pv-slide-arrow-prev cursor-interaction" id="pv-prev" type="button" aria-label="이전 안내" disabled><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
-            <button class="pv-icon-button pv-slide-arrow pv-slide-arrow-next cursor-interaction" id="pv-slide-next" type="button" aria-label="다음 안내"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
           <div class="pv-slide" data-page="0">
             <div class="pv-art pv-quokka-hero" aria-label="웃는 쿼카 자동차가 오른쪽에서 왼쪽으로 곧게 달려와 브레이크를 잡고 멈추는 모습"><div class="pv-arriving-car"><img src="assets/quokka-car-ui.png" alt="자동차를 탄 쿼카"></div></div>
             <div class="pv-eyebrow">앱 소개</div><h2 id="pv-title-0">주차 걱정 없이,<br>가볍게 출발해요</h2><p>주차장 찾기부터 요금 확인과 결제까지,<br>주차에 필요한 일을 한곳에서 해결해요.</p>
@@ -55,7 +53,7 @@
             <div class="pv-eyebrow">요금 확인 · 출차</div><h2 id="pv-title-3">요금 확인부터 결제까지<br>간편하게 마무리해요</h2><p>이용 현황에서 주차 시간과 요금을 확인하고,<br>결제 후 출차 안내를 따라주세요.</p>
           </div>
           </div>
-          <div class="pv-dialog-foot"><div class="pv-dots" aria-label="안내 4장 중 1번째"><span class="pv-dot" aria-current="step"></span><span class="pv-dot"></span><span class="pv-dot"></span><span class="pv-dot"></span></div><button class="pv-primary cursor-interaction" id="pv-next" type="button">다음</button></div>
+          <div class="pv-dialog-foot"><div class="pv-slide-navigation" aria-label="안내 페이지 이동"><button class="pv-icon-button pv-slide-arrow pv-slide-arrow-prev cursor-interaction" id="pv-prev" type="button" aria-label="이전 안내" disabled><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button><div class="pv-dots" aria-label="안내 4장 중 1번째"><span class="pv-dot" aria-current="step"></span><span class="pv-dot"></span><span class="pv-dot"></span><span class="pv-dot"></span></div><button class="pv-icon-button pv-slide-arrow pv-slide-arrow-next cursor-interaction" id="pv-slide-next" type="button" aria-label="다음 안내"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button></div><button class="pv-primary cursor-interaction" id="pv-next" type="button">다음</button></div>
         </section>
       </div>
       <section class="pv-auth" id="pv-auth" aria-labelledby="pv-auth-title" hidden>
