@@ -259,3 +259,28 @@
 .national-search-result{display:grid;gap:6px;width:100%;text-align:left;padding:16px 0;background:transparent;border-bottom:1px solid var(--line)}
 .national-search-result strong{font-size:16px;line-height:24px;font-weight:600}.national-search-result span{font-size:14px;line-height:22px;color:var(--text-secondary)}
 #parking-app .parking-card-price strong{font-size:16px;line-height:24px;overflow-wrap:anywhere}.parking-card-price{min-width:0}
+
+/* Nearby result browsing is separate from the illustration and its text. */
+.parking-pager{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 8px 12px;font-size:12px;line-height:18px;color:var(--text-secondary)}
+.parking-pager>span{color:var(--blue);font-weight:600;min-width:0}
+.parking-pager>div{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.parking-pager button{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:var(--soft);color:var(--blue)}
+.parking-pager button:disabled{opacity:.3;cursor:default}.parking-pager button svg{width:18px;height:18px}
+#parking-page-count{min-width:42px;text-align:center;font-variant-numeric:tabular-nums}
+.gps-navigation-point{background:#ffffffed;border-radius:50%;box-shadow:0 0 0 6px #ffd44735,0 3px 10px #5d470b29;display:grid;place-items:center}
+.gps-navigation-point svg{width:30px!important;height:30px!important;transform-origin:center}
+.map-source-control{font-size:12px;line-height:18px;color:#52627a;background:#ffffffed;border-radius:12px;padding:4px 7px;max-width:240px}
+.map-source-control summary{cursor:pointer;list-style:none;text-align:right;font-size:18px;line-height:22px;min-width:22px}.map-source-control summary::-webkit-details-marker{display:none}.map-source-control span{display:block;padding:5px 3px}.map-source-control a{color:#52627a}
+.parking-cover{--cover-hue:207;background:linear-gradient(125deg,hsl(var(--cover-hue) 68% 91%),hsl(var(--cover-hue) 54% 72%))}
+.parking-cover .parking-building{left:var(--building-left,25%);width:var(--building-width,52%);top:var(--building-top,25px);background:linear-gradient(110deg,hsl(var(--cover-hue) 43% 67%),hsl(var(--cover-hue) 48% 48%));border-color:hsl(var(--cover-hue) 60% 83%)}
+.parking-cover>img{right:var(--car-right,25px)}
+.parking-annex{position:absolute;left:9%;bottom:29px;width:28%;height:54px;border:4px solid #b9d5ed;background:repeating-linear-gradient(90deg,#6798c0 0 12px,#b8d4e9 12px 16px);transform:skewY(-8deg)}
+.parking-tree{position:absolute;bottom:27px;width:7px;height:38px;background:#8fabb4;border-radius:3px}.parking-tree::before{content:"";position:absolute;width:25px;height:31px;background:#a9ccbd;border:3px solid #c5e0d5;border-radius:50%;left:-9px;top:-12px}.tree-left{left:9%}.tree-right{right:12%;height:32px}
+.parking-cover[data-variant="0"] .parking-annex,.parking-cover[data-variant="0"] .tree-right{display:none}
+.parking-cover[data-variant="1"] .parking-building{transform:skewY(7deg);height:130px}.parking-cover[data-variant="1"] .tree-left{display:none}
+.parking-cover[data-variant="2"] .parking-building{height:97px;top:48px;border-radius:9px 9px 0 0;transform:skewY(-5deg)}.parking-cover[data-variant="2"] .parking-annex{display:none}
+.parking-cover[data-variant="3"] .parking-building{transform:skewY(-12deg);border-top-width:10px}.parking-cover[data-variant="3"] .tree-right{display:none}
+.parking-cover[data-variant="4"] .parking-building{height:115px;transform:skewY(0);border-radius:14px 14px 0 0}.parking-cover[data-variant="4"] .parking-annex{left:15%;width:24%;height:65px}
+@media(max-width:360px){.parking-pager{padding-inline:5px;gap:4px}.parking-pager button{width:36px;height:40px}.parking-pager>div{gap:2px}}
+
+.leaflet-bottom .map-source-control{margin-bottom:48px}

@@ -15,6 +15,7 @@
   let mapRequest = 0;
   let roadController;
   let gpsLocation = null;
+  let gpsHeading = 0;
   const mapCache = new Map();
   const mapData = window.PARKING_MAP_DATA;
   const LOTS = mapData.parking.map((lot, index) => ({ ...lot,
@@ -288,6 +289,8 @@
   }
   function chooseLot(lot) {
     selectedLot = lot;
+    renderParkingPager(lot);
+    renderParkingCover(lot);
     const web = new URL('https://m.map.naver.com/route.nhn');
     web.search = new URLSearchParams({ menu: 'route', ename: lot.name, ex: String(lot.lon), ey: String(lot.lat), pathType: '0', showMap: 'true' });
     const query = new URLSearchParams({ dlat: String(lot.lat), dlng: String(lot.lon), dname: lot.name, appname: 'https://parkinguiux.vercel.app' });
@@ -313,6 +316,33 @@
     }));
     animate($('#map-selection'), [{ transform: 'translateY(3px)', opacity: .85 }, { transform: 'translateY(0)', opacity: 1 }], 220);
   }
+  function renderParkingPager(lot) {
+    const index=nearbyLots.findIndex(item=>item.id===lot.id);
+    $('#parking-pager').hidden=index<0;
+    $('#parking-rank').textContent=index===0?'가장 가까운 주차장':`${index+1}번째로 가까운 주차장`;
+    $('#parking-page-count').textContent=`${index+1} / ${nearbyLots.length}`;
+    $('#previous-parking').disabled=index<=0;
+    $('#next-parking').disabled=index<0||index>=nearbyLots.length-1;
+  }
+  function renderParkingCover(lot) {
+    let seed=0;for(const char of String(lot.id))seed=(Math.imul(seed,31)+char.charCodeAt(0))>>>0;
+    const cover=$('.parking-cover');
+    cover.dataset.variant=String(seed%5);
+    cover.style.setProperty('--cover-hue',`${195+seed%28}`);
+    cover.style.setProperty('--building-width',`${43+(seed>>>4)%18}%`);
+    cover.style.setProperty('--building-left',`${20+(seed>>>8)%12}%`);
+    cover.style.setProperty('--building-top',`${23+(seed>>>12)%17}px`);
+    cover.style.setProperty('--car-right',`${14+(seed>>>16)%24}px`);
+  }
+  function browseParking(direction) {
+    const index=nearbyLots.findIndex(lot=>lot.id===selectedLot.id);
+    const next=nearbyLots[index+direction];if(!next)return;
+    chooseLot(next);
+    maps.forEach(record=>record.map.panTo([next.lat,next.lon],{animate:allowMotion(),duration:.35}));
+  }
+  function locationIcon() {
+    return L.divIcon({className:'gps-navigation-point',html:`<svg viewBox="0 0 32 32" aria-hidden="true" style="transform:rotate(${gpsHeading}deg)"><path d="M16 3 28 27 16 22 4 27Z" fill="#ffd447" stroke="#936900" stroke-width="1.5" stroke-linejoin="round"/></svg>`,iconSize:[34,34],iconAnchor:[17,17]});
+  }
   function renderFavoriteToggle() {
     const saved = preferences.favorites.includes(selectedLot.id);
     $('#favorite-toggle').setAttribute('aria-pressed', String(saved));
@@ -331,10 +361,10 @@
   function ensureMap(kind) {
     if (!window.L) { mapFailure(kind); return; }
     if (maps.has(kind)) { requestAnimationFrame(()=>maps.get(kind).map.invalidateSize({pan:false})); return; }
-    const map=L.map($('#full-map'),{zoomControl:true,scrollWheelZoom:false,minZoom:14,maxZoom:18,maxBounds:[[32.8,123.8],[39.1,132.1]],zoomSnap:.25,zoomAnimation:allowMotion(),fadeAnimation:allowMotion()}).setView(center,15);
-    map.attributionControl.setPrefix(false); map.attributionControl.setPosition('topright');
-    map.attributionControl.addAttribution('<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> · &copy; OpenMapTiles · &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>');
-    const point=L.marker(gpsLocation||center,{interactive:false,icon:L.divIcon({className:gpsLocation?'center-point':'search-center-point',iconSize:[14,14],iconAnchor:[7,7]})}).addTo(map);
+    const map=L.map($('#full-map'),{zoomControl:true,attributionControl:false,scrollWheelZoom:false,minZoom:14,maxZoom:18,maxBounds:[[32.8,123.8],[39.1,132.1]],zoomSnap:.25,zoomAnimation:allowMotion(),fadeAnimation:allowMotion()}).setView(center,15);
+    const credits=L.control({position:'bottomright'});
+    credits.onAdd=()=>{const box=L.DomUtil.create('div','map-source-control');box.innerHTML='<details><summary aria-label="지도 출처 보기">ⓘ</summary><span><a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> · © <a href="https://openmaptiles.org" target="_blank" rel="noopener">OpenMapTiles</a> · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></span></details>';L.DomEvent.disableClickPropagation(box);return box;};credits.addTo(map);
+    const point=L.marker(gpsLocation||center,{interactive:false,keyboard:false,zIndexOffset:2000,icon:gpsLocation?locationIcon():L.divIcon({className:'search-center-point',iconSize:[14,14],iconAnchor:[7,7]})}).addTo(map);
     const record={map,point,markers:[],layers:[]};maps.set(kind,record);drawRoads(record,mapData.geometry);
     map.on('dragend',()=>{$('#search-this-area').hidden=false;});
     requestAnimationFrame(()=>map.invalidateSize({pan:false}));
@@ -400,7 +430,8 @@
       const location=[p.coords.latitude,p.coords.longitude];
       if(location[0]<33||location[0]>39||location[1]<124||location[1]>132){toast('대한민국 내 주차장 정보를 제공해요. 지역 검색을 이용해주세요.');return;}
       gpsLocation=location;
-      maps.forEach(r=>r.point.setIcon(L.divIcon({className:'center-point',iconSize:[14,14],iconAnchor:[7,7]})));
+      gpsHeading=Number.isFinite(p.coords.heading)?p.coords.heading:0;
+      maps.forEach(r=>r.point.setIcon(locationIcon()));
       await loadNearby(location,'내 위치 주변');
     } catch(error){toast(error.code===1?'위치 권한이 꺼져 있어요. 지역 검색으로도 이용할 수 있어요.':'현재 위치를 확인하지 못했어요. 지역 검색을 이용해주세요.');}
     finally{$('#locate-button').disabled=false;}
@@ -508,6 +539,8 @@
     const button = event.target.closest('button');
     if (!button || button.disabled || busy) return;
     tap(button);
+    if(button.id==='previous-parking'){browseParking(-1);return;}
+    if(button.id==='next-parking'){browseParking(1);return;}
     if(button.id==='search-this-area'){const p=maps.get('full')?.map.getCenter();if(p)loadNearby([p.lat,p.lng],'지도 중심 주변');return;}
     if(button.dataset.nationalLot){const lot=knownLots.get(button.dataset.nationalLot);if(lot){closeDialog();show('map');loadNearby([lot.lat,lot.lon],lot.name).then(()=>{if(nearbyLots.some(item=>item.id===lot.id))chooseLot({...lot,distance:0});});}return;}
     if (button.dataset.benefitTab) { benefitTab = button.dataset.benefitTab; renderBenefits(); return; }
