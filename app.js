@@ -15,7 +15,6 @@
   let mapRequest = 0;
   let roadController;
   let gpsLocation = null;
-  let gpsHeading = 0;
   const mapCache = new Map();
   const mapData = window.PARKING_MAP_DATA;
   const LOTS = mapData.parking.map((lot, index) => ({ ...lot,
@@ -333,7 +332,7 @@
     maps.forEach(record=>record.map.panTo([next.lat,next.lon],{animate:allowMotion(),duration:.35}));
   }
   function locationIcon() {
-    return L.divIcon({className:'gps-navigation-point',html:`<svg viewBox="0 0 32 32" aria-hidden="true" style="transform:rotate(${gpsHeading}deg)"><path d="M16 3 28 27 16 22 4 27Z" fill="#ffd447" stroke="#936900" stroke-width="1.5" stroke-linejoin="round"/></svg>`,iconSize:[34,34],iconAnchor:[17,17]});
+    return L.divIcon({className:'gps-location-point',iconSize:[14,14],iconAnchor:[7,7]});
   }
   function renderFavoriteToggle() {
     const saved = preferences.favorites.includes(selectedLot.id);
@@ -422,7 +421,6 @@
       const location=[p.coords.latitude,p.coords.longitude];
       if(location[0]<33||location[0]>39||location[1]<124||location[1]>132){toast('대한민국 내 주차장 정보를 제공해요. 지역 검색을 이용해주세요.');return;}
       gpsLocation=location;
-      gpsHeading=Number.isFinite(p.coords.heading)?p.coords.heading:0;
       maps.forEach(r=>r.point.setIcon(locationIcon()));
       await loadNearby(location,'내 위치 주변');
     } catch(error){toast(error.code===1?'위치 권한이 꺼져 있어요. 지역 검색으로도 이용할 수 있어요.':'현재 위치를 확인하지 못했어요. 지역 검색을 이용해주세요.');}

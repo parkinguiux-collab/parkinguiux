@@ -10,17 +10,17 @@
   <link rel="apple-touch-icon" href="assets/app-icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/vendor/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=20261029-v60">
-  <link rel="stylesheet" href="assets/onboarding.css?v=20261029-v60">
+  <link rel="stylesheet" href="styles.css?v=20261029-v61">
+  <link rel="stylesheet" href="assets/onboarding.css?v=20261029-v61">
   <script defer src="assets/vendor/leaflet.js"></script>
   <script defer src="assets/vendor/ui-icons.js"></script>
   <script defer src="assets/nearby-map.js"></script>
-  <script defer src="assets/benefits.js?v=20261029-v60"></script>
-  <script defer src="assets/national-map.js?v=20261029-v60"></script>
-  <script defer src="assets/parking-scenes.js?v=20261029-v60"></script>
-  <script defer src="app.js?v=20261029-v60"></script>
-  <script defer src="assets/onboarding.js?v=20261029-v60"></script>
-  <link rel="stylesheet" href="assets/typography.css?v=20261029-v60">
+  <script defer src="assets/benefits.js?v=20261029-v61"></script>
+  <script defer src="assets/national-map.js?v=20261029-v61"></script>
+  <script defer src="assets/parking-scenes.js?v=20261029-v61"></script>
+  <script defer src="app.js?v=20261029-v61"></script>
+  <script defer src="assets/onboarding.js?v=20261029-v61"></script>
+  <link rel="stylesheet" href="assets/typography.css?v=20261029-v61">
 </head>
 <body>
 <div class="app-shell is-welcome" id="parking-app">
@@ -110,7 +110,7 @@
     </section>
 
     <section class="screen map-screen" data-view="map" hidden aria-labelledby="map-title">
-      <header class="screen-header"><button class="round-button" type="button" data-screen="home" aria-label="홈으로 돌아가기"><i data-lucide="arrow-left" aria-hidden="true"></i></button><h1 id="map-title">주변 주차장</h1><button class="round-button" type="button" id="locate-button" aria-label="현재 위치로 이동"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 3 28 27 16 22 4 27Z" fill="#ffd447" stroke="#936900" stroke-width="1.5" stroke-linejoin="round"/></svg></button></header>
+      <header class="screen-header"><button class="round-button" type="button" data-screen="home" aria-label="홈으로 돌아가기"><i data-lucide="arrow-left" aria-hidden="true"></i></button><h1 id="map-title">주변 주차장</h1><button class="round-button" type="button" id="locate-button" aria-label="현재 위치로 이동"><i data-lucide="locate-fixed" aria-hidden="true"></i></button></header>
       <div class="map-context"><span class="location-dot"></span><strong data-area-label>서울시청 주변</strong><span class="demo-badge">전국 공영·민영</span></div>
       <p class="sr-only" id="map-load-status" role="status">전국 주차장 데이터 준비 중</p>
       <div class="full-map-frame"><div id="full-map" role="region" aria-label="주변 주차장 위치 지도"></div><div class="map-fallback" data-map-fallback="full" hidden><i data-lucide="map-pin" aria-hidden="true"></i><strong>지도 연결을 확인해주세요</strong><button type="button" data-retry-map>다시 불러오기</button></div></div>
