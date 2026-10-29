@@ -324,14 +324,7 @@
     $('#next-parking').disabled=index<0||index>=nearbyLots.length-1;
   }
   function renderParkingCover(lot) {
-    let seed=0;for(const char of String(lot.id))seed=(Math.imul(seed,31)+char.charCodeAt(0))>>>0;
-    const cover=$('.parking-cover');
-    cover.dataset.variant=String(seed%5);
-    cover.style.setProperty('--cover-hue',`${195+seed%28}`);
-    cover.style.setProperty('--building-width',`${43+(seed>>>4)%18}%`);
-    cover.style.setProperty('--building-left',`${20+(seed>>>8)%12}%`);
-    cover.style.setProperty('--building-top',`${23+(seed>>>12)%17}px`);
-    cover.style.setProperty('--car-right',`${14+(seed>>>16)%24}px`);
+    $('.parking-cover').innerHTML=window.ParkingScenes.render(lot.id);
   }
   function browseParking(direction) {
     const index=nearbyLots.findIndex(lot=>lot.id===selectedLot.id);

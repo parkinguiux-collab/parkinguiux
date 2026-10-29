@@ -11,3 +11,5 @@
 - If road loading fails, show a retry and parking locations. Never place cached Seoul roads behind another region's markers.
 - Marker data never starts a parking session. Current entry, settlement and exit remain prototype interactions; national public parking results are not claims of partnership or live vacancies.
 - Run `npm test` and `npm run build`. To refresh: download the original JSON pages with the portal download flow, then `python3 scripts/import-national-parking.py <page1.json> <page2.json>` and review counts/reference dates. Update the retrieval date when refreshing.
+
+- Parking card artwork uses six decorative SVG scene families (outdoor lot, garage, tower, canopy, neighbourhood building, underground entrance), selected deterministically by facility ID. These are illustrative covers, not verified images or classifications of the facility. GPS uses a yellow navigation arrow without a circular background or pulse.
