@@ -268,7 +268,7 @@
 .parking-pager button:disabled{opacity:.3;cursor:default}.parking-pager button svg{width:18px;height:18px}
 #parking-page-count{min-width:42px;text-align:center;font-variant-numeric:tabular-nums}
 .gps-navigation-point{background:#ffffffed;border-radius:50%;box-shadow:0 0 0 6px #ffd44735,0 3px 10px #5d470b29;display:grid;place-items:center}
-.gps-navigation-point svg{width:30px!important;height:30px!important;transform-origin:center}
+.gps-navigation-point svg{width:24px!important;height:24px!important;transform-origin:center}
 .map-source-control{font-size:12px;line-height:18px;color:#52627a;background:#ffffffed;border-radius:12px;padding:4px 7px;max-width:240px}
 .map-source-control summary{cursor:pointer;list-style:none;text-align:right;font-size:18px;line-height:22px;min-width:22px}.map-source-control summary::-webkit-details-marker{display:none}.map-source-control span{display:block;padding:5px 3px}.map-source-control a{color:#52627a}
 .parking-cover{--cover-hue:207;background:linear-gradient(125deg,hsl(var(--cover-hue) 68% 91%),hsl(var(--cover-hue) 54% 72%))}

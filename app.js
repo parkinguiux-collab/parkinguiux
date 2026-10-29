@@ -332,7 +332,7 @@
     maps.forEach(record=>record.map.panTo([next.lat,next.lon],{animate:allowMotion(),duration:.35}));
   }
   function locationIcon() {
-    return L.divIcon({className:'gps-navigation-point',html:'<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 28 27 16 22 4 27Z" fill="#ffd447" stroke="#936900" stroke-width="1.5" stroke-linejoin="round"/></svg>',iconSize:[32,32],iconAnchor:[16,16]});
+    return L.divIcon({className:'gps-navigation-point',html:'<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 28 27 16 22 4 27Z" fill="#ffd447" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/></svg>',iconSize:[26,26],iconAnchor:[13,13]});
   }
   function renderFavoriteToggle() {
     const saved = preferences.favorites.includes(selectedLot.id);
