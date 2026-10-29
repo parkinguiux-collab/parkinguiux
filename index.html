@@ -10,19 +10,19 @@
   <link rel="apple-touch-icon" href="assets/app-icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/vendor/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=20261029-v69">
-  <link rel="stylesheet" href="assets/onboarding.css?v=20261029-v69">
+  <link rel="stylesheet" href="styles.css?v=20261029-v70">
+  <link rel="stylesheet" href="assets/onboarding.css?v=20261029-v70">
   <script defer src="assets/vendor/leaflet.js"></script>
   <script defer src="assets/vendor/ui-icons.js"></script>
   <script defer src="assets/nearby-map.js"></script>
-  <script defer src="assets/benefits.js?v=20261029-v69"></script>
-  <script defer src="assets/national-map.js?v=20261029-v69"></script>
-  <script defer src="assets/parking-scenes.js?v=20261029-v69"></script>
-  <script defer src="app.js?v=20261029-v69"></script>
-  <script defer src="assets/vehicle-search.js?v=20261029-v69"></script>
-  <script defer src="assets/account-ui.js?v=20261029-v69"></script>
-  <script defer src="assets/onboarding.js?v=20261029-v69"></script>
-  <link rel="stylesheet" href="assets/typography.css?v=20261029-v69">
+  <script defer src="assets/benefits.js?v=20261029-v70"></script>
+  <script defer src="assets/national-map.js?v=20261029-v70"></script>
+  <script defer src="assets/parking-scenes.js?v=20261029-v70"></script>
+  <script defer src="app.js?v=20261029-v70"></script>
+  <script defer src="assets/vehicle-search.js?v=20261029-v70"></script>
+  <script defer src="assets/account-ui.js?v=20261029-v70"></script>
+  <script defer src="assets/onboarding.js?v=20261029-v70"></script>
+  <link rel="stylesheet" href="assets/typography.css?v=20261029-v70">
 </head>
 <body>
 <div class="app-shell is-welcome" id="parking-app">
@@ -179,7 +179,7 @@
     <section class="screen profile-screen padded-screen" data-view="profile" hidden aria-labelledby="profile-title">
       <header class="screen-header"><h1 id="profile-title">마이페이지</h1><div class="profile-header-actions"><button class="round-button" type="button" data-dialog="settings" aria-label="설정"><i data-lucide="settings-2" aria-hidden="true"></i></button><button class="round-button" type="button" data-dialog="help" aria-label="도움말"><img src="assets/ui-icons/help.svg" alt=""></button></div></header>
       <div class="profile-card"><div class="profile-character"><img src="assets/quokka-car-ui.png" alt="쿼카"></div><div><span class="eyebrow">오늘도 반가워요</span><h2><span id="profile-name">주차 메이트</span>님</h2><button class="text-button" type="button" data-dialog="nickname">내 정보 수정 <i data-lucide="chevron-right" aria-hidden="true"></i></button></div></div>
-      <article class="profile-vehicle-card"><div class="profile-block-top"><h2>내 차량</h2><span class="demo-badge">대표 차량</span></div><div class="profile-vehicle-main"><div><span>내 차</span><strong data-vehicle>32가 4321</strong></div><img src="assets/team-icons/car.png" alt=""></div><button class="profile-card-action" type="button" data-dialog="vehicle"><span>차량 등록·변경</span><i data-lucide="chevron-right" aria-hidden="true"></i></button></article>
+      <article class="profile-vehicle-card"><div class="profile-block-top"><h2>내 차량</h2></div><div class="profile-vehicle-main"><div><span id="profile-vehicle-model">차종 미등록</span><strong data-vehicle>32가 4321</strong></div><img src="assets/team-icons/car.png" alt=""></div><button class="profile-card-action" type="button" data-dialog="vehicle"><span>차량 등록·변경</span><i data-lucide="chevron-right" aria-hidden="true"></i></button></article>
       <article class="profile-block"><h2>결제수단</h2><button class="profile-payment-row" type="button" data-dialog="payment"><img src="assets/ui-icons/wallet.svg" alt=""><span><strong data-card-name>블루카드</strong><small>등록된 결제수단</small></span><span class="profile-row-action">등록·변경 <i data-lucide="chevron-right" aria-hidden="true"></i></span></button></article>
       <article class="profile-block"><button class="profile-record-heading" type="button" data-dialog="history"><img src="assets/ui-icons/history.svg" alt=""><span><strong>이용 기록 <small id="history-count">0</small></strong><small>지난 주차 · 결제 내역</small></span><i data-lucide="chevron-right" aria-hidden="true"></i></button><button class="profile-recent" type="button" data-dialog="history"><span id="profile-recent-label">이용 기록</span><strong id="profile-recent-name">아직 이용 기록이 없어요</strong><small id="profile-recent-detail">주차 이용을 마치면 여기에서 확인할 수 있어요.</small></button></article>
       <article class="profile-block"><button class="profile-record-heading" type="button" data-dialog="favorites"><img src="assets/team-icons/favorite.png" alt=""><span><strong>저장한 주차장</strong><small>즐겨찾기 · <span id="profile-saved-count">0곳 저장</span></small></span><i data-lucide="chevron-right" aria-hidden="true"></i></button></article>

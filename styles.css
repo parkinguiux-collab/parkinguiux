@@ -308,3 +308,5 @@
 #parking-app .parking-cover{height:164px;padding:0}
 #parking-app .parking-scene{display:block;width:100%;height:100%;max-width:none}
 @media(max-width:360px){#parking-app .parking-info-body{padding:16px 14px}#parking-app .parking-cover{height:154px}}
+
+#parking-app #profile-vehicle-model{overflow-wrap:anywhere}

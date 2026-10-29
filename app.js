@@ -28,6 +28,7 @@
         coupons: Array.isArray(value.coupons) ? benefits.catalog.flatMap(offer => { const c = value.coupons.find(item => item?.id === offer.id && Number.isFinite(item.issuedAt) && Number.isFinite(item.expiresAt) && item.expiresAt > item.issuedAt); return c ? [{ id: offer.id, issuedAt: c.issuedAt, expiresAt: c.expiresAt, usedAt: Number.isFinite(c.usedAt) ? c.usedAt : 0 }] : []; }) : [],
         name: typeof value.name === 'string' ? value.name.slice(0, 12) : '주차 메이트',
         vehicle: typeof value.vehicle === 'string' && /^\d{2,3}[가-힣]\d{4}$/.test(value.vehicle.replace(/\s/g, '')) ? value.vehicle.replace(/\s/g, '') : '32가4321',
+        vehicleModel: typeof value.vehicleModel === 'string' ? value.vehicleModel.slice(0, 200) : '',
         card: CARD_NAMES.includes(value.card) ? value.card : CARD_NAMES[0],
         motion: value.motion !== false,
         notifications: value.notifications !== false,
@@ -37,7 +38,7 @@
         parkingSpot: Object.fromEntries(['floor', 'zone', 'pillar', 'note'].map(key => [key, typeof value.parkingSpot?.[key] === 'string' ? value.parkingSpot[key].slice(0, key === 'note' ? 120 : 20) : ''])),
         history: Array.isArray(value.history) ? value.history.filter(item => item && typeof item.name === 'string' && Number.isFinite(item.amount) && typeof item.date === 'string' && !Number.isNaN(Date.parse(item.date))).slice(0, 30) : []
       };
-    } catch { return { savedLots: [], coupons: [], name: '주차 메이트', vehicle: '32가4321', card: CARD_NAMES[0], motion: true, notifications: true, favorites: [], parkingSpot: { floor: '', zone: '', pillar: '', note: '' }, history: [] }; }
+    } catch { return { savedLots: [], coupons: [], name: '주차 메이트', vehicle: '32가4321', vehicleModel: '', card: CARD_NAMES[0], motion: true, notifications: true, favorites: [], parkingSpot: { floor: '', zone: '', pillar: '', note: '' }, history: [] }; }
   }
   const preferences = readStored();
   const knownLots = new Map([...LOTS,...preferences.savedLots].map(lot=>[lot.id,lot]));
@@ -145,6 +146,7 @@
   function renderProfile() {
     renderHomeTitle();
     $('#profile-name').textContent = preferences.name;
+    $('#profile-vehicle-model').textContent = preferences.vehicleModel || '차종 미등록';
     $$('[data-vehicle]').forEach(element => { element.textContent = formatVehicle(); });
     $$('[data-card-name]').forEach(element => { element.textContent = preferences.card; });
     $('#history-count').textContent = preferences.history.length;
@@ -652,7 +654,7 @@
   root.addEventListener('parking-account-change', event => {
     clearTimeout(entrySimulationTimer); clearTimeout(entryNoticeTimer);
     accountActive = !!event.detail;
-    const fresh = accountActive ? { savedLots: [], coupons: [], name: event.detail.name, vehicle: event.detail.plate, card: CARD_NAMES[0], motion: true, notifications: true, favorites: [], parkingSpot: { floor: '', zone: '', pillar: '', note: '' }, history: [] } : readStored();
+    const fresh = accountActive ? { savedLots: [], coupons: [], name: event.detail.name, vehicle: event.detail.plate, vehicleModel: [event.detail.vehicle_brand, event.detail.vehicle_model].filter(Boolean).join(' '), card: CARD_NAMES[0], motion: true, notifications: true, favorites: [], parkingSpot: { floor: '', zone: '', pillar: '', note: '' }, history: [] } : readStored();
     Object.keys(preferences).forEach(key => delete preferences[key]); Object.assign(preferences, fresh);
     stage = 'exited'; sessionStartedAt = 0; settledFee = 0; paidAt = 0; exitedAt = 0; settlement = null; selectedCouponId = null;
     knownLots.clear(); [...LOTS, ...preferences.savedLots].forEach(lot => knownLots.set(lot.id, lot));
