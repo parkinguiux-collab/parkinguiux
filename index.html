@@ -10,14 +10,14 @@
   <link rel="apple-touch-icon" href="assets/app-icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/vendor/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=20261023-v48">
-  <link rel="stylesheet" href="assets/onboarding.css?v=20261023-v48">
+  <link rel="stylesheet" href="styles.css?v=20261029-v49">
+  <link rel="stylesheet" href="assets/onboarding.css?v=20261029-v49">
   <script defer src="assets/vendor/leaflet.js"></script>
   <script defer src="assets/vendor/ui-icons.js"></script>
   <script defer src="assets/nearby-map.js"></script>
-  <script defer src="app.js?v=20261023-v48"></script>
-  <script defer src="assets/onboarding.js?v=20261023-v48"></script>
-  <link rel="stylesheet" href="assets/typography.css?v=20261023-v48">
+  <script defer src="app.js?v=20261029-v49"></script>
+  <script defer src="assets/onboarding.js?v=20261029-v49"></script>
+  <link rel="stylesheet" href="assets/typography.css?v=20261029-v49">
 </head>
 <body>
 <div class="app-shell is-welcome" id="parking-app">
@@ -57,7 +57,7 @@
         <div class="pv-auth-head"><button type="button" class="pv-icon-button cursor-interaction" id="pv-auth-back" aria-label="마지막 안내로 돌아가기"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button><span>시작하기</span></div>
         <div class="pv-auth-main"><div class="pv-auth-logo"><img src="assets/team-icons/car.png" alt=""></div><h2 id="pv-auth-title">이제, 편하게<br>주차해요</h2><p>내 차량과 이용 기록을<br>한곳에서 간편하게 관리하세요.</p></div>
         <div class="pv-auth-actions"><button type="button" class="pv-primary cursor-interaction" data-auth="signup">회원가입</button><button type="button" class="pv-secondary cursor-interaction" data-auth="login">로그인</button></div>
-        <p class="pv-auth-preview-note">현재 계정 인증을 연결하기 전인 시안입니다.</p><button type="button" class="pv-preview-button" data-preview-enter>홈 화면 미리보기</button><div class="pv-auth-foot"><button class="cursor-interaction" type="button" id="pv-review">앱 이용 방법 다시 보기</button></div>
+        <button type="button" class="pv-preview-button" data-preview-enter>홈 화면 미리보기</button><div class="pv-auth-foot"><button class="cursor-interaction" type="button" id="pv-review">앱 이용 방법 다시 보기</button></div>
       </section>
       <section class="pv-auth pv-auth-connection" id="pv-auth-connection" aria-labelledby="pv-connection-title" hidden>
         <div class="pv-auth-head"><button type="button" class="pv-icon-button" id="pv-connection-back" aria-label="로그인 선택으로 돌아가기">←</button><span id="pv-connection-label">로그인</span></div>
@@ -90,7 +90,7 @@
           <button type="button" data-dialog="vehicle"><img src="assets/team-icons/car.png" alt=""><span>내 차량</span></button>
         </div>
         <div class="entry-notice" id="entry-notice" role="status" hidden><img src="assets/team-icons/car.png" alt=""><div><small>입차 연동 시뮬레이션</small><strong>입차됐어요</strong><p id="entry-notice-detail"></p></div><button type="button" id="dismiss-entry-notice" aria-label="입차 알림 닫기">×</button></div>
-        <div class="home-status-heading"><h2>지금 내 주차</h2><span>내 이용 정보</span></div>
+        <div class="home-status-heading"><h2>지금 내 주차</h2></div>
         <article class="home-parking-card" aria-label="현재 주차 상태">
           <div class="home-status-top"><span class="home-status-badge" id="home-parking-caption">주차 중</span></div>
           <div id="home-session-details"><h3 data-session-name>주차장</h3><p class="home-entry-note">등록 차량의 입차 정보가 연결되었어요</p>
