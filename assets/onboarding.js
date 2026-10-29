@@ -67,7 +67,7 @@
   root.querySelectorAll('[data-preview-enter]').forEach(button => button.addEventListener('click', enterPreview));
   app.addEventListener('parking-account-enter', enterPreview);
   app.addEventListener('parking-account-edit', () => { view = 'connection'; gate(); });
-  app.querySelector('[data-preview-exit]').addEventListener('click', async () => {
+  app.addEventListener('parking-account-exit', async () => {
     try { if (window.ParkingAccount.signedIn) await window.ParkingAccount.logout(); view = 'auth'; gate(); }
     catch { const toast = document.getElementById('toast'); toast.textContent = '로그아웃하지 못했어요. 다시 시도해 주세요.'; toast.hidden = false; }
   });

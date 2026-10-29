@@ -90,7 +90,6 @@
   }
   function enter(result) {
     authenticated=result; root.dispatchEvent(new CustomEvent('parking-account-change',{detail:result.profile}));
-    root.querySelector('[data-preview-exit]').textContent='로그아웃';
     root.dispatchEvent(new Event('parking-account-enter'));
     form.reset();verified=null;requested=false;editing=false;closeOptions();message();
   }
@@ -161,6 +160,6 @@
     finally{pending=false;updateFields();}
   }
   window.ParkingAccount={open,resume,async logout(){
-    await api({action:'logout'});authenticated=null;verified=null;form.reset();root.dispatchEvent(new CustomEvent('parking-account-change',{detail:null}));root.querySelector('[data-preview-exit]').textContent='시작 화면으로';
+    await api({action:'logout'});authenticated=null;verified=null;form.reset();root.dispatchEvent(new CustomEvent('parking-account-change',{detail:null}));
   },get signedIn(){return !!authenticated},get editing(){return editing},get pending(){return pending}};
 })();
