@@ -181,7 +181,7 @@
     const count = availableCoupons().length;
     $('#coupon-count').textContent = count;
     $('#benefits-count-label').textContent = `내 쿠폰 ${count}`;
-    $('#profile-coupon-count').textContent = `보유 쿠폰 ${count}장 · 사용 조건 확인`;
+    $('#profile-coupon-count').textContent = `보유 쿠폰 ${count}장`;
     $$('[data-benefit-tab]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.benefitTab === benefitTab)));
     const offers = benefits.catalog.filter(o => benefitTab === 'available' || preferences.coupons.some(c => c.id === o.id));
     $('#benefit-list').innerHTML = offers.length ? offers.map(offer => {
@@ -189,7 +189,7 @@
       const unavailable = coupon && (coupon.usedAt || coupon.expiresAt <= Date.now()) || offer.id === 'welcome' && preferences.history.length > 0;
       const status = coupon ? couponStatus(coupon) : offer.id === 'welcome' && preferences.history.length > 0 ? '첫 이용 대상 아님' : '발급 후 7일';
       const action = coupon ? '쿠폰 사용' : '쿠폰 받기';
-      return `<article class="benefit-coupon"><div class="benefit-coupon-main"><span class="benefit-label${offer.id === 'weekend' ? ' yellow' : ''}">${escape(offer.label)} · ${status}</span><h3>${escape(offer.title)}</h3><strong>${offer.amount ? money(offer.amount) : 10}<small>${offer.amount ? '원 할인' : '% 할인'}</small></strong><p>${escape(offer.description)}</p>${coupon ? `<p>${couponDate(coupon.expiresAt)}까지 · ${coupon.usedAt ? '사용 완료' : '1회 사용'}</p>` : ''}<button class="text-button coupon-details" type="button" data-benefit-details="${offer.id}">사용 방법·조건 보기 ›</button></div><button type="button" ${coupon ? 'data-use-coupon' : 'data-claim-coupon'}="${offer.id}" ${unavailable ? 'disabled' : ''}>${unavailable ? coupon ? couponStatus(coupon) : '대상 아님' : action}<i data-lucide="${coupon ? 'ticket-check' : 'download'}" aria-hidden="true"></i></button></article>`;
+      return `<article class="benefit-coupon"><div class="benefit-coupon-main"><span class="benefit-label${offer.id === 'weekend' ? ' yellow' : ''}">${escape(offer.label)} · ${status}</span><h3>${escape(offer.title)}</h3><strong>${offer.amount ? money(offer.amount) : 10}<small>${offer.amount ? '원 할인' : '% 할인'}</small></strong><p>${escape(offer.description)}</p>${coupon ? `<p>${couponDate(coupon.expiresAt)}까지 · ${coupon.usedAt ? '사용 완료' : '1회 사용'}</p>` : ''}<button class="text-button coupon-details" type="button" data-benefit-details="${offer.id}">사용 방법 보기 ›</button></div><button type="button" ${coupon ? 'data-use-coupon' : 'data-claim-coupon'}="${offer.id}" ${unavailable ? 'disabled' : ''}>${unavailable ? coupon ? couponStatus(coupon) : '대상 아님' : action}<i data-lucide="${coupon ? 'ticket-check' : 'download'}" aria-hidden="true"></i></button></article>`;
     }).join('') : '<div class="history-empty"><img src="assets/team-icons/benefits.png" alt=""><h3>아직 받은 쿠폰이 없어요</h3><p>받을 수 있는 혜택에서 쿠폰을 받아보세요.</p><button class="primary-button" type="button" data-benefit-tab="available">혜택 둘러보기</button></div>';
     icons();
   }
@@ -206,7 +206,7 @@
     const offer = benefits.catalog.find(o => o.id === activeBenefitId) || benefits.catalog[0];
     const coupon = preferences.coupons.find(c => c.id === offer.id);
     const unavailable = coupon && (coupon.usedAt || coupon.expiresAt <= Date.now()) || offer.id === 'welcome' && preferences.history.length > 0;
-    content.innerHTML = `<div class="coupon-detail-intro"><img src="assets/team-icons/benefits.png" alt=""><h3>${escape(offer.title)}</h3><p>${escape(offer.description)}</p></div><ol class="benefit-steps"><li><strong>쿠폰 받기</strong><p>받은 쿠폰은 내 쿠폰에 저장돼요.</p></li><li><strong>정산 전에 쿠폰 선택</strong><p>홈의 ‘이용 중’ → 쿠폰 선택에서 사용할 쿠폰을 골라요.</p></li><li><strong>할인 금액 확인 후 정산</strong><p>최종 금액에서 할인이 빠졌는지 확인하고 정산해요. 정산 완료 시 쿠폰은 사용 처리돼요.</p></li></ol><div class="coupon-conditions"><strong>사용 조건</strong><p>${escape(offer.conditions)}</p><p>시안에서 제공하는 모든 주차장에 적용됩니다.${coupon ? ` 사용 기한: ${couponDate(coupon.expiresAt)}까지.` : ''}</p></div><button class="primary-button" type="button" ${coupon ? 'data-use-coupon' : 'data-claim-coupon'}="${offer.id}" ${unavailable ? 'disabled' : ''}>${unavailable ? '사용할 수 없는 혜택이에요' : coupon ? '정산 화면에서 사용하기' : '쿠폰 받기'}</button>`;
+    content.innerHTML = `<div class="coupon-detail-intro"><img src="assets/team-icons/benefits.png" alt=""><h3>${escape(offer.title)}</h3><p>${escape(offer.description)}</p></div><ol class="benefit-steps"><li><strong>쿠폰 받기</strong><p>받은 쿠폰은 내 쿠폰에 저장돼요.</p></li><li><strong>정산 전에 쿠폰 선택</strong><p>홈의 ‘이용 중’ → 쿠폰 선택에서 사용할 쿠폰을 골라요.</p></li><li><strong>할인 금액 확인 후 정산</strong><p>최종 금액에서 할인이 빠졌는지 확인하고 정산해요. 정산 완료 시 쿠폰은 사용 처리돼요.</p></li></ol><button class="primary-button" type="button" ${coupon ? 'data-use-coupon' : 'data-claim-coupon'}="${offer.id}" ${unavailable ? 'disabled' : ''}>${unavailable ? '사용할 수 없는 혜택이에요' : coupon ? '정산 화면에서 사용하기' : '쿠폰 받기'}</button>`;
   }
   function renderCouponPicker(content) {
     const fee = currentFee();
