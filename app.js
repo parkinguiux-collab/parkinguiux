@@ -306,7 +306,6 @@
     $('#selected-lot-price').textContent = lot.feeType === '무료' ? '무료' : lot.basicFee && lot.basicMinutes ? `${money(Number(lot.basicFee))}원 / ${lot.basicMinutes}분` : '현장 확인';
     $('#selected-lot-address').textContent = lot.address || '등록된 주소 없음';
     $('#selected-lot-hours').textContent = lot.weekdayOpen && lot.weekdayClose ? `평일 ${lot.weekdayOpen}–${lot.weekdayClose} · 주말은 현장 확인` : '운영시간·이용 가능 여부 현장 확인';
-    $('#selected-lot-reference').textContent = lot.referenceDate ? `정보 기준 ${lot.referenceDate} · 실시간 잔여면수 미제공` : '시청 주변 저장 지도 · 요금과 운영시간 현장 확인';
     $('#selected-lot-status').textContent = lot.status;
     $('#selected-lot-status').classList.toggle('is-busy', lot.status === '보통');
     maps.forEach(record => record.markers.forEach((marker, index) => {

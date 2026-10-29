@@ -10,16 +10,16 @@
   <link rel="apple-touch-icon" href="assets/app-icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/vendor/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=20261029-v58">
-  <link rel="stylesheet" href="assets/onboarding.css?v=20261029-v58">
+  <link rel="stylesheet" href="styles.css?v=20261029-v59">
+  <link rel="stylesheet" href="assets/onboarding.css?v=20261029-v59">
   <script defer src="assets/vendor/leaflet.js"></script>
   <script defer src="assets/vendor/ui-icons.js"></script>
   <script defer src="assets/nearby-map.js"></script>
-  <script defer src="assets/benefits.js?v=20261029-v58"></script>
-  <script defer src="assets/national-map.js?v=20261029-v58"></script>
-  <script defer src="app.js?v=20261029-v58"></script>
-  <script defer src="assets/onboarding.js?v=20261029-v58"></script>
-  <link rel="stylesheet" href="assets/typography.css?v=20261029-v58">
+  <script defer src="assets/benefits.js?v=20261029-v59"></script>
+  <script defer src="assets/national-map.js?v=20261029-v59"></script>
+  <script defer src="app.js?v=20261029-v59"></script>
+  <script defer src="assets/onboarding.js?v=20261029-v59"></script>
+  <link rel="stylesheet" href="assets/typography.css?v=20261029-v59">
 </head>
 <body>
 <div class="app-shell is-welcome" id="parking-app">
@@ -111,7 +111,7 @@
     <section class="screen map-screen" data-view="map" hidden aria-labelledby="map-title">
       <header class="screen-header"><button class="round-button" type="button" data-screen="home" aria-label="홈으로 돌아가기"><i data-lucide="arrow-left" aria-hidden="true"></i></button><h1 id="map-title">주변 주차장</h1><button class="round-button" type="button" id="locate-button" aria-label="현재 위치로 이동"><i data-lucide="locate-fixed" aria-hidden="true"></i></button></header>
       <div class="map-context"><span class="location-dot"></span><strong data-area-label>서울시청 주변</strong><span class="demo-badge">전국 공영·민영</span></div>
-      <p class="section-description">공영·민영 주차장 위치를 확인하세요. 현재 위치 버튼을 누르면 GPS를 이용해 주변을 찾아요.</p><p class="map-data-status" id="map-load-status" role="status">전국 주차장 데이터 준비 중</p>
+      <p class="sr-only" id="map-load-status" role="status">전국 주차장 데이터 준비 중</p>
       <div class="full-map-frame"><div id="full-map" role="region" aria-label="주변 주차장 위치 지도"></div><div class="map-fallback" data-map-fallback="full" hidden><i data-lucide="map-pin" aria-hidden="true"></i><strong>지도 연결을 확인해주세요</strong><button type="button" data-retry-map>다시 불러오기</button></div></div>
       <button class="map-area-search" type="button" id="search-this-area" hidden>이 지역 다시 조회</button>
       <div class="empty-state" id="map-empty" hidden><h2>주변에 등록된 주차장이 없어요</h2><p>지도를 이동해 다시 조회하거나 다른 지역을 검색해주세요.</p></div>
@@ -121,11 +121,10 @@
         <div class="parking-info-body"><span class="parking-category">주변 주차장</span><div class="selection-heading"><div><h2 id="selected-lot-name">주차장 위치</h2></div><span class="availability" id="selected-lot-status">위치 정보</span></div>
         <p class="parking-info-line"><i data-lucide="map-pin" aria-hidden="true"></i><span>검색 기준점에서 직선거리 <strong id="selected-lot-distance">—</strong></span></p>
         <p class="parking-info-line"><i data-lucide="info" aria-hidden="true"></i><span id="selected-lot-hours">운영시간·이용 가능 여부 확인 필요</span></p>
-        <p class="parking-info-line" id="selected-lot-address"></p><p class="parking-info-line" id="selected-lot-reference"></p>
+        <p class="parking-info-line" id="selected-lot-address"></p>
         <button class="favorite-toggle" id="favorite-toggle" type="button" aria-pressed="false"><img src="assets/team-icons/favorite.png" alt=""><span id="favorite-toggle-label">즐겨찾기에 저장</span></button>
         <div class="parking-card-bottom"><div class="parking-card-price"><small>등록된 기본요금</small><strong id="selected-lot-price">2,000원</strong></div><a class="primary-button parking-directions" id="parking-directions" href="https://m.map.naver.com/route.nhn?menu=route" target="_blank" rel="noopener noreferrer" aria-label="선택한 주차장 네이버 길찾기">네이버 길찾기 <i data-lucide="arrow-up-right" aria-hidden="true"></i></a></div></div>
       </article>
-      <p class="fine-print">주차장: <a href="https://www.data.go.kr/data/15012896/standard.do" target="_blank" rel="noopener">공공데이터포털 전국주차장정보</a> · 2026.10.29 수집<br><a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> · © <a href="https://openmaptiles.org" target="_blank" rel="noopener">OpenMapTiles</a> · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a><br>누락 주차장이 있을 수 있으며 운영·요금은 현장 확인해주세요.</p>
     </section>
 
     <section class="screen payment-screen padded-screen" data-view="payment" hidden aria-labelledby="payment-title">
