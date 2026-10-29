@@ -10,6 +10,12 @@
   const STORE_KEY = 'parking-demo-v2';
   const EXIT_GRACE_MS = 3 * 60 * 1000;
   const DEFAULT_CENTER = [37.5665, 126.9780];
+  const national = window.NationalParking;
+  let nearbyLots = [];
+  let mapRequest = 0;
+  let roadController;
+  let gpsLocation = null;
+  const mapCache = new Map();
   const mapData = window.PARKING_MAP_DATA;
   const LOTS = mapData.parking.map((lot, index) => ({ ...lot,
     name: lot.name === '이름 미등록 주차장' ? `시청 인근 주차장 ${index + 1}` : lot.name,
@@ -25,14 +31,16 @@
         card: CARD_NAMES.includes(value.card) ? value.card : CARD_NAMES[0],
         motion: value.motion !== false,
         notifications: value.notifications !== false,
-        favorites: Array.isArray(value.favorites) ? [...new Set(value.favorites.filter(id => LOTS.some(lot => lot.id === id)))] : [],
+        savedLots: Array.isArray(value.savedLots) ? value.savedLots.filter(lot => lot && typeof lot.id === 'string' && typeof lot.name === 'string' && Number.isFinite(lot.lat) && Number.isFinite(lot.lon)).slice(0,200) : [],
+        favorites: Array.isArray(value.favorites) ? [...new Set(value.favorites.filter(id => typeof id === 'string'))].slice(0,200) : [],
         parkingSession: value.parkingSession && ['active', 'paid', 'exited'].includes(value.parkingSession.stage) && LOTS.some(lot => lot.id === value.parkingSession.lotId) && Number.isFinite(value.parkingSession.startedAt) && value.parkingSession.startedAt > 0 && value.parkingSession.startedAt <= Date.now() && Number.isFinite(value.parkingSession.settledFee) && value.parkingSession.settledFee >= 0 && (value.parkingSession.stage !== 'paid' || Number.isFinite(value.parkingSession.paidAt) && value.parkingSession.paidAt > 0) ? value.parkingSession : null,
         parkingSpot: Object.fromEntries(['floor', 'zone', 'pillar', 'note'].map(key => [key, typeof value.parkingSpot?.[key] === 'string' ? value.parkingSpot[key].slice(0, key === 'note' ? 120 : 20) : ''])),
         history: Array.isArray(value.history) ? value.history.filter(item => item && typeof item.name === 'string' && Number.isFinite(item.amount) && typeof item.date === 'string' && !Number.isNaN(Date.parse(item.date))).slice(0, 30) : []
       };
-    } catch { return { coupons: [], name: '주차 메이트', vehicle: '32가4321', card: CARD_NAMES[0], motion: true, notifications: true, favorites: [], parkingSpot: { floor: '', zone: '', pillar: '', note: '' }, history: [] }; }
+    } catch { return { savedLots: [], coupons: [], name: '주차 메이트', vehicle: '32가4321', card: CARD_NAMES[0], motion: true, notifications: true, favorites: [], parkingSpot: { floor: '', zone: '', pillar: '', note: '' }, history: [] }; }
   }
   const preferences = readStored();
+  const knownLots = new Map([...LOTS,...preferences.savedLots].map(lot=>[lot.id,lot]));
   let currentScreen = 'home';
   let selectedLot = LOTS[0];
   let sessionLot = LOTS[0];
@@ -106,7 +114,7 @@
     renderSession();
     renderBenefits();
     if (oldScreen !== screen) window.scrollTo({ top: 0, behavior: 'instant' });
-    if (screen === 'map') ensureMap('full');
+    if (screen === 'map') { ensureMap('full'); if (!nearbyLots.length && !mapRequest) loadNearby(center, areaName); }
     if (screen === 'home') scheduleEntrySimulation();
   }
   async function withLoading(title, description, task, duration = 500) {
@@ -292,13 +300,16 @@
     renderFavoriteToggle();
     $('#selected-lot-name').textContent = lot.name;
     $('#selected-lot-distance').textContent = `약 ${lot.distance}m`;
-    $('#selected-lot-price').textContent = `${money(lot.price)}원`;
+    $('#selected-lot-price').textContent = lot.feeType === '무료' ? '무료' : lot.basicFee && lot.basicMinutes ? `${money(Number(lot.basicFee))}원 / ${lot.basicMinutes}분` : '현장 확인';
+    $('#selected-lot-address').textContent = lot.address || '등록된 주소 없음';
+    $('#selected-lot-hours').textContent = lot.weekdayOpen && lot.weekdayClose ? `평일 ${lot.weekdayOpen}–${lot.weekdayClose} · 주말은 현장 확인` : '운영시간·이용 가능 여부 현장 확인';
+    $('#selected-lot-reference').textContent = lot.referenceDate ? `정보 기준 ${lot.referenceDate} · 실시간 잔여면수 미제공` : '시청 주변 저장 지도 · 요금과 운영시간 현장 확인';
     $('#selected-lot-status').textContent = lot.status;
     $('#selected-lot-status').classList.toggle('is-busy', lot.status === '보통');
     maps.forEach(record => record.markers.forEach((marker, index) => {
       const element = marker.getElement();
-      element?.classList.toggle('is-selected', LOTS[index].id === lot.id);
-      element?.setAttribute('aria-pressed', String(LOTS[index].id === lot.id));
+      element?.classList.toggle('is-selected', marker.parkingId === lot.id);
+      element?.setAttribute('aria-pressed', String(marker.parkingId === lot.id));
     }));
     animate($('#map-selection'), [{ transform: 'translateY(3px)', opacity: .85 }, { transform: 'translateY(0)', opacity: 1 }], 220);
   }
@@ -308,66 +319,91 @@
     $('#favorite-toggle-label').textContent = saved ? '즐겨찾기 저장됨' : '즐겨찾기에 저장';
   }
   function mapFailure(kind) { $(`[data-map-fallback="${kind}"]`).hidden = false; }
+  function drawRoads(record, geometry) {
+    record.layers.forEach(layer=>record.map.removeLayer(layer));
+    const major = f => /primary|secondary|tertiary|trunk|motorway/.test(f.properties.class);
+    record.layers = [
+      L.geoJSON(geometry,{interactive:false,filter:f=>f.properties.kind==='park',style:{color:'#e5eee9',weight:1,fillColor:'#e5eee9',fillOpacity:.85}}).addTo(record.map),
+      L.geoJSON(geometry,{interactive:false,filter:f=>f.properties.kind==='road',style:f=>({color:'#dce4ee',weight:major(f)?10:5,opacity:.9,lineCap:'round'})}).addTo(record.map),
+      L.geoJSON(geometry,{interactive:false,filter:f=>f.properties.kind==='road',style:f=>({color:'#fff',weight:major(f)?7:3,opacity:1,lineCap:'round'})}).addTo(record.map)
+    ];
+  }
   function ensureMap(kind) {
     if (!window.L) { mapFailure(kind); return; }
-    if (maps.has(kind)) { requestAnimationFrame(() => maps.get(kind).map.invalidateSize({ pan: false })); return; }
-    const mapElement = kind === 'home' ? $('#home-map') : $('#full-map');
-    const map = L.map(mapElement, { zoomControl: kind !== 'home', scrollWheelZoom: false, dragging: kind !== 'home', touchZoom: kind !== 'home', doubleClickZoom: false, keyboard: kind !== 'home', minZoom:14, maxZoom:18, maxBounds:mapData.bounds, maxBoundsViscosity:1, zoomSnap:.25, zoomAnimation: allowMotion(), fadeAnimation: allowMotion() }).setView(center, 15);
-    const major = feature => /primary|secondary|tertiary/.test(feature.properties.class);
-    L.geoJSON(mapData.geometry, { interactive:false, filter:feature=>feature.properties.kind==='park', style:{color:'#e5eee9',weight:1,fillColor:'#e5eee9',fillOpacity:.85} }).addTo(map);
-    L.geoJSON(mapData.geometry, { interactive:false, filter:feature=>feature.properties.kind==='road', style:feature=>({color:'#dce4ee',weight:major(feature)?10:5,opacity:.9,lineCap:'round'}) }).addTo(map);
-    L.geoJSON(mapData.geometry, { interactive:false, filter:feature=>feature.properties.kind==='road', style:feature=>({color:'#fff',weight:major(feature)?7:3,opacity:1,lineCap:'round'}) }).addTo(map);
-    map.attributionControl.setPrefix(false);
-    map.attributionControl.setPosition('topright');
-    map.attributionControl.addAttribution('&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>');
-    const point = L.marker(center, { interactive: false, keyboard: false, icon: L.divIcon({ className: 'center-point', iconSize: [14, 14], iconAnchor: [7, 7] }) }).addTo(map);
-    const markers = LOTS.map(lot => {
-      const marker = L.marker([lot.lat, lot.lon], { title: lot.name, alt: lot.name, icon: L.divIcon({ className: `lot-pin${lot.id === selectedLot.id ? ' is-selected' : ''}`, html: '<span class="parking-orbit"><span class="parking-core"></span></span>', iconSize: [66, 66], iconAnchor: [33, 33] }) }).addTo(map);
-      marker.on('click', () => { chooseLot(lot); if (kind === 'home') show('map'); });
-      marker.getElement()?.setAttribute('aria-label', `${lot.name} · 직선거리 약 ${lot.distance}m · OSM 주차장 위치`);
-      marker.getElement()?.setAttribute('aria-pressed', String(lot.id === selectedLot.id));
-      return marker;
-    });
-    maps.set(kind, { map, markers, point });
-    requestAnimationFrame(() => { map.invalidateSize({ pan:false }); map.fitBounds([DEFAULT_CENTER,...LOTS.map(lot=>[lot.lat,lot.lon])],{padding:[32,38],maxZoom:16,animate:false}); });
+    if (maps.has(kind)) { requestAnimationFrame(()=>maps.get(kind).map.invalidateSize({pan:false})); return; }
+    const map=L.map($('#full-map'),{zoomControl:true,scrollWheelZoom:false,minZoom:14,maxZoom:18,maxBounds:[[32.8,123.8],[39.1,132.1]],zoomSnap:.25,zoomAnimation:allowMotion(),fadeAnimation:allowMotion()}).setView(center,15);
+    map.attributionControl.setPrefix(false); map.attributionControl.setPosition('topright');
+    map.attributionControl.addAttribution('<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> · &copy; OpenMapTiles · &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>');
+    const point=L.marker(gpsLocation||center,{interactive:false,icon:L.divIcon({className:gpsLocation?'center-point':'search-center-point',iconSize:[14,14],iconAnchor:[7,7]})}).addTo(map);
+    const record={map,point,markers:[],layers:[]};maps.set(kind,record);drawRoads(record,mapData.geometry);
+    map.on('dragend',()=>{$('#search-this-area').hidden=false;});
+    requestAnimationFrame(()=>map.invalidateSize({pan:false}));
   }
-  function repositionMaps() {
-    $$('[data-area-label]').forEach(element => { element.textContent = areaName; });
-    maps.forEach(record => {
-      record.map.setView(center, 15, { animate: false });
-      record.point.setLatLng(center);
-    });
+  async function loadNearby(location, label) {
+    let parkingLoaded=false;
+    if(!location.every(Number.isFinite)||location[0]<33||location[0]>39||location[1]<124||location[1]>132){toast('대한민국 내 지역을 선택해주세요.');return;}
+    const request=++mapRequest;
+    roadController?.abort(); roadController=new AbortController();
+    $('#map-load-status').textContent='주변 주차장을 불러오고 있어요…';$('#search-this-area').disabled=true;
+    try {
+      const lots=await national.nearby(location); if(request!==mapRequest)return;
+      center=location;areaName=label;nearbyLots=lots;parkingLoaded=true;lots.forEach(lot=>knownLots.set(lot.id,lot));
+      $$('[data-area-label]').forEach(e=>e.textContent=areaName);
+      $('#map-selection').hidden=!lots.length;$('#map-empty').hidden=!!lots.length;
+      $('#map-load-status').textContent=`반경 2.5km · 등록 주차장 ${lots.length}곳 · 공영·민영 포함`;
+      maps.forEach(record=>{
+        record.map.setView(center,15,{animate:false});
+        if(gpsLocation)record.point.setLatLng(gpsLocation);
+        else record.point.setLatLng(center);
+        record.markers.forEach(marker=>record.map.removeLayer(marker));
+        record.markers=lots.map(lot=>{
+          const marker=L.marker([lot.lat,lot.lon],{title:lot.name,alt:lot.name,icon:L.divIcon({className:'lot-pin',html:'<span class="parking-orbit"><span class="parking-core"></span></span>',iconSize:[66,66],iconAnchor:[33,33]})}).addTo(record.map);
+          marker.parkingId=lot.id;marker.on('click',()=>chooseLot(lot));marker.getElement()?.setAttribute('aria-label',`${lot.name} · ${lot.category} · 약 ${lot.distance}m`);return marker;
+        });
+      });
+      if(lots.length)chooseLot(lots[0]);
+      $('#search-this-area').hidden=true;
+      const key=location.map(n=>n.toFixed(2)).join(',');
+      const record=maps.get('full');
+      if(!record)return;
+      if(mapCache.has(key)){drawRoads(record,mapCache.get(key));return;}
+      // Never show Seoul's roads under a different city's parking markers.
+      if(national.distance(location,DEFAULT_CENTER)>2000)drawRoads(record,{type:'FeatureCollection',features:[]});
+      const response=await fetch(`/api/map?lat=${location[0].toFixed(3)}&lon=${location[1].toFixed(3)}`,{signal:roadController.signal});
+      if(!response.ok)throw Error('roads');const geometry=await response.json();if(request!==mapRequest)return;
+      if(!Array.isArray(geometry.features))throw Error('roads');
+      mapCache.set(key,geometry);drawRoads(record,geometry);
+    } catch(error) {
+      if(request!==mapRequest||error.name==='AbortError')return;
+      $('#map-load-status').textContent=parkingLoaded?`등록 주차장 ${nearbyLots.length}곳 · 도로 연결 지연 · 다시 조회 가능`:'데이터를 불러오지 못했어요. 다시 조회해주세요.';
+      $('#search-this-area').hidden=false;
+    } finally {if(request===mapRequest)$('#search-this-area').disabled=false;}
   }
   async function searchDestination(event) {
-    event.preventDefault();
-    if (busy) return;
-    const query = $('#destination-input').value.trim();
-    if (query && !/시청|서울|광화문/.test(query)) {
-      toast('현재는 서울시청 주변 주차장을 제공하고 있어요.');
-      $('#destination-input').focus();
-      return;
-    }
-    const button = $('#destination-search button');
-    button.disabled = true;
+    event.preventDefault();if(busy)return;const query=$('#destination-input').value.trim();
+    if(query.length<2){toast('지역·주소·주차장 이름을 2글자 이상 입력해주세요.');return;}
+    const button=$('#destination-search button');button.disabled=true;
     try {
-      await animate($('.home-quokka'), [{ transform: 'translateX(0)' }, { transform: 'translateX(5px) rotate(2deg)', offset: .25 }, { transform: 'translateX(-34px)', opacity: .5 }], 330);
-      await withLoading('가까운 주차장을 찾고 있어요', '서울시청 주변의 주차장 위치를 확인해요.', () => { center = DEFAULT_CENTER.slice(); areaName = '서울시청 주변'; repositionMaps(); }, 480);
-      show('map');
-    } finally { button.disabled = false; }
+      const matches=await national.search(query);
+      if(!matches.length){toast('등록된 주차장을 찾지 못했어요. 시·구 이름이나 도로명으로 검색해주세요.');return;}
+      matches.forEach(lot=>knownLots.set(lot.id,lot));
+      openDialog('national-search',button);$('#dialog-title').textContent='주차장 검색 결과';
+      $('#dialog-content').innerHTML=`<p class="dialog-description">‘${escape(query)}’ 검색 · 최대 12곳 표시</p><div class="dialog-list">${matches.map(lot=>`<button type="button" class="national-search-result" data-national-lot="${escape(lot.id)}"><strong>${escape(lot.name)}</strong><span>${escape(lot.category)} · ${escape(lot.address)}</span></button>`).join('')}</div>`;
+    }catch{toast('전국 주차장 데이터를 불러오지 못했어요. 잠시 후 다시 시도해주세요.');}
+    finally{button.disabled=false;}
   }
   async function locate() {
-    if (!navigator.geolocation || !window.isSecureContext) { toast('현재 위치는 HTTPS 사이트에서 확인할 수 있어요.'); return; }
-    $('#locate-button').disabled = true;
+    if(!navigator.geolocation||!window.isSecureContext){toast('현재 위치는 HTTPS에서 이용할 수 있어요.');return;}
+    $('#locate-button').disabled=true;
     try {
-      const position = await new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 8000, maximumAge: 60000 }));
-      const location = [position.coords.latitude, position.coords.longitude];
-      if(location[0]<mapData.bounds[0][0]||location[0]>mapData.bounds[1][0]||location[1]<mapData.bounds[0][1]||location[1]>mapData.bounds[1][1]){toast('현재는 서울시청 주변의 주차장 위치를 지원해요.');return;}
-      center = location;
-      areaName = '내 위치 주변';
-      repositionMaps();
-      toast('내 위치로 이동했어요. 주차장 핀은 실제 등록 좌표를 유지해요.');
-    } catch { toast('위치를 확인하지 못했어요. 서울시청 주변 지도를 이용해 주세요.'); }
-    finally { $('#locate-button').disabled = false; }
+      const p=await new Promise((resolve,reject)=>navigator.geolocation.getCurrentPosition(resolve,reject,{timeout:12000,maximumAge:30000,enableHighAccuracy:true}));
+      const location=[p.coords.latitude,p.coords.longitude];
+      if(location[0]<33||location[0]>39||location[1]<124||location[1]>132){toast('대한민국 내 주차장 정보를 제공해요. 지역 검색을 이용해주세요.');return;}
+      gpsLocation=location;
+      maps.forEach(r=>r.point.setIcon(L.divIcon({className:'center-point',iconSize:[14,14],iconAnchor:[7,7]})));
+      await loadNearby(location,'내 위치 주변');
+    } catch(error){toast(error.code===1?'위치 권한이 꺼져 있어요. 지역 검색으로도 이용할 수 있어요.':'현재 위치를 확인하지 못했어요. 지역 검색을 이용해주세요.');}
+    finally{$('#locate-button').disabled=false;}
   }
   async function pay() {
     if (busy || stage !== 'active') return;
@@ -414,8 +450,8 @@
     const titles = { favorites: '즐겨찾기', 'parking-spot': '주차 위치', benefit: '혜택 이용 안내', coupons: '정산에 사용할 쿠폰', receipt: '정산 상세', vehicle: '내 차량 관리', payment: '결제수단 관리', history: '이용·결제 내역', notice: '알림', settings: '설정', nickname: '프로필 수정', help: '이용 안내', about: '앱 정보·아이콘' };
     $('#dialog-title').textContent = titles[kind] || '안내';
     if (kind === 'favorites') {
-      const savedLots = LOTS.filter(lot => preferences.favorites.includes(lot.id));
-      content.innerHTML = savedLots.length ? `<p class="dialog-description">자주 가는 주차장을 모아두고 바로 찾아보세요.</p><div class="favorite-list">${savedLots.map(lot => `<article class="favorite-item"><button class="favorite-open" type="button" data-open-lot="${escape(lot.id)}"><img src="assets/team-icons/nearby.png" alt=""><span><strong>${escape(lot.name)}</strong><small>서울시청 인근 · 지도에서 보기</small></span></button><button class="favorite-remove" type="button" data-remove-favorite="${escape(lot.id)}" aria-label="${escape(lot.name)} 즐겨찾기 해제">해제</button></article>`).join('')}</div><p class="fine-print">즐겨찾기는 이 브라우저에 저장돼요.</p>` : '<div class="history-empty"><img src="assets/team-icons/favorite.png" alt=""><h3>자주 가는 주차장을 저장해보세요</h3><p>주차장 정보에서 즐겨찾기를 누르면<br>이곳에서 바로 확인할 수 있어요.</p><button class="primary-button favorite-find" type="button" id="find-favorite-parking">주변 주차장 보기</button></div>';
+      const savedLots = preferences.favorites.map(id=>knownLots.get(id)).filter(Boolean);
+      content.innerHTML = savedLots.length ? `<p class="dialog-description">자주 가는 주차장을 모아두고 바로 찾아보세요.</p><div class="favorite-list">${savedLots.map(lot => `<article class="favorite-item"><button class="favorite-open" type="button" data-open-lot="${escape(lot.id)}"><img src="assets/team-icons/nearby.png" alt=""><span><strong>${escape(lot.name)}</strong><small>${escape(lot.category || '주차장')} · 지도에서 보기</small></span></button><button class="favorite-remove" type="button" data-remove-favorite="${escape(lot.id)}" aria-label="${escape(lot.name)} 즐겨찾기 해제">해제</button></article>`).join('')}</div><p class="fine-print">즐겨찾기는 이 브라우저에 저장돼요.</p>` : '<div class="history-empty"><img src="assets/team-icons/favorite.png" alt=""><h3>자주 가는 주차장을 저장해보세요</h3><p>주차장 정보에서 즐겨찾기를 누르면<br>이곳에서 바로 확인할 수 있어요.</p><button class="primary-button favorite-find" type="button" id="find-favorite-parking">주변 주차장 보기</button></div>';
     }
     if (kind === 'parking-spot') {
       const spot = preferences.parkingSpot;
@@ -428,7 +464,7 @@
     if (kind === 'history') content.innerHTML = preferences.history.length ? `<p class="dialog-description">이용 기록을 눌러 할인과 정산 상세를 확인하세요.</p><div class="dialog-list">${preferences.history.map((item, index) => `<button type="button" class="history-receipt" data-receipt="${index}"><span><strong>${escape(item.name)}</strong><small>${new Date(item.date).toLocaleDateString('ko-KR')} · 이용 종료</small></span><span><strong>${money(item.amount)}원</strong><small>정산 상세 ›</small></span></button>`).join('')}</div>` : '<div class="history-empty"><img src="assets/ui-icons/history.svg" alt=""><h3>아직 이용 내역이 없어요</h3><p>주차 이용을 마치면<br>여기에서 다시 확인할 수 있어요.</p><button class="primary-button" type="button" id="find-favorite-parking">주변 주차장 보기</button></div>';
     if (kind === 'notice') content.innerHTML = `<div class="notice-item"><img src="assets/ui-icons/bell.svg" alt=""><div><h3>${stage === 'paid' ? '출차 준비가 끝났어요' : '쿼카와 편안하게 주차해요'}</h3><p>${stage === 'paid' ? '이용 현황에서 출차 가능 시간을 확인해주세요.' : '주변 주차장을 선택하고 이용 정보를 확인하세요.'}</p></div></div><p class="fine-print">주차 및 정산 관련 안내를 확인하세요.</p>`;
     if (kind === 'settings') content.innerHTML = `<form id="settings-form"><label class="toggle-row">캐릭터·아이콘 모션<input type="checkbox" name="motion" ${preferences.motion ? 'checked' : ''}></label><label class="toggle-row">앱 내 안내 표시<input type="checkbox" name="notifications" ${preferences.notifications ? 'checked' : ''}></label><p class="dialog-description">휴대폰에서 ‘동작 줄이기’를 사용하면 모션은 자동으로 생략돼요.</p><button class="primary-button" type="submit">설정 저장하기</button></form>`;
-    if (kind === 'help') content.innerHTML = '<div class="help-list"><div><span><strong>주변 주차장 위치 확인</strong><p>지도에서 원형 표시를 눌러 주차장을 골라요. 현재는 서울시청 주변 위치를 제공합니다.</p></span></div><div><span><strong>현장 방식으로 입차·주차</strong><p>앱에서 QR을 찍을 필요가 없어요. 등록된 차량이 입차하면 이용 현황이 자동으로 연결돼요.</p></span></div><div><span><strong>출차 전에 앱에서 정산</strong><p>이용 현황에서 주차요금을 확인하고 정산해요.</p></span></div><div><span><strong>출차 확인</strong><p>실제 서비스의 출차 확인은 제휴 시스템 연동이 필요해요. 현재 시안에서는 정산 후 ‘출차하기’를 누르면 이용이 종료돼요.</p></span></div></div>';
+    if (kind === 'help') content.innerHTML = '<div class="help-list"><div><span><strong>주변 주차장 위치 확인</strong><p>지도에서 원형 표시를 눌러 주차장을 골라요. 전국 공영·민영 주차장을 지역·주소로 검색하거나 현재 위치 주변에서 찾아보세요.</p></span></div><div><span><strong>현장 방식으로 입차·주차</strong><p>앱에서 QR을 찍을 필요가 없어요. 등록된 차량이 입차하면 이용 현황이 자동으로 연결돼요.</p></span></div><div><span><strong>출차 전에 앱에서 정산</strong><p>이용 현황에서 주차요금을 확인하고 정산해요.</p></span></div><div><span><strong>출차 확인</strong><p>실제 서비스의 출차 확인은 제휴 시스템 연동이 필요해요. 현재 시안에서는 정산 후 ‘출차하기’를 누르면 이용이 종료돼요.</p></span></div></div>';
     if (kind === 'about') content.innerHTML = '<div class="about-content"><img class="about-icon" src="assets/app-icons/icon-192.png" alt="쿼카와 P로 만든 앱 아이콘"><h3>주차 서비스</h3><p>쿼카와 함께, 편안한 주차의 시작.<br>모바일 프로토타입 v0.2<br>앱 이름과 아이콘은 팀 검토용입니다.</p><a href="assets/app-icons/icon-512.png" download="parking-app-icon.png">앱 아이콘 원본 저장</a></div><p class="fine-print">지도: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> · 라이브러리: Leaflet, Lucide<br>실제 결제·제휴 시스템·실시간 자리 정보는 연결되지 않습니다.<br>홈 진입 약 10초 후 입차 이벤트를 한 번 보여주고, 정산 후 출차하기 버튼으로 이용을 종료합니다. 위치 확인이나 길찾기로 입차가 확정되지는 않습니다.</p>';
     if (kind === 'notice' && !preferences.notifications) content.innerHTML = '<p class="dialog-description">앱 내 안내 표시가 꺼져 있어요. 마이페이지 설정에서 변경할 수 있습니다.</p>';
     if (kind === 'benefit') renderBenefitDetails(content);
@@ -472,6 +508,8 @@
     const button = event.target.closest('button');
     if (!button || button.disabled || busy) return;
     tap(button);
+    if(button.id==='search-this-area'){const p=maps.get('full')?.map.getCenter();if(p)loadNearby([p.lat,p.lng],'지도 중심 주변');return;}
+    if(button.dataset.nationalLot){const lot=knownLots.get(button.dataset.nationalLot);if(lot){closeDialog();show('map');loadNearby([lot.lat,lot.lon],lot.name).then(()=>{if(nearbyLots.some(item=>item.id===lot.id))chooseLot({...lot,distance:0});});}return;}
     if (button.dataset.benefitTab) { benefitTab = button.dataset.benefitTab; renderBenefits(); return; }
     if (button.hasAttribute('data-open-wallet')) { benefitTab = 'wallet'; show('benefits'); return; }
     if (button.dataset.benefitDetails) { activeBenefitId = button.dataset.benefitDetails; openDialog('benefit', button); return; }
@@ -493,6 +531,7 @@
     if (button.id === 'favorite-toggle') {
       const saved = preferences.favorites.includes(selectedLot.id);
       preferences.favorites = saved ? preferences.favorites.filter(id => id !== selectedLot.id) : [...preferences.favorites, selectedLot.id];
+      preferences.savedLots=preferences.favorites.map(id=>knownLots.get(id)).filter(Boolean);
       savePreferences(); renderFavoriteToggle(); renderProfile(); toast(saved ? '즐겨찾기를 해제했어요.' : '즐겨찾기에 저장했어요.'); return;
     }
     if (button.dataset.removeFavorite) {
@@ -500,8 +539,8 @@
       savePreferences(); renderFavoriteToggle(); renderProfile(); openDialog('favorites', dialogOpener); toast('즐겨찾기를 해제했어요.'); return;
     }
     if (button.dataset.openLot) {
-      const lot = LOTS.find(item => String(item.id) === button.dataset.openLot);
-      if (lot) { closeDialog(); chooseLot(lot); show('map'); } return;
+      const lot = knownLots.get(button.dataset.openLot);
+      if (lot) { closeDialog(); show('map'); loadNearby([lot.lat,lot.lon],lot.name).then(()=>{if(nearbyLots.some(item=>item.id===lot.id))chooseLot({...lot,distance:0});}); } return;
     }
     if (button.id === 'find-favorite-parking') { closeDialog(); show('map'); return; }
     if (button.id === 'clear-parking-spot') {
