@@ -216,3 +216,8 @@
 
 /* Match the parking heading to the app action blue. */
 .home-greeting .home-parking-title-status{color:var(--blue)}
+
+/* Align home headings with the parking card's inner text edge. */
+#parking-app{--home-card-text-inset:21px}
+#parking-app .home-greeting h1,#parking-app .home-status-heading{padding-inline-start:var(--home-card-text-inset)}
+@media(max-width:375px){#parking-app{--home-card-text-inset:18px}}
