@@ -153,11 +153,13 @@
 #parking-first-visit .account-inbox>strong{display:block;font-size:16px;line-height:24px;margin-bottom:8px}
 #parking-first-visit .account-inbox>p{font-size:14px;line-height:22px}
 
-/* Auth welcome: align the heading to the content and anchor primary actions below support links. */
+/* Auth welcome: align the heading to the content and keep secondary links beneath the primary actions. */
 #parking-first-visit #pv-auth>.pv-auth-head{display:grid;justify-items:start;gap:12px}
 #parking-first-visit #pv-auth #pv-auth-back{margin-left:-12px}
 #parking-first-visit #pv-auth>.pv-auth-head>span{font-size:18px;line-height:26px;font-weight:700;letter-spacing:-.3px}
 #parking-first-visit #pv-auth>.pv-auth-main{padding-top:32px;min-height:300px}
-#parking-first-visit #pv-auth>.pv-auth-support{display:flex;flex-direction:column;align-items:center;margin-top:auto;padding-top:20px}
-#parking-first-visit #pv-auth .pv-auth-foot{padding:0 0 4px}
-#parking-first-visit #pv-auth>.pv-auth-actions{padding-top:18px;flex-shrink:0}
+#parking-first-visit #pv-auth>.pv-auth-support{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 16px;margin-top:0;padding-top:10px;flex-shrink:0}
+#parking-first-visit #pv-auth .pv-auth-foot{padding:0}
+#parking-first-visit #pv-auth>.pv-auth-actions{margin-top:auto;padding-top:24px;flex-shrink:0}
+
+#parking-first-visit #pv-auth>.pv-auth-support button{font-size:12px;line-height:18px;font-weight:500;letter-spacing:0;color:var(--park-sub);min-height:44px;padding:6px 0}
