@@ -7,9 +7,6 @@
   const $ = selector => root.querySelector(selector);
   const slides = [...root.querySelectorAll('[data-page]')];
   const dots = [...root.querySelectorAll('.pv-dot')];
-  const ACCESS_KEY = 'parking-preview-access-v1';
-  const SEEN_KEY = 'parking-onboarding-seen-v1';
-  const read = (storage, key) => { try { return storage.getItem(key); } catch { return null; } };
   let slideTimer;
   const scheduleSlides = () => {
     clearTimeout(slideTimer);
@@ -17,7 +14,7 @@
     slideTimer = setTimeout(() => { page += 1; render(); }, 4500);
   };
   let page = 0;
-  let view = read(localStorage, SEEN_KEY) ? 'auth' : 'intro';
+  let view = 'intro';
   const render = () => {
     const intro = view === 'intro';
     $('#pv-onboarding').hidden = !intro;
@@ -42,7 +39,6 @@
   };
   const enterPreview = () => {
     clearTimeout(slideTimer);
-    try { sessionStorage.setItem(ACCESS_KEY, 'preview'); } catch { /* Current page still works without storage. */ }
     app.classList.remove('is-welcome');
     document.getElementById('app-main').inert = false;
     app.querySelector('.bottom-nav').inert = false;
@@ -56,7 +52,6 @@
       return;
     }
     view = 'auth';
-    try { localStorage.setItem(SEEN_KEY, 'seen'); } catch { /* Optional preference. */ }
     render();
   });
   $('#pv-prev').addEventListener('click', () => { page = Math.max(0, page - 1); render(); });
@@ -71,9 +66,8 @@
   }));
   root.querySelectorAll('[data-preview-enter]').forEach(button => button.addEventListener('click', enterPreview));
   app.querySelector('[data-preview-exit]').addEventListener('click', () => {
-    try { sessionStorage.removeItem(ACCESS_KEY); } catch { /* Return works without storage. */ }
     view = 'auth'; gate();
   });
   document.addEventListener('visibilitychange', scheduleSlides);
-  if (read(sessionStorage, ACCESS_KEY) === 'preview') enterPreview(); else gate();
+  gate();
 })();
