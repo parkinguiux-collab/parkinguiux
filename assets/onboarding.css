@@ -149,3 +149,6 @@
 #parking-first-visit .account-form .pv-primary{margin:0 0 24px;width:100%;min-height:52px}
 #parking-first-visit .account-form button:disabled{opacity:.6;cursor:wait}
 #parking-first-visit #account-captcha{max-width:100%;overflow:auto}
+#parking-first-visit .account-inbox{border:1px solid #d8e3f2;border-radius:18px;padding:18px;background:#f0f6ff}
+#parking-first-visit .account-inbox>strong{display:block;font-size:16px;line-height:24px;margin-bottom:8px}
+#parking-first-visit .account-inbox>p{font-size:14px;line-height:22px}

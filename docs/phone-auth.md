@@ -1,28 +1,27 @@
-# SMS account integration
+# Email account integration
+
+The user changed the login method from SMS to email verification on 2026-10-29.
 
 ## Implemented
-- Existing introductory slides lead to signup/login.
-- Korean 010 numbers → +82 E.164; SMS OTP verification via Supabase Auth.
-- Signup: name, birth year, contact email (not email verified), vehicle plate, searchable model.
-- Verified Supabase user ID owns the profile; RLS limits select/insert/update to that user. No service-role key used.
-- Access token is returned only in an HttpOnly, Secure, SameSite=Strict cookie on Vercel. No tokens, phone or signup fields in browser localStorage. Session is limited to one hour; reauthentication is required after expiry. Refresh tokens are intentionally not retained.
-- Profile editing writes to the same database. Logout clears the session cookie.
-- Existing parking/payment interactions remain the existing preview; SMS auth does not connect a real parking operator or payment gateway. Account-mode demo parking/coupon state is memory-only and isolated from browser demo preferences.
+- Signup/login requests a real Supabase email magic link. PKCE S256 binds the link to a one-hour HttpOnly verifier cookie. The link must be opened in the browser that requested it.
+- The callback exchanges the one-use code on the server, verifies the authenticated email, and stores a one-hour HttpOnly/Secure/SameSite=Strict session cookie. No access/refresh tokens or signup fields are persisted in localStorage; auth codes are removed from the URL immediately.
+- New users enter name, birth year, phone (unverified contact number), plate and a searchable official model after verifying email. Existing users enter the home screen. Profile edits are stored in Supabase. Email changes require a separate verification flow and are not allowed through the profile form.
+- RLS restricts each profile to its authenticated user ID and JWT email. Server uses publishable key + user token, never a service-role key. Anonymous profile reads were verified to return 401/42501.
+- Existing parking/payment/coupon interactions remain the prior preview. Account-mode parking state is memory-only and isolated from local demo preferences. Real parking operators and payment gateways are not connected.
 
-## Provisioning (not complete until verified)
-1. Supabase free organization `parkinguiux` was created with user approval. The user created project `parking` (`yjqcvecskqdkupmpqbzo`, Frankfurt eu-central-1). Reuse this project; do not create a second one.
-2. `supabase/migrations/20261029_parking_profiles.sql` was run successfully in that project on 2026-10-29. The profile table grants authenticated users access only through self-only RLS policies.
-3. Enable Phone auth, connect an SMS provider supporting Korean recipients. The provider may require billing/sender verification. This repository contains no SMS credentials. Never enable test OTPs on production.
-4. Enable hCaptcha in Supabase Auth. Add the deployed site domain to hCaptcha; store its secret in Supabase, and its public sitekey in Vercel. Set OTP length to 6, expiry to 3 minutes and resend interval to at least 60 seconds; set suitable send limits in Supabase/provider.
-5. Configure Vercel environment variables through the dashboard (never commit secrets):
-   - `SUPABASE_URL`: project URL (`https://<ref>.supabase.co`)
-   - `SUPABASE_PUBLISHABLE_KEY`: publishable/anon key; never service_role
-   - `HCAPTCHA_SITEKEY`: public sitekey
-   - `APP_ORIGIN`: `https://parkinguiux.vercel.app`
-   - `AUTH_READY`: `true` **only after** database, Phone provider and CAPTCHA are configured.
-6. Redeploy. Verify real SMS to an explicitly authorized test number: new signup, reload session, logout/login, wrong/expired OTP, resend cooldown, denied cross-account read/write.
+## Confirmed infrastructure
+- Free organization `parkinguiux`, user-created project `parking` (`yjqcvecskqdkupmpqbzo`, Frankfurt eu-central-1).
+- Both migrations in `supabase/migrations/` ran successfully. The second migrates the self-only policy from phone to email and adds the contact phone column.
+- Supabase Site URL: `https://parkinguiux.vercel.app`; allowed redirect: `https://parkinguiux.vercel.app/` only.
+- Vercel has `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `APP_ORIGIN` for Production/Preview. The legacy SMS `AUTH_READY=false` remains unused by the email implementation.
+- Set `EMAIL_AUTH_READY=true` to enable the email endpoint. hCaptcha is supported when `HCAPTCHA_SITEKEY` is configured and the provider secret is enabled in Supabase; otherwise existing Supabase email rate limits apply. Do not disable confirmation or use fake verification/test OTPs in production.
 
-Until configured, `/api/account?action=config` reports `ready:false`. Forms show an honest connection status; no SMS success, fake token, local registration or bypass is provided.
+## Remaining external delivery limitation
+Supabase's default email delivery is limited to organization team-member addresses, with a small provider-enforced hourly limit. Therefore this setup can be tested with the project's team email but is **not yet general-public email delivery**. A custom SMTP sender/service or Send Email hook must be connected to allow arbitrary users to sign up. Email templates currently remain the Supabase defaults; no paid upgrade was purchased.
+
+A real end-to-end test still needs the user to request mail to an authorized team email and open the link in the same browser, then complete profile/save/logout/login. Mocked backend tests verify PKCE failure, unverified-user denial, cookie protection and identity ownership; they do not prove email delivery.
+
+Official docs: [Passwordless email](https://supabase.com/docs/guides/auth/auth-email-passwordless), [default SMTP limitations](https://supabase.com/docs/guides/auth/auth-smtp), [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security).
 
 ## Official vehicle catalog
 Source: [KEA public automobile fuel-efficiency search](https://min24.energy.or.kr/trans_hp/AHP/HP_03/HP_03_01_010.do), downloaded 2026-10-29 using the same public search request as the page (no filters). 4,293 source rows, 3,631 unique manufacturer + model labels. Years 2008 onward in this snapshot; includes detailed trim labels and domestic/imported manufacturers. It is **not** a guaranteed exhaustive list of every car sold in Korea (historic, special vehicles or unreported models may be absent).

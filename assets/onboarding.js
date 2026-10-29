@@ -72,5 +72,14 @@
     catch { const toast = document.getElementById('toast'); toast.textContent = '로그아웃하지 못했어요. 다시 시도해 주세요.'; toast.hidden = false; }
   });
   document.addEventListener('visibilitychange', scheduleSlides);
-  gate();
+  const callback = new URL(window.location.href);
+  const authCode = callback.searchParams.get('code');
+  const authError = callback.searchParams.get('error_description');
+  if (authCode || authError) {
+    callback.searchParams.delete('code'); callback.searchParams.delete('error'); callback.searchParams.delete('error_code'); callback.searchParams.delete('error_description');
+    history.replaceState(null, '', callback.pathname + callback.search + callback.hash);
+    view = 'connection'; gate();
+    if (authCode) window.ParkingAccount.resume(authCode);
+    else { window.ParkingAccount.open('login'); document.getElementById('account-message').textContent = '인증 링크가 만료됐어요. 새 인증메일을 요청해 주세요.'; }
+  } else gate();
 })();

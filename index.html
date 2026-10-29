@@ -10,19 +10,19 @@
   <link rel="apple-touch-icon" href="assets/app-icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/vendor/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=20261029-v67">
-  <link rel="stylesheet" href="assets/onboarding.css?v=20261029-v67">
+  <link rel="stylesheet" href="styles.css?v=20261029-v68">
+  <link rel="stylesheet" href="assets/onboarding.css?v=20261029-v68">
   <script defer src="assets/vendor/leaflet.js"></script>
   <script defer src="assets/vendor/ui-icons.js"></script>
   <script defer src="assets/nearby-map.js"></script>
-  <script defer src="assets/benefits.js?v=20261029-v67"></script>
-  <script defer src="assets/national-map.js?v=20261029-v67"></script>
-  <script defer src="assets/parking-scenes.js?v=20261029-v67"></script>
-  <script defer src="app.js?v=20261029-v67"></script>
-  <script defer src="assets/vehicle-search.js?v=20261029-v67"></script>
-  <script defer src="assets/account-ui.js?v=20261029-v67"></script>
-  <script defer src="assets/onboarding.js?v=20261029-v67"></script>
-  <link rel="stylesheet" href="assets/typography.css?v=20261029-v67">
+  <script defer src="assets/benefits.js?v=20261029-v68"></script>
+  <script defer src="assets/national-map.js?v=20261029-v68"></script>
+  <script defer src="assets/parking-scenes.js?v=20261029-v68"></script>
+  <script defer src="app.js?v=20261029-v68"></script>
+  <script defer src="assets/vehicle-search.js?v=20261029-v68"></script>
+  <script defer src="assets/account-ui.js?v=20261029-v68"></script>
+  <script defer src="assets/onboarding.js?v=20261029-v68"></script>
+  <link rel="stylesheet" href="assets/typography.css?v=20261029-v68">
 </head>
 <body>
 <div class="app-shell is-welcome" id="parking-app">
@@ -68,19 +68,19 @@
       </section>
       <section class="pv-auth pv-auth-connection" id="pv-auth-connection" aria-labelledby="pv-connection-title" hidden>
         <div class="pv-auth-head"><button type="button" class="pv-icon-button" id="pv-connection-back" aria-label="로그인 선택으로 돌아가기">←</button><span id="pv-connection-label">로그인</span></div>
-        <div class="account-intro"><img src="assets/team-icons/profile-purple.png" alt=""><span id="account-step">휴대폰 인증</span><h2 id="pv-connection-title">휴대폰 번호로<br>간편하게 로그인</h2><p id="account-description">문자로 받은 인증번호로 로그인해요.</p></div>
+        <div class="account-intro"><img src="assets/team-icons/profile-purple.png" alt=""><span id="account-step">이메일 인증</span><h2 id="pv-connection-title">이메일로<br>간편하게 로그인</h2><p id="account-description">메일로 받은 인증 링크로 로그인해요.</p></div>
         <form id="account-form" class="account-form">
-          <label for="account-phone">휴대폰 번호<input id="account-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="01012345678" maxlength="13" required></label>
+          <label for="account-email">이메일<input id="account-email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="example@email.com" required></label>
           <div id="account-profile-fields" hidden>
             <div class="account-field-pair"><label for="account-name">이름<input id="account-name" name="name" autocomplete="name" maxlength="40" placeholder="이름 입력"></label><label for="account-birth-year">출생연도<input id="account-birth-year" name="birthYear" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="예: 2000" autocomplete="bday-year"></label></div>
-            <label for="account-email">이메일<input id="account-email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="example@email.com"></label>
+            <label for="account-phone">휴대폰 번호<input id="account-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="01012345678" maxlength="13"></label>
             <label for="account-plate">차량 번호<input id="account-plate" name="plate" maxlength="12" placeholder="예: 32가 4321" autocomplete="off"></label>
             <div class="vehicle-picker"><label for="account-vehicle-search">차종 검색<input id="account-vehicle-search" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="account-vehicle-results" autocomplete="off" placeholder="브랜드 또는 차종 검색 · 예: 현대" maxlength="100"></label><input id="account-vehicle-id" name="vehicleId" type="hidden"><p id="vehicle-selection" class="account-hint" aria-live="polite">브랜드명이나 모델명으로 찾을 수 있어요.</p><div id="vehicle-options" hidden><p id="vehicle-result-count" class="account-hint"></p><ul id="account-vehicle-results" role="listbox" aria-label="차종 검색 결과"></ul><button id="vehicle-load-more" type="button">차종 더 보기</button></div><p class="vehicle-source">차종 정보: 한국에너지공단 · 목록에 없는 차량은 추후 추가됩니다.</p></div>
           </div>
-          <div id="account-code-field" hidden><label for="account-code">인증번호<input id="account-code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" placeholder="인증번호 6자리"></label><div class="account-code-actions"><span id="account-code-status" aria-live="polite"></span><button type="button" id="account-resend">다시 받기</button><button type="button" id="account-change-phone">번호 변경</button></div></div>
+          <div id="account-code-field" class="account-inbox" hidden><strong>이메일을 확인해 주세요</strong><p>메일 속 로그인 버튼을 누르면 앱으로 돌아와요.<br>메일이 보이지 않으면 스팸함도 확인해 주세요.</p><div class="account-code-actions"><span id="account-code-status" aria-live="polite"></span><button type="button" id="account-resend">다시 받기</button><button type="button" id="account-change-phone">이메일 변경</button></div></div>
           <div id="account-captcha"></div>
           <p id="account-message" class="account-message" role="status" aria-live="polite" tabindex="-1"></p>
-          <button type="submit" class="pv-primary" id="account-submit">인증번호 받기</button>
+          <button type="submit" class="pv-primary" id="account-submit">인증메일 받기</button>
         </form>
       </section>
     </div>
