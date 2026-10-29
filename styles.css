@@ -255,7 +255,7 @@
 .map-data-status{font-size:12px;line-height:18px;color:var(--text-secondary);margin:0 22px 12px;min-height:18px}
 .map-area-search{position:relative;display:block;z-index:410;margin:-58px auto 18px;min-height:40px;padding:10px 18px;border-radius:22px;background:white;color:var(--blue);box-shadow:0 3px 18px #182c4829;font-size:14px;line-height:20px}
 .map-area-search:not([hidden])~.map-selection{margin-top:12px}
-.search-center-point,.gps-location-point{border:3px solid white;border-radius:50%;background:#7956d8;box-shadow:none;animation:none!important}
+.search-center-point,.gps-location-point{border:3px solid white;border-radius:50%;background:#ffd447;box-shadow:none;animation:none!important}
 .national-search-result{display:grid;gap:6px;width:100%;text-align:left;padding:16px 0;background:transparent;border-bottom:1px solid var(--line)}
 .national-search-result strong{font-size:16px;line-height:24px;font-weight:600}.national-search-result span{font-size:14px;line-height:22px;color:var(--text-secondary)}
 #parking-app .parking-card-price strong{font-size:16px;line-height:24px;overflow-wrap:anywhere}.parking-card-price{min-width:0}
