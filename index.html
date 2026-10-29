@@ -10,14 +10,15 @@
   <link rel="apple-touch-icon" href="assets/app-icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/vendor/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=20261029-v54">
-  <link rel="stylesheet" href="assets/onboarding.css?v=20261029-v54">
+  <link rel="stylesheet" href="styles.css?v=20261029-v55">
+  <link rel="stylesheet" href="assets/onboarding.css?v=20261029-v55">
   <script defer src="assets/vendor/leaflet.js"></script>
   <script defer src="assets/vendor/ui-icons.js"></script>
   <script defer src="assets/nearby-map.js"></script>
-  <script defer src="app.js?v=20261029-v54"></script>
-  <script defer src="assets/onboarding.js?v=20261029-v54"></script>
-  <link rel="stylesheet" href="assets/typography.css?v=20261029-v54">
+  <script defer src="assets/benefits.js?v=20261029-v55"></script>
+  <script defer src="app.js?v=20261029-v55"></script>
+  <script defer src="assets/onboarding.js?v=20261029-v55"></script>
+  <link rel="stylesheet" href="assets/typography.css?v=20261029-v55">
 </head>
 <body>
 <div class="app-shell is-welcome" id="parking-app">
@@ -129,16 +130,21 @@
       <div id="parking-active">
         <div class="fee-card"><div class="fee-card-heading"><span class="yellow-label">이용 중</span><i data-lucide="car-front" aria-hidden="true"></i></div><p>예상 주차요금</p><h2><span data-fee>8,000</span><small>원</small></h2><div class="fee-card-bottom"><span data-session-name>시청 센트럴 주차장</span><span data-duration>0분</span></div></div>
         <div class="session-details"><div><span>차량 번호</span><strong data-vehicle>32가 4321</strong></div><div><span>입차 시간</span><strong data-entry-time>—</strong></div><div><span>이용 시간</span><strong data-duration>0분</strong></div></div>
+        <button class="text-button" type="button" data-dialog="parking-spot">내 차 주차 위치 메모하기 <i data-lucide="map-pin" aria-hidden="true"></i></button>
+        <div class="section-heading compact"><h2>쿠폰 할인</h2><button class="text-button" type="button" id="open-payment-coupons">쿠폰 선택</button></div>
+        <button class="coupon-select-row" type="button" id="payment-coupon-button"><span id="payment-coupon-label">사용할 쿠폰을 선택해주세요</span><i data-lucide="chevron-right" aria-hidden="true"></i></button>
+        <div class="settlement-summary" aria-label="정산 금액"><div><span>주차요금</span><strong id="summary-fee">0원</strong></div><div><span>쿠폰 할인</span><strong id="summary-discount">0원</strong></div><div class="settlement-total"><span>최종 정산 금액</span><strong id="summary-total">0원</strong></div></div>
         <div class="section-heading compact"><h2>결제수단</h2><button class="text-button" type="button" data-dialog="payment">변경</button></div>
         <button class="payment-method" type="button" data-dialog="payment"><img src="assets/ui-icons/wallet.svg" alt=""><span><strong data-card-name>샘플 블루카드</strong><small>등록된 결제수단</small></span><i data-lucide="circle-check" aria-hidden="true"></i></button>
         <p class="gentle-note"><i data-lucide="info" aria-hidden="true"></i>결제 후 출차 가능 시간을 알려드려요.</p>
         <button class="primary-button" type="button" id="pay-button"><span data-pay-label>8,000원 결제하기</span><i data-lucide="arrow-right" aria-hidden="true"></i></button>
-        <p class="fine-print">현장 할인과 최종 요금은 정산 시 확인해주세요.</p>
+        <p class="fine-print">시안 내 정산으로 실제 카드 결제는 발생하지 않아요.</p>
       </div>
       <div id="parking-paid" class="completion-panel" hidden>
         <span class="demo-badge" id="paid-result-badge">정산 완료</span><h2 id="paid-result-title">출차 준비가<br>끝났어요!</h2><p id="paid-result-description">주차장 출구로 이동해주세요.</p>
         <div class="exit-scene" aria-label="쿼카 자동차가 출발하는 모션"><span class="exit-spark spark-one"></span><span class="exit-spark spark-two"></span><span class="exit-spark spark-three"></span><div class="exit-glow"></div><div class="exit-road"></div><img class="exit-quokka" src="assets/quokka-car-ui.png" alt="자동차를 타고 출발하는 쿼카"><span class="vroom" aria-hidden="true">붕~</span></div>
         <div class="exit-countdown"><span>출차 가능 시각</span><strong id="exit-deadline">16:10까지</strong><small id="exit-time-left">3분 안에 출차해주세요</small></div>
+        <p class="settled-receipt" id="settled-receipt"></p>
         <button class="primary-button" type="button" id="exit-button">출차하기</button>
         <button class="text-button centered" type="button" data-screen="home">홈으로 돌아가기</button>
         <p class="fine-print" id="paid-result-note">출차 가능 시간을 확인하고 출구로 이동해주세요.</p>
@@ -147,12 +153,11 @@
     </section>
 
     <section class="screen benefits-screen padded-screen" data-view="benefits" hidden aria-labelledby="benefits-title">
-      <header class="screen-header"><div><p class="eyebrow">주차도 조금 더 가볍게</p><h1 id="benefits-title">혜택</h1></div><span class="demo-badge">미리보기</span></header>
+      <header class="screen-header"><div><p class="eyebrow">주차도 조금 더 가볍게</p><h1 id="benefits-title">혜택</h1></div><span class="demo-badge" id="benefits-count-label">내 쿠폰 0</span></header>
       <div class="benefits-hero"><div><span class="benefits-kicker">PARKING BENEFITS</span><h2>주차할 때마다<br>기분 좋은 혜택</h2><p>제휴 주차장에서 만나는 작은 선물</p></div><img src="assets/team-icons/benefits.png" alt=""></div>
-      <div class="section-heading"><h2>주차 혜택 둘러보기</h2><span class="benefits-example">예시 혜택 2개</span></div>
-      <article class="benefit-coupon"><div class="benefit-coupon-main"><span class="benefit-label">첫 이용 혜택 · 예시</span><h3>첫 주차를 가볍게</h3><strong>2,000<small>원 할인</small></strong><p>제휴 주차장 첫 정산 시 사용</p></div><button type="button" data-dialog="benefit" aria-label="첫 이용 혜택 안내">혜택<br>안내<i data-lucide="chevron-right" aria-hidden="true"></i></button></article>
-      <article class="benefit-coupon"><div class="benefit-coupon-main"><span class="benefit-label yellow">제휴 혜택 · 예시</span><h3>주말에도 편안한 주차</h3><strong>10<small>% 할인</small></strong><p>참여 주차장에서 주말 정산 시 사용</p></div><button type="button" data-dialog="benefit" aria-label="주말 제휴 혜택 안내">혜택<br>안내<i data-lucide="chevron-right" aria-hidden="true"></i></button></article>
-      <div class="benefits-note"><img src="assets/ui-icons/check.svg" alt=""><p>사용 가능한 혜택은 정산 전에 확인할 수 있어요.<br><span>현재는 디자인 예시로, 발급·할인이 적용되지 않습니다.</span></p></div>
+      <div class="benefit-tabs" role="group" aria-label="혜택 목록"><button type="button" data-benefit-tab="available" aria-pressed="true">받을 수 있는 혜택</button><button type="button" data-benefit-tab="wallet" aria-pressed="false">내 쿠폰 <span id="coupon-count">0</span></button></div>
+      <div id="benefit-list"></div>
+      <div class="benefits-note"><img src="assets/ui-icons/check.svg" alt=""><p>혜택 받기 → 정산 화면에서 쿠폰 선택 → 할인 적용<br><span>쿠폰은 이 브라우저에 저장됩니다. 시안 내 정산에 적용되며 실제 청구는 발생하지 않아요.</span></p></div>
     </section>
 
     <section class="screen profile-screen padded-screen" data-view="profile" hidden aria-labelledby="profile-title">
@@ -162,6 +167,7 @@
       <article class="profile-block"><h2>결제수단</h2><button class="profile-payment-row" type="button" data-dialog="payment"><img src="assets/ui-icons/wallet.svg" alt=""><span><strong data-card-name>블루카드</strong><small>등록된 결제수단</small></span><span class="profile-row-action">등록·변경 <i data-lucide="chevron-right" aria-hidden="true"></i></span></button></article>
       <article class="profile-block"><button class="profile-record-heading" type="button" data-dialog="history"><img src="assets/ui-icons/history.svg" alt=""><span><strong>이용 기록 <small id="history-count">0</small></strong><small>지난 주차 · 결제 내역</small></span><i data-lucide="chevron-right" aria-hidden="true"></i></button><button class="profile-recent" type="button" data-dialog="history"><span id="profile-recent-label">이용 기록</span><strong id="profile-recent-name">아직 이용 기록이 없어요</strong><small id="profile-recent-detail">주차 이용을 마치면 여기에서 확인할 수 있어요.</small></button></article>
       <article class="profile-block"><button class="profile-record-heading" type="button" data-dialog="favorites"><img src="assets/team-icons/favorite.png" alt=""><span><strong>저장한 주차장</strong><small>즐겨찾기 · <span id="profile-saved-count">0곳 저장</span></small></span><i data-lucide="chevron-right" aria-hidden="true"></i></button></article>
+      <article class="profile-block"><button class="profile-record-heading" type="button" data-open-wallet><img src="assets/team-icons/benefits.png" alt=""><span><strong>내 쿠폰</strong><small id="profile-coupon-count">사용 가능한 쿠폰 0장</small></span><i data-lucide="chevron-right" aria-hidden="true"></i></button></article>
       <div class="profile-footer-links"><button type="button" data-dialog="help">고객센터</button><span aria-hidden="true">|</span><button type="button" data-preview-exit>시작 화면으로</button></div>
       <div class="profile-secondary-links"><button type="button" data-dialog="notice">알림</button><button type="button" data-dialog="about">앱 정보</button></div>
     </section>
