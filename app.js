@@ -185,10 +185,15 @@
     $('#benefits-count-label').textContent = `내 쿠폰 ${count}`;
     $('#profile-coupon-count').textContent = `보유 쿠폰 ${count}장`;
     $$('[data-benefit-tab]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.benefitTab === benefitTab)));
-    const offers = benefits.catalog.filter(o => benefitTab === 'available' || preferences.coupons.some(c => c.id === o.id));
+    const unavailableOffer = offer => {
+      const coupon = preferences.coupons.find(c => c.id === offer.id);
+      return Boolean(coupon && (coupon.usedAt || coupon.expiresAt <= Date.now()) || offer.id === 'welcome' && preferences.history.length > 0);
+    };
+    const offers = benefits.catalog.filter(o => benefitTab === 'available' || preferences.coupons.some(c => c.id === o.id))
+      .sort((a, b) => Number(unavailableOffer(a)) - Number(unavailableOffer(b)));
     $('#benefit-list').innerHTML = offers.length ? offers.map(offer => {
       const coupon = preferences.coupons.find(c => c.id === offer.id);
-      const unavailable = coupon && (coupon.usedAt || coupon.expiresAt <= Date.now()) || offer.id === 'welcome' && preferences.history.length > 0;
+      const unavailable = unavailableOffer(offer);
       const status = coupon ? couponStatus(coupon) : offer.id === 'welcome' && preferences.history.length > 0 ? '첫 이용 대상 아님' : '발급 후 7일';
       const action = coupon ? '쿠폰 사용' : '쿠폰 받기';
       return `<article class="benefit-coupon"><div class="benefit-coupon-main"><span class="benefit-label${offer.id === 'weekend' ? ' yellow' : ''}">${escape(offer.label)} · ${status}</span><h3>${escape(offer.title)}</h3><strong>${offer.amount ? money(offer.amount) : 10}<small>${offer.amount ? '원 할인' : '% 할인'}</small></strong><p>${escape(offer.description)}</p>${coupon ? `<p>${couponDate(coupon.expiresAt)}까지 · ${coupon.usedAt ? '사용 완료' : '1회 사용'}</p>` : ''}<button class="text-button coupon-details" type="button" data-benefit-details="${offer.id}">사용 방법 보기 ›</button></div><button type="button" ${coupon ? 'data-use-coupon' : 'data-claim-coupon'}="${offer.id}" ${unavailable ? 'disabled' : ''}>${unavailable ? coupon ? couponStatus(coupon) : '대상 아님' : action}<i data-lucide="${coupon ? 'ticket-check' : 'download'}" aria-hidden="true"></i></button></article>`;
