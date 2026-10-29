@@ -163,3 +163,6 @@
 #parking-first-visit #pv-auth>.pv-auth-actions{margin-top:auto;padding-top:24px;flex-shrink:0}
 
 #parking-first-visit #pv-auth>.pv-auth-support button{font-size:12px;line-height:18px;font-weight:500;letter-spacing:0;color:var(--park-sub);min-height:44px;padding:6px 0}
+
+#parking-first-visit #account-credentials{display:grid;gap:18px;min-width:0}
+#parking-first-visit .account-intro #account-description{font-size:12px;line-height:19px}

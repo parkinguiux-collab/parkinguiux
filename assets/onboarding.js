@@ -59,7 +59,7 @@
   $('#pv-prev').addEventListener('click', () => { page = Math.max(0, page - 1); render(); });
   $('#pv-auth-back').addEventListener('click', () => { view = 'intro'; page = 3; render(); });
   $('#pv-review').addEventListener('click', () => { view = 'intro'; page = 0; render(); });
-  $('#pv-connection-back').addEventListener('click', () => { if (window.ParkingAccount.pending) return; if (window.ParkingAccount.editing) { enterPreview(); return; } view = 'auth'; render(); });
+  $('#pv-connection-back').addEventListener('click', () => { if (window.ParkingAccount.pending) return; window.ParkingAccount.cancel(); if (window.ParkingAccount.editing) { enterPreview(); return; } view = 'auth'; render(); });
   root.querySelectorAll('[data-auth]').forEach(button => button.addEventListener('click', () => {
     view = 'connection'; render();
     window.ParkingAccount.open(button.dataset.auth);

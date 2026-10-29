@@ -10,19 +10,19 @@
   <link rel="apple-touch-icon" href="assets/app-icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/vendor/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=20261030-v74">
-  <link rel="stylesheet" href="assets/onboarding.css?v=20261030-v74">
+  <link rel="stylesheet" href="styles.css?v=20261030-v75">
+  <link rel="stylesheet" href="assets/onboarding.css?v=20261030-v75">
   <script defer src="assets/vendor/leaflet.js"></script>
   <script defer src="assets/vendor/ui-icons.js"></script>
   <script defer src="assets/nearby-map.js"></script>
-  <script defer src="assets/benefits.js?v=20261030-v74"></script>
-  <script defer src="assets/national-map.js?v=20261030-v74"></script>
-  <script defer src="assets/parking-scenes.js?v=20261030-v74"></script>
-  <script defer src="app.js?v=20261030-v74"></script>
-  <script defer src="assets/vehicle-search.js?v=20261030-v74"></script>
-  <script defer src="assets/account-ui.js?v=20261030-v74"></script>
-  <script defer src="assets/onboarding.js?v=20261030-v74"></script>
-  <link rel="stylesheet" href="assets/typography.css?v=20261030-v74">
+  <script defer src="assets/benefits.js?v=20261030-v75"></script>
+  <script defer src="assets/national-map.js?v=20261030-v75"></script>
+  <script defer src="assets/parking-scenes.js?v=20261030-v75"></script>
+  <script defer src="app.js?v=20261030-v75"></script>
+  <script defer src="assets/vehicle-search.js?v=20261030-v75"></script>
+  <script defer src="assets/account-ui.js?v=20261030-v75"></script>
+  <script defer src="assets/onboarding.js?v=20261030-v75"></script>
+  <link rel="stylesheet" href="assets/typography.css?v=20261030-v75">
 </head>
 <body>
 <div class="app-shell is-welcome" id="parking-app">
@@ -68,19 +68,21 @@
       </section>
       <section class="pv-auth pv-auth-connection" id="pv-auth-connection" aria-labelledby="pv-connection-title" hidden>
         <div class="pv-auth-head"><button type="button" class="pv-icon-button" id="pv-connection-back" aria-label="로그인 선택으로 돌아가기">←</button><span id="pv-connection-label">로그인</span></div>
-        <div class="account-intro"><img src="assets/team-icons/profile-purple.png" alt=""><span id="account-step">이메일 인증</span><h2 id="pv-connection-title">이메일로<br>간편하게 로그인</h2><p id="account-description">메일로 받은 인증 링크로 로그인해요.</p></div>
+        <div class="account-intro"><img src="assets/team-icons/profile-purple.png" alt=""><span id="account-step">휴대폰 인증</span><h2 id="pv-connection-title">아이디로<br>간편하게 로그인</h2><p id="account-description">이 브라우저에서 목업 계정으로 이용해요.</p></div>
         <form id="account-form" class="account-form">
-          <label for="account-email">이메일<input id="account-email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="example@email.com" required></label>
+          <div id="account-phone-check" class="account-inbox" role="status" aria-live="polite"><strong>휴대폰 인증을 준비하고 있어요</strong><p id="account-check-status">5초 후 회원정보를 입력할 수 있어요.</p><p class="account-hint">문자 발송 없는 인증 목업이에요.</p></div>
+          <div id="account-credentials" hidden>
+            <label for="account-id">아이디<input id="account-id" name="username" autocomplete="username" pattern="[A-Za-z0-9_]{4,30}" maxlength="30" placeholder="영문·숫자·밑줄 4~30자"></label>
+            <label for="account-password">비밀번호<input id="account-password" name="password" type="password" autocomplete="new-password" minlength="8" maxlength="100" placeholder="8자 이상 입력"></label>
+          </div>
           <div id="account-profile-fields" hidden>
-            <div class="account-field-pair"><label for="account-name">이름<input id="account-name" name="name" autocomplete="name" maxlength="40" placeholder="이름 입력"></label><label for="account-birth-year">출생연도<input id="account-birth-year" name="birthYear" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="예: 2000" autocomplete="bday-year"></label></div>
-            <label for="account-phone">휴대폰 번호<input id="account-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="01012345678" maxlength="13"></label>
+            <label for="account-name">이름<input id="account-name" name="name" autocomplete="name" maxlength="40" placeholder="이름 입력"></label>
+            <label for="account-phone">휴대폰 번호<input id="account-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" pattern="010[0-9]{8}|010-[0-9]{4}-[0-9]{4}" placeholder="01012345678" maxlength="13"></label>
             <label for="account-plate">차량 번호<input id="account-plate" name="plate" maxlength="12" placeholder="예: 32가 4321" autocomplete="off"></label>
             <div class="vehicle-picker"><label for="account-vehicle-search">차종 검색<input id="account-vehicle-search" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="account-vehicle-results" autocomplete="off" placeholder="브랜드 또는 차종 검색 · 예: 현대" maxlength="100"></label><input id="account-vehicle-id" name="vehicleId" type="hidden"><p id="vehicle-selection" class="account-hint" aria-live="polite">브랜드명이나 모델명으로 찾을 수 있어요.</p><div id="vehicle-options" hidden><p id="vehicle-result-count" class="account-hint"></p><ul id="account-vehicle-results" role="listbox" aria-label="차종 검색 결과"></ul><button id="vehicle-load-more" type="button">차종 더 보기</button></div><p class="vehicle-source">차종 정보: 한국에너지공단 · 목록에 없는 차량은 추후 추가됩니다.</p></div>
           </div>
-          <div id="account-code-field" class="account-inbox" hidden><strong>이메일을 확인해 주세요</strong><p>메일 속 로그인 버튼을 누르면 앱으로 돌아와요.<br>메일이 보이지 않으면 스팸함도 확인해 주세요.</p><div class="account-code-actions"><span id="account-code-status" aria-live="polite"></span><button type="button" id="account-resend">다시 받기</button><button type="button" id="account-change-phone">이메일 변경</button></div></div>
-          <div id="account-captcha"></div>
           <p id="account-message" class="account-message" role="status" aria-live="polite" tabindex="-1"></p>
-          <button type="submit" class="pv-primary" id="account-submit">인증메일 받기</button>
+          <button type="submit" class="pv-primary" id="account-submit">회원가입 완료</button>
         </form>
       </section>
     </div>
@@ -125,7 +127,8 @@
 
     <section class="screen map-screen" data-view="map" hidden aria-labelledby="map-title">
       <header class="screen-header"><button class="round-button" type="button" data-screen="home" aria-label="홈으로 돌아가기"><i data-lucide="arrow-left" aria-hidden="true"></i></button><h1 id="map-title">주변 주차장</h1><button class="round-button" type="button" id="locate-button" aria-label="현재 위치로 이동"><i data-lucide="locate-fixed" aria-hidden="true"></i></button></header>
-      <div class="map-context"><span class="location-dot"></span><strong data-area-label>서울시청 주변</strong><span class="demo-badge">전국 공영·민영</span></div>
+      <div class="map-context"><button class="map-location-edit" id="map-location-edit" type="button" aria-label="지역·주소 변경" aria-controls="map-location-search" aria-expanded="false"><i data-lucide="search" aria-hidden="true"></i></button><strong data-area-label>서울시청 주변</strong><span class="demo-badge">전국 공영·민영</span></div>
+      <form class="destination-search map-location-search" id="map-location-search" hidden><label class="sr-only" for="map-location-input">변경할 지역·주소</label><input id="map-location-input" placeholder="지역·주소·주차장 검색" autocomplete="off" enterkeyhint="search"><button type="submit" aria-label="위치 검색"><i data-lucide="search" aria-hidden="true"></i></button></form>
       <p class="sr-only" id="map-load-status" role="status">전국 주차장 데이터 준비 중</p>
       <div class="full-map-frame"><div id="full-map" role="region" aria-label="주변 주차장 위치 지도"></div><div class="map-fallback" data-map-fallback="full" hidden><i data-lucide="map-pin" aria-hidden="true"></i><strong>지도 연결을 확인해주세요</strong><button type="button" data-retry-map>다시 불러오기</button></div></div>
       <button class="map-area-search" type="button" id="search-this-area" hidden>이 지역 다시 조회</button>
@@ -179,7 +182,7 @@
     <section class="screen profile-screen padded-screen" data-view="profile" hidden aria-labelledby="profile-title">
       <header class="screen-header"><h1 id="profile-title">마이페이지</h1><div class="profile-header-actions"><button class="round-button" type="button" data-dialog="settings" aria-label="설정"><i data-lucide="settings-2" aria-hidden="true"></i></button><button class="round-button" type="button" data-dialog="help" aria-label="도움말"><img src="assets/ui-icons/help.svg" alt=""></button></div></header>
       <div class="profile-card"><div class="profile-character"><img src="assets/quokka-car-ui.png" alt="쿼카"></div><div><span class="eyebrow">오늘도 반가워요</span><h2><span id="profile-name">주차 메이트</span>님</h2><button class="text-button" type="button" data-dialog="nickname">내 정보 수정 <i data-lucide="chevron-right" aria-hidden="true"></i></button></div></div>
-      <article class="profile-vehicle-card"><div class="profile-block-top"><h2>내 차량</h2></div><div class="profile-vehicle-main"><div><span id="profile-vehicle-model">차종 미등록</span><strong data-vehicle>32가 4321</strong></div><img src="assets/team-icons/car.png" alt=""></div><button class="profile-card-action" type="button" data-dialog="vehicle"><span>차량 등록·변경</span><i data-lucide="chevron-right" aria-hidden="true"></i></button></article>
+      <article class="profile-vehicle-card"><div class="profile-block-top"><h2>내 차량</h2></div><div class="profile-vehicle-main"><div><span id="profile-vehicle-model">테슬라 사이버트럭</span><strong data-vehicle>32가 4321</strong></div><img src="assets/team-icons/car.png" alt=""></div><button class="profile-card-action" type="button" data-dialog="vehicle"><span>차량 등록·변경</span><i data-lucide="chevron-right" aria-hidden="true"></i></button></article>
       <article class="profile-block"><h2>결제수단</h2><button class="profile-payment-row" type="button" data-dialog="payment"><img src="assets/ui-icons/wallet.svg" alt=""><span><strong data-card-name>블루카드</strong><small>등록된 결제수단</small></span><span class="profile-row-action">등록·변경 <i data-lucide="chevron-right" aria-hidden="true"></i></span></button></article>
       <article class="profile-block"><button class="profile-record-heading" type="button" data-dialog="history"><img src="assets/ui-icons/history.svg" alt=""><span><strong>이용 기록 <small id="history-count">0</small></strong><small>지난 주차 · 결제 내역</small></span><i data-lucide="chevron-right" aria-hidden="true"></i></button><button class="profile-recent" type="button" data-dialog="history"><span id="profile-recent-label">이용 기록</span><strong id="profile-recent-name">아직 이용 기록이 없어요</strong><small id="profile-recent-detail">주차 이용을 마치면 여기에서 확인할 수 있어요.</small></button></article>
       <article class="profile-block"><button class="profile-record-heading" type="button" data-dialog="favorites"><img src="assets/team-icons/favorite.png" alt=""><span><strong>저장한 주차장</strong><small>즐겨찾기 · <span id="profile-saved-count">0곳 저장</span></small></span><i data-lucide="chevron-right" aria-hidden="true"></i></button></article>

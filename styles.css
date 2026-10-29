@@ -310,3 +310,11 @@
 @media(max-width:360px){#parking-app .parking-info-body{padding:16px 14px}#parking-app .parking-cover{height:154px}}
 
 #parking-app #profile-vehicle-model{overflow-wrap:anywhere}
+
+/* Location search leaves the GPS marker and parking card dimensions intact. */
+#parking-app .map-location-edit{display:grid;place-items:center;flex-shrink:0;width:36px;min-height:44px;background:transparent;color:var(--blue);margin-left:-8px}
+#parking-app .map-location-edit svg{width:18px;height:18px}
+#parking-app .map-context strong{min-width:0;overflow-wrap:anywhere}
+#parking-app .map-context .demo-badge{flex-shrink:0}
+#parking-app .map-location-search{margin:0 22px 14px;border:1px solid var(--line);box-shadow:none}
+#parking-app .map-location-search[hidden]{display:none}

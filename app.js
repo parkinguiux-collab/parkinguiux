@@ -146,7 +146,7 @@
   function renderProfile() {
     renderHomeTitle();
     $('#profile-name').textContent = preferences.name;
-    $('#profile-vehicle-model').textContent = preferences.vehicleModel || '차종 미등록';
+    $('#profile-vehicle-model').textContent = preferences.vehicleModel || '테슬라 사이버트럭';
     $$('[data-vehicle]').forEach(element => { element.textContent = formatVehicle(); });
     $$('[data-card-name]').forEach(element => { element.textContent = preferences.card; });
     $('#history-count').textContent = preferences.history.length;
@@ -196,9 +196,9 @@
     $('#benefit-list').innerHTML = offers.length ? offers.map(offer => {
       const coupon = preferences.coupons.find(c => c.id === offer.id);
       const unavailable = unavailableOffer(offer);
-      const status = coupon ? couponStatus(coupon) : offer.id === 'welcome' && preferences.history.length > 0 ? '첫 이용 대상 아님' : '발급 후 7일';
+      const status = coupon ? couponStatus(coupon) : offer.id === 'welcome' && preferences.history.length > 0 ? '첫 이용 대상 아님' : '받을 수 있어요';
       const action = coupon ? '쿠폰 사용' : '쿠폰 받기';
-      return `<article class="benefit-coupon"><div class="benefit-coupon-main"><span class="benefit-label${offer.id === 'weekend' ? ' yellow' : ''}">${escape(offer.label)} · ${status}</span><h3>${escape(offer.title)}</h3><strong>${offer.amount ? money(offer.amount) : 10}<small>${offer.amount ? '원 할인' : '% 할인'}</small></strong><p>${escape(offer.description)}</p>${coupon ? `<p>${couponDate(coupon.expiresAt)}까지 · ${coupon.usedAt ? '사용 완료' : '1회 사용'}</p>` : ''}<button class="text-button coupon-details" type="button" data-benefit-details="${offer.id}">사용 방법 보기 ›</button></div><button type="button" ${coupon ? 'data-use-coupon' : 'data-claim-coupon'}="${offer.id}" ${unavailable ? 'disabled' : ''}>${unavailable ? coupon ? couponStatus(coupon) : '대상 아님' : action}<i data-lucide="${coupon ? 'ticket-check' : 'download'}" aria-hidden="true"></i></button></article>`;
+      return `<article class="benefit-coupon"><div class="benefit-coupon-main"><span class="benefit-label${offer.id === 'weekend' ? ' yellow' : ''}">${escape(offer.label)} · ${status}</span><h3>${escape(offer.title)}</h3><strong>${offer.amount ? money(offer.amount) : 10}<small>${offer.amount ? '원 할인' : '% 할인'}</small></strong><p>${escape(offer.description)}</p><button class="text-button coupon-details" type="button" data-benefit-details="${offer.id}">사용 방법 보기 ›</button></div><button type="button" ${coupon ? 'data-use-coupon' : 'data-claim-coupon'}="${offer.id}" ${unavailable ? 'disabled' : ''}>${unavailable ? coupon ? couponStatus(coupon) : '대상 아님' : action}<i data-lucide="${coupon ? 'ticket-check' : 'download'}" aria-hidden="true"></i></button></article>`;
     }).join('') : '<div class="history-empty"><img src="assets/team-icons/benefits.png" alt=""><h3>아직 받은 쿠폰이 없어요</h3><p>받을 수 있는 혜택에서 쿠폰을 받아보세요.</p><button class="primary-button" type="button" data-benefit-tab="available">혜택 둘러보기</button></div>';
     icons();
   }
@@ -223,7 +223,7 @@
       const offer = benefits.catalog.find(o => o.id === coupon.id);
       const reason = benefits.reason(offer, coupon, fee, preferences.history.length);
       const quote = benefits.quote(fee, coupon, preferences.history.length);
-      return `<button class="coupon-option" type="button" data-select-coupon="${offer.id}" aria-pressed="${selectedCouponId === offer.id}" ${reason ? 'disabled' : ''}><strong>${escape(offer.title)}</strong><span>${reason || `${money(quote.discount)}원 할인`}</span><small>${couponDate(coupon.expiresAt)}까지</small></button>`;
+      return `<button class="coupon-option" type="button" data-select-coupon="${offer.id}" aria-pressed="${selectedCouponId === offer.id}" ${reason ? 'disabled' : ''}><strong>${escape(offer.title)}</strong><span>${reason || `${money(quote.discount)}원 할인`}</span></button>`;
     }).join('')}<button class="text-button centered" type="button" id="get-more-coupons">받을 수 있는 혜택 보러 가기</button>`;
   }
   function receiptText(item) {
@@ -410,9 +410,9 @@
     } finally {if(request===mapRequest)$('#search-this-area').disabled=false;}
   }
   async function searchDestination(event) {
-    event.preventDefault();if(busy)return;const query=$('#destination-input').value.trim();
+    event.preventDefault();if(busy)return;const searchForm=event.currentTarget;const query=searchForm.querySelector('input').value.trim();
     if(query.length<2){toast('지역·주소·주차장 이름을 2글자 이상 입력해주세요.');return;}
-    const button=$('#destination-search button');button.disabled=true;
+    const button=searchForm.querySelector('button');button.disabled=true;
     try {
       const matches=await national.search(query);
       if(!matches.length){toast('등록된 주차장을 찾지 못했어요. 시·구 이름이나 도로명으로 검색해주세요.');return;}
@@ -616,6 +616,15 @@
     }, 1800);
   });
   $('#destination-search').addEventListener('submit', searchDestination);
+  $('#map-location-search').addEventListener('submit', searchDestination);
+  $('#map-location-edit').addEventListener('click', () => {
+    const form = $('#map-location-search'); form.hidden = !form.hidden;
+    $('#map-location-edit').setAttribute('aria-expanded', String(!form.hidden));
+    if (!form.hidden) $('#map-location-input').focus();
+  });
+  $('#map-location-input').addEventListener('keydown', event => {
+    if (event.key === 'Escape') { $('#map-location-search').hidden = true; $('#map-location-edit').setAttribute('aria-expanded','false'); $('#map-location-edit').focus(); }
+  });
   $('#dialog-content').addEventListener('submit', event => {
     event.preventDefault();
     const form = event.target;
