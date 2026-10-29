@@ -4,14 +4,15 @@
   const DAY = 86400000;
   const catalog = [
     { id: 'welcome', title: '첫 주차를 가볍게', label: '첫 이용 혜택', amount: 2000, minimum: 2000, description: '첫 정산 시 2,000원 할인', conditions: '2,000원 이상 첫 정산에 사용 · 발급 후 7일 · 다른 쿠폰과 중복 사용 불가' },
-    { id: 'weekend', title: '주말에도 편안한 주차', label: '주말 혜택', rate: .1, maximum: 3000, minimum: 1000, description: '주말 정산 시 10% 할인, 최대 3,000원', conditions: '토·일요일 1,000원 이상 정산에 사용 · 최대 3,000원 · 발급 후 7일 · 중복 사용 불가' }
+    // Retain the existing ID so previously issued coupons and receipts remain valid.
+    { id: 'weekend', title: '평일에 편안한 주차', label: '평일 혜택', rate: .1, maximum: 3000, minimum: 1000, description: '평일 정산 시 10% 할인, 최대 3,000원', conditions: '월~금요일 1,000원 이상 정산에 사용 · 최대 3,000원 · 발급 후 7일 · 중복 사용 불가' }
   ];
   function reason(offer, coupon, fee, completedCount, now = Date.now()) {
     if (!coupon) return '쿠폰을 먼저 받아주세요';
     if (coupon.usedAt) return '이미 사용한 쿠폰이에요';
     if (coupon.expiresAt <= now) return '사용 기간이 지났어요';
     if (offer.id === 'welcome' && completedCount > 0) return '첫 정산에만 사용할 수 있어요';
-    if (offer.id === 'weekend' && !['Sat', 'Sun'].includes(new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Seoul', weekday: 'short' }).format(now))) return '토·일요일에 사용할 수 있어요';
+    if (offer.id === 'weekend' && ['Sat', 'Sun'].includes(new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Seoul', weekday: 'short' }).format(now))) return '월~금요일에 사용할 수 있어요';
     if (fee < offer.minimum) return `${offer.minimum.toLocaleString('ko-KR')}원 이상 정산 시 사용할 수 있어요`;
     return '';
   }

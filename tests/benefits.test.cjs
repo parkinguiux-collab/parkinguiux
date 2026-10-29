@@ -16,13 +16,17 @@ test('used, expired and missing coupons cannot reduce settlement', () => {
   assert.equal(benefits.quote(4000, c, 0, c.expiresAt).discount, 0);
   assert.equal(benefits.quote(4000, undefined, 0, thursday).total, 4000);
 });
-test('weekend discount uses Korea time, minimum amount, rounding and cap', () => {
+test('weekday benefit applies Monday–Friday in Korea with minimum, rounding and cap', () => {
   const c = benefits.issue('weekend', thursday);
-  assert.equal(benefits.quote(4000, c, 1, thursday).discount, 0);
-  assert.equal(benefits.quote(4000, c, 1, saturday).discount, 400);
-  assert.equal(benefits.quote(50000, c, 1, saturday).discount, 3000);
-  assert.equal(benefits.quote(999, c, 1, saturday).discount, 0);
-  assert.equal(benefits.quote(1999, c, 1, saturday).discount, 199);
-  const fridayUtcSaturdayKorea = Date.parse('2026-10-30T15:00:00Z');
-  assert.equal(benefits.quote(4000, c, 1, fridayUtcSaturdayKorea).discount, 400);
+  assert.equal(benefits.catalog.find(o => o.id === c.id).title, '평일에 편안한 주차');
+  assert.equal(benefits.quote(4000, c, 1, thursday).discount, 400);
+  assert.equal(benefits.quote(4000, c, 1, saturday).discount, 0);
+  assert.equal(benefits.quote(50000, c, 1, thursday).discount, 3000);
+  assert.equal(benefits.quote(999, c, 1, thursday).discount, 0);
+  assert.equal(benefits.quote(1999, c, 1, thursday).discount, 199);
+  assert.equal(benefits.quote(4000, c, 1, Date.parse('2026-10-30T14:59:59Z')).discount, 400);
+  assert.equal(benefits.quote(4000, c, 1, Date.parse('2026-10-30T15:00:00Z')).discount, 0);
+  assert.equal(benefits.quote(4000, c, 1, Date.parse('2026-11-01T15:00:00Z')).discount, 400);
+  assert.equal(benefits.quote(4000, { ...c, usedAt: thursday }, 1, thursday).discount, 0);
+  assert.equal(benefits.quote(4000, c, 1, c.expiresAt).discount, 0);
 });
