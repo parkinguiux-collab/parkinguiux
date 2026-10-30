@@ -23,8 +23,7 @@
       const row = document.createElement('div'); row.className = 'support-reply';
       const avatar = document.createElement('img'); avatar.src = 'assets/quokka-support.png'; avatar.alt = ''; avatar.className = 'support-reply-avatar';
       const body = document.createElement('div'); body.className = 'support-reply-body';
-      const name = document.createElement('span'); name.className = 'support-reply-name'; name.textContent = '쿼카 도우미';
-      const time = document.createElement('span'); time.className = 'support-message-time'; time.textContent = timeLabel(); name.append(time);
+      const name = document.createElement('span'); name.className = 'support-reply-name'; name.textContent = '쿼카센터';
       body.append(name, item); row.append(avatar, body); log.append(row);
     }
     while (log.children.length > 60) log.firstElementChild.remove();
@@ -97,7 +96,6 @@
   document.getElementById('support-open-footer').addEventListener('click', () => launcher.click());
   document.getElementById('support-close').addEventListener('click', close);
   panel.addEventListener('cancel', event => {event.preventDefault(); close();});
-  document.getElementById('support-restart').addEventListener('click', () => {log.replaceChildren(); topic = ''; lastQuestion = ''; welcome();});
   log.addEventListener('click', event => {const button = event.target.closest('[data-support-action]'); if (!button || button.disabled) return; add(button.textContent, true); answer(button.dataset.supportAction);});
   document.getElementById('support-form').addEventListener('submit', event => {
     event.preventDefault(); const text = input.value.trim(); if (!text) return; input.value = ''; lastQuestion = text; add(text, true);
