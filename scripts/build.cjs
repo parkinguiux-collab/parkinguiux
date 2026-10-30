@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
-for (const script of ['app.js', 'assets/account-ui.js', 'assets/vehicle-search.js', 'assets/onboarding.js']) new Function(fs.readFileSync(script, 'utf8'));
+for (const script of ['app.js', 'assets/account-ui.js', 'assets/vehicle-search.js', 'assets/onboarding.js', 'assets/support.js']) new Function(fs.readFileSync(script, 'utf8'));
 const manifest = JSON.parse(fs.readFileSync('manifest.webmanifest', 'utf8'));
 for (const icon of manifest.icons) {
   if (!fs.existsSync(icon.src)) throw new Error(`Missing app icon: ${icon.src}`);
