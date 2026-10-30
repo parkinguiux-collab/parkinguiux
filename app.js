@@ -26,6 +26,7 @@
       const value = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
       return {
         coupons: Array.isArray(value.coupons) ? benefits.catalog.flatMap(offer => { const c = value.coupons.find(item => item?.id === offer.id && Number.isFinite(item.issuedAt) && Number.isFinite(item.expiresAt) && item.expiresAt > item.issuedAt); return c ? [{ id: offer.id, issuedAt: c.issuedAt, expiresAt: c.expiresAt, usedAt: Number.isFinite(c.usedAt) ? c.usedAt : 0 }] : []; }) : [],
+        pendingCouponId: benefits.catalog.some(offer => offer.id === value.pendingCouponId) ? value.pendingCouponId : null,
         name: typeof value.name === 'string' ? value.name.slice(0, 12) : '주차 메이트',
         vehicle: typeof value.vehicle === 'string' && /^\d{2,3}[가-힣]\d{4}$/.test(value.vehicle.replace(/\s/g, '')) ? value.vehicle.replace(/\s/g, '') : '32가4321',
         vehicleModel: typeof value.vehicleModel === 'string' ? value.vehicleModel.slice(0, 200) : '',
@@ -177,7 +178,8 @@
     $('#summary-discount').textContent = quote.discount ? `−${money(quote.discount)}원` : '0원';
     $('#summary-total').textContent = `${money(quote.total)}원`;
     const offer = benefits.catalog.find(o => o.id === quote.couponId);
-    $('#payment-coupon-label').textContent = offer ? `${offer.title} · ${money(quote.discount)}원 할인` : `사용할 쿠폰 선택 · 보유 ${availableCoupons().length}장`;
+    const selectedOffer = benefits.catalog.find(o => o.id === selectedCouponId);
+    $('#payment-coupon-label').textContent = offer ? `${offer.title} · ${money(quote.discount)}원 할인` : selectedOffer ? `${selectedOffer.title} · 할인 조건 확인` : `사용할 쿠폰 선택 · 보유 ${availableCoupons().length}장`;
     $('[data-pay-label]').textContent = quote.total ? `${money(quote.total)}원 정산하기` : '0원으로 정산 완료하기';
     $('#settled-receipt').textContent = settlement ? `${money(settlement.fee)}원 − 쿠폰 ${money(settlement.discount)}원 = ${money(settledFee)}원 정산 완료` : `${money(settledFee)}원 정산 완료`;
   }
@@ -196,8 +198,9 @@
     $('#benefit-list').innerHTML = offers.length ? offers.map(offer => {
       const coupon = preferences.coupons.find(c => c.id === offer.id);
       const unavailable = unavailableOffer(offer);
-      const status = coupon ? couponStatus(coupon) : offer.id === 'welcome' && preferences.history.length > 0 ? '첫 이용 대상 아님' : '받을 수 있어요';
-      const action = coupon ? '쿠폰 사용' : '쿠폰 받기';
+      const chosen = coupon && !unavailable && (stage === 'active' ? selectedCouponId : preferences.pendingCouponId) === offer.id;
+      const status = chosen ? '정산에 선택됨' : coupon ? couponStatus(coupon) : offer.id === 'welcome' && preferences.history.length > 0 ? '첫 이용 대상 아님' : '받을 수 있어요';
+      const action = coupon ? chosen ? '선택 변경' : '쿠폰 사용' : '쿠폰 받기';
       return `<article class="benefit-coupon"><div class="benefit-coupon-main"><span class="benefit-label${offer.id === 'weekend' ? ' yellow' : ''}">${escape(offer.label)} · ${status}</span><h3>${escape(offer.title)}</h3><strong>${offer.amount ? money(offer.amount) : 10}<small>${offer.amount ? '원 할인' : '% 할인'}</small></strong><p>${escape(offer.description)}</p><button class="text-button coupon-details" type="button" data-benefit-details="${offer.id}">사용 방법 보기 ›</button></div><button type="button" ${coupon ? 'data-use-coupon' : 'data-claim-coupon'}="${offer.id}" ${unavailable ? 'disabled' : ''}>${unavailable ? coupon ? couponStatus(coupon) : '대상 아님' : action}<i data-lucide="${coupon ? 'ticket-check' : 'download'}" aria-hidden="true"></i></button></article>`;
     }).join('') : '<div class="history-empty"><img src="assets/team-icons/benefits.png" alt=""><h3>아직 받은 쿠폰이 없어요</h3><p>받을 수 있는 혜택에서 쿠폰을 받아보세요.</p><button class="primary-button" type="button" data-benefit-tab="available">혜택 둘러보기</button></div>';
     icons();
@@ -215,7 +218,17 @@
     const offer = benefits.catalog.find(o => o.id === activeBenefitId) || benefits.catalog[0];
     const coupon = preferences.coupons.find(c => c.id === offer.id);
     const unavailable = coupon && (coupon.usedAt || coupon.expiresAt <= Date.now()) || offer.id === 'welcome' && preferences.history.length > 0;
-    content.innerHTML = `<div class="coupon-detail-intro"><img src="assets/team-icons/benefits.png" alt=""><h3>${escape(offer.title)}</h3><p>${escape(offer.description)}</p></div><ol class="benefit-steps"><li><strong>쿠폰 받기</strong><p>받은 쿠폰은 내 쿠폰에 저장돼요.</p></li><li><strong>정산 전에 쿠폰 선택</strong><p>홈의 ‘이용 중’ → 쿠폰 선택에서 사용할 쿠폰을 골라요.</p></li><li><strong>할인 금액 확인 후 정산</strong><p>최종 금액에서 할인이 빠졌는지 확인하고 정산해요. 정산 완료 시 쿠폰은 사용 처리돼요.</p></li></ol><button class="primary-button" type="button" ${coupon ? 'data-use-coupon' : 'data-claim-coupon'}="${offer.id}" ${unavailable ? 'disabled' : ''}>${unavailable ? '사용할 수 없는 혜택이에요' : coupon ? '정산 화면에서 사용하기' : '쿠폰 받기'}</button>`;
+    content.innerHTML = `<div class="coupon-detail-intro"><img src="assets/team-icons/benefits.png" alt=""><h3>${escape(offer.title)}</h3><p>${escape(offer.description)}</p></div><ol class="benefit-steps"><li><strong>쿠폰 받기</strong><p>받은 쿠폰은 내 쿠폰에 저장돼요.</p></li><li><strong>정산 전에 쿠폰 선택</strong><p>‘쿠폰 사용’을 눌러 다음 정산에 사용할 쿠폰을 미리 선택해요. 주차 중이라면 현재 정산에 적용돼요.</p></li><li><strong>할인 금액 확인 후 정산</strong><p>최종 금액에서 할인이 빠졌는지 확인하고 정산해요. 정산 완료 시 쿠폰은 사용 처리돼요.</p></li></ol><button class="primary-button" type="button" ${coupon ? 'data-use-coupon' : 'data-claim-coupon'}="${offer.id}" ${unavailable ? 'disabled' : ''}>${unavailable ? '사용할 수 없는 혜택이에요' : coupon ? '사용할 쿠폰 선택하기' : '쿠폰 받기'}</button>`;
+  }
+  function renderCouponUse(content) {
+    const offer = benefits.catalog.find(o => o.id === activeBenefitId);
+    const coupon = availableCoupons().find(c => c.id === activeBenefitId);
+    if (!offer || !coupon) { content.innerHTML = '<p class="dialog-description">사용할 수 없는 쿠폰이에요. 다른 쿠폰을 선택해 주세요.</p>'; return; }
+    const active = stage === 'active';
+    const chosen = (active ? selectedCouponId : preferences.pendingCouponId) === offer.id;
+    const quote = active ? benefits.quote(currentFee(), coupon, preferences.history.length) : null;
+    const reason = active ? benefits.reason(offer, coupon, currentFee(), preferences.history.length) : '';
+    content.innerHTML = `<div class="coupon-detail-intro"><img src="assets/team-icons/benefits.png" alt=""><h3>${escape(offer.title)}</h3><p>${escape(offer.description)}</p></div>${active ? `<div class="settlement-summary"><div><span>현재 주차요금</span><strong>${money(quote.fee)}원</strong></div><div><span>쿠폰 할인</span><strong>−${money(quote.discount)}원</strong></div><div class="settlement-total"><span>적용 후 정산 금액</span><strong>${money(quote.total)}원</strong></div></div>` : '<p class="dialog-description">다음 정산에 사용할 쿠폰으로 선택해둘게요.<br>정산 화면에서 할인 금액을 확인하고 변경할 수 있어요.</p>'}<p class="dialog-description">${reason ? escape(reason) : '쿠폰은 정산이 완료될 때 사용 처리돼요.'}</p><button class="primary-button" type="button" data-confirm-coupon="${offer.id}" ${reason && !chosen ? 'disabled' : ''}>${chosen ? '쿠폰 선택 해제' : active ? '이 쿠폰 적용하기' : '다음 정산에 선택하기'}</button>`;
   }
   function renderCouponPicker(content) {
     const fee = currentFee();
@@ -498,6 +511,7 @@
     if (kind === 'about') content.innerHTML = '<div class="about-content"><img class="about-icon" src="assets/app-icons/icon-192.png" alt="쿼카와 P로 만든 앱 아이콘"><h3>주차 서비스</h3><p>쿼카와 함께, 편안한 주차의 시작.<br>모바일 프로토타입 v0.2<br>앱 이름과 아이콘은 팀 검토용입니다.</p><a href="assets/app-icons/icon-512.png" download="parking-app-icon.png">앱 아이콘 원본 저장</a></div><p class="fine-print">지도: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> · 라이브러리: Leaflet, Lucide<br>실제 결제·제휴 시스템·실시간 자리 정보는 연결되지 않습니다.<br>홈 진입 약 10초 후 입차 이벤트를 한 번 보여주고, 정산 후 출차하기 버튼으로 이용을 종료합니다. 위치 확인이나 길찾기로 입차가 확정되지는 않습니다.</p>';
     if (kind === 'notice' && !preferences.notifications) content.innerHTML = '<p class="dialog-description">앱 내 안내 표시가 꺼져 있어요. 마이페이지 설정에서 변경할 수 있습니다.</p>';
     if (kind === 'benefit') renderBenefitDetails(content);
+    if (kind === 'coupon-use') { $('#dialog-title').textContent = '쿠폰 사용'; renderCouponUse(content); }
     if (kind === 'coupons') renderCouponPicker(content);
     if (kind === 'receipt') renderReceipt(content);
     icons();
@@ -506,9 +520,9 @@
   }
   function receiveEntry(lot, entryTime) {
     if (stage !== 'exited') return;
-    selectedCouponId = null; settlement = null;
+    selectedCouponId = availableCoupons().some(c => c.id === preferences.pendingCouponId) ? preferences.pendingCouponId : null; preferences.pendingCouponId = null; settlement = null;
     sessionLot = lot; sessionStartedAt = entryTime; settledFee = 0; paidAt = 0; exitedAt = 0; stage = 'active';
-    saveSession(); renderSession();
+    saveSession(); renderSession(); renderBenefits();
     $('#entry-notice-detail').textContent = `${lot.name} · ${formatVehicle()}`;
     $('#entry-notice').hidden = !preferences.notifications;
     $('.home-parking-card').classList.remove('has-new-entry');
@@ -548,15 +562,26 @@
     if (button.dataset.benefitDetails) { activeBenefitId = button.dataset.benefitDetails; openDialog('benefit', button); return; }
     if (button.dataset.claimCoupon) { claimCoupon(button.dataset.claimCoupon); return; }
     if (button.dataset.useCoupon) {
-      if (stage !== 'active') { if ($('#app-dialog').open) closeDialog(); show('home'); toast('입차 후 이용 중 화면에서 쿠폰을 적용할 수 있어요.'); return; }
-      if ($('#app-dialog').open) closeDialog(); show('payment'); openDialog('coupons', $('#payment-coupon-button')); return;
+      activeBenefitId = button.dataset.useCoupon; openDialog('coupon-use', button); return;
+    }
+    if (button.dataset.confirmCoupon) {
+      const id = button.dataset.confirmCoupon;
+      const coupon = availableCoupons().find(c => c.id === id);
+      if (!coupon) { renderCouponUse($('#dialog-content')); return; }
+      const active = stage === 'active';
+      const chosen = (active ? selectedCouponId : preferences.pendingCouponId) === id;
+      if (active && !chosen && !benefits.quote(currentFee(), coupon, preferences.history.length).couponId) { renderCouponUse($('#dialog-content')); return; }
+      if (active) { selectedCouponId = chosen ? null : id; saveSession(); renderSession(); }
+      else { preferences.pendingCouponId = chosen ? null : id; savePreferences(); }
+      closeDialog(); renderBenefits();
+      toast(chosen ? '쿠폰 선택을 해제했어요.' : active ? '쿠폰 할인을 적용했어요.' : '다음 정산에 사용할 쿠폰을 선택했어요.'); return;
     }
     if (button.id === 'payment-coupon-button' || button.id === 'open-payment-coupons') { openDialog('coupons', button); return; }
     if (button.hasAttribute('data-select-coupon')) {
       const id = button.dataset.selectCoupon;
       const coupon = preferences.coupons.find(c => c.id === id);
       if (id && !benefits.quote(currentFee(), coupon, preferences.history.length).couponId) { toast('사용 조건을 다시 확인해주세요.'); openDialog('coupons', dialogOpener); return; }
-      selectedCouponId = id || null; saveSession(); renderSession(); closeDialog(); toast(id ? '쿠폰 할인을 적용했어요.' : '쿠폰 적용을 해제했어요.'); return;
+      selectedCouponId = id || null; saveSession(); renderSession(); renderBenefits(); closeDialog(); toast(id ? '쿠폰 할인을 적용했어요.' : '쿠폰 적용을 해제했어요.'); return;
     }
     if (button.id === 'get-more-coupons') { closeDialog(); benefitTab = 'available'; show('benefits'); return; }
     if (button.hasAttribute('data-receipt')) { receiptIndex = Number(button.dataset.receipt); openDialog('receipt', button); return; }
