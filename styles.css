@@ -318,3 +318,5 @@
 #parking-app .map-context .demo-badge{flex-shrink:0}
 #parking-app .map-location-search{margin:0 22px 14px;border:1px solid var(--line);box-shadow:none}
 #parking-app .map-location-search[hidden]{display:none}
+
+#parking-app .coupon-option .coupon-discount,#parking-app #summary-discount{color:var(--blue);font-weight:600}
