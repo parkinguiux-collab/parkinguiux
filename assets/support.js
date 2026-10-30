@@ -15,7 +15,15 @@
   ];
   function add(text, user = false) {
     const item = document.createElement('div'); item.className = user ? 'support-message is-user' : 'support-message';
-    const p = document.createElement('p'); p.textContent = text; item.append(p); log.append(item);
+    const p = document.createElement('p'); p.textContent = text; item.append(p);
+    if (user) log.append(item);
+    else {
+      const row = document.createElement('div'); row.className = 'support-reply';
+      const avatar = document.createElement('img'); avatar.src = 'assets/quokka-support.png'; avatar.alt = ''; avatar.className = 'support-reply-avatar';
+      const body = document.createElement('div'); body.className = 'support-reply-body';
+      const name = document.createElement('span'); name.className = 'support-reply-name'; name.textContent = '쿼카 도우미';
+      body.append(name, item); row.append(avatar, body); log.append(row);
+    }
     while (log.children.length > 60) log.firstElementChild.remove();
     log.scrollTop = log.scrollHeight;
   }
@@ -30,11 +38,10 @@
     if (action === 'topics') { add('어떤 도움이 필요하세요?'); options(topics); return; }
     if (action === 'payment') {
       topic = '정산 오류'; add('먼저 결제 내역을 확인해 주세요. 승인 내역이 있다면 중복 결제를 막기 위해 정산 버튼을 다시 누르지 마세요.\n카드 승인 또는 앱 이용 기록이 있나요?');
-      options([['이용·결제 내역 확인', 'history'], ['승인 내역이 있어요', 'approved'], ['승인 내역이 없어요', 'not-approved'], ['잘 모르겠어요', 'unknown-payment']]); return;
+      options([['이용·결제 내역 확인', 'history'], ['승인 내역이 있어요', 'approved'], ['승인 내역이 없어요', 'not-approved']]); return;
     }
     if (action === 'approved') { add('카드 승인은 됐지만 앱에 반영이 늦을 수 있어요. 잠시 후 이용 현황을 확인하고, 계속 정산 전으로 보이면 주차장 관리자에게 승인 시각과 금액을 알려 확인해 주세요.\n추가 결제는 먼저 하지 않는 것이 좋아요.'); options([['홈에서 이용 현황 확인', 'home']]); finish(); return; }
     if (action === 'not-approved') { add('인터넷 연결과 선택한 결제수단을 확인해 주세요. 승인 내역이 없는 것을 확인했다면 이용 현황에서 다시 정산할 수 있어요. 같은 오류가 반복되면 화면에 나온 오류 문구를 남겨주세요.'); options([['홈으로 이동', 'home'], ['문의 내용 정리', 'summary']]); return; }
-    if (action === 'unknown-payment') { add('앱 이용 기록과 카드사 앱의 승인 내역을 함께 확인해 주세요. 승인 여부가 불분명하면 반복 결제보다 주차장 관리자에게 먼저 확인하는 것이 좋아요.'); options([['이용·결제 내역 확인', 'history']]); finish(); return; }
     if (action === 'extra') {
       topic = '추가 결제'; add('추가된 금액을 함께 확인해볼게요. 어떤 상황인가요?');
       options([['같은 금액이 두 번 결제됐어요', 'duplicate'], ['정산 후 출차가 늦었어요', 'late-exit'], ['금액이 예상과 달라요', 'unexpected'], ['이용·결제 내역 확인', 'history']]); return;
