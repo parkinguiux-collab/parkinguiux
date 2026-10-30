@@ -10,21 +10,21 @@
   <link rel="apple-touch-icon" href="assets/app-icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/vendor/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=20261030-v86">
-  <link rel="stylesheet" href="assets/onboarding.css?v=20261030-v86">
+  <link rel="stylesheet" href="styles.css?v=20261030-v87">
+  <link rel="stylesheet" href="assets/onboarding.css?v=20261030-v87">
   <script defer src="assets/vendor/leaflet.js"></script>
   <script defer src="assets/vendor/ui-icons.js"></script>
   <script defer src="assets/nearby-map.js"></script>
-  <script defer src="assets/benefits.js?v=20261030-v86"></script>
-  <script defer src="assets/national-map.js?v=20261030-v86"></script>
-  <script defer src="assets/parking-scenes.js?v=20261030-v86"></script>
-  <script defer src="app.js?v=20261030-v86"></script>
-  <script defer src="assets/vehicle-search.js?v=20261030-v86"></script>
-  <script defer src="assets/account-ui.js?v=20261030-v86"></script>
-  <script defer src="assets/onboarding.js?v=20261030-v86"></script>
-  <link rel="stylesheet" href="assets/typography.css?v=20261030-v86">
-  <link rel="stylesheet" href="assets/support.css?v=20261030-v86">
-  <script defer src="assets/support.js?v=20261030-v86"></script>
+  <script defer src="assets/benefits.js?v=20261030-v87"></script>
+  <script defer src="assets/national-map.js?v=20261030-v87"></script>
+  <script defer src="assets/parking-scenes.js?v=20261030-v87"></script>
+  <script defer src="app.js?v=20261030-v87"></script>
+  <script defer src="assets/vehicle-search.js?v=20261030-v87"></script>
+  <script defer src="assets/account-ui.js?v=20261030-v87"></script>
+  <script defer src="assets/onboarding.js?v=20261030-v87"></script>
+  <link rel="stylesheet" href="assets/typography.css?v=20261030-v87">
+  <link rel="stylesheet" href="assets/support.css?v=20261030-v87">
+  <script defer src="assets/support.js?v=20261030-v87"></script>
 </head>
 <body>
 <div class="app-shell is-welcome" id="parking-app">
@@ -197,7 +197,7 @@
     <button type="button" data-screen="profile" class="nav-item"><img src="assets/team-icons/profile-purple.png" alt=""><span>마이페이지</span></button>
   </nav>
   <button class="support-launcher" id="support-launcher" type="button" aria-label="쿼카 도우미와 상담하기" aria-haspopup="dialog" aria-expanded="false" aria-controls="support-dialog"><img class="support-avatar" src="assets/quokka-support.png" alt="헤드셋을 쓴 쿼카 도우미"></button>
-  <dialog class="support-dialog" id="support-dialog" aria-labelledby="support-title"><header class="support-header"><img src="assets/quokka-support.png" alt=""><div class="support-heading"><h2 id="support-title">쿼카 도우미</h2><p>궁금한 점을 도와드려요 · 자동 안내</p></div><button type="button" id="support-restart" aria-label="상담 처음부터 다시 보기"><i data-lucide="rotate-ccw" aria-hidden="true"></i></button><button type="button" id="support-close" aria-label="상담 닫기"><i data-lucide="x" aria-hidden="true"></i></button></header><div class="support-log" id="support-log" role="log" aria-live="polite" aria-relevant="additions" aria-label="쿼카 도우미 대화" tabindex="0"></div><footer class="support-footer"><p>자동 안내이며 결제 조회·환불은 직접 처리하지 않아요.</p><form class="support-form" id="support-form"><label class="sr-only" for="support-input">문의 내용</label><input id="support-input" placeholder="궁금한 내용을 적어주세요" autocomplete="off" maxlength="200" enterkeyhint="send"><button type="submit" aria-label="문의 보내기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></form></footer></dialog>
+  <dialog class="support-dialog" id="support-dialog" aria-labelledby="support-title"><header class="support-header"><img src="assets/quokka-support.png" alt=""><div class="support-heading"><h2 id="support-title">쿼카 도우미</h2><p>쿼카와 대화 중 · 자동 안내</p></div><button type="button" id="support-restart" aria-label="상담 처음부터 다시 보기">다른 질문</button><button type="button" id="support-close" aria-label="상담 닫기"><i data-lucide="x" aria-hidden="true"></i></button></header><div class="support-log" id="support-log" role="log" aria-live="polite" aria-relevant="additions" aria-label="쿼카 도우미 대화" tabindex="0"></div><footer class="support-footer"><p>자동 안내이며 결제 조회·환불은 직접 처리하지 않아요.</p><form class="support-form" id="support-form"><label class="sr-only" for="support-input">문의 내용</label><input id="support-input" placeholder="궁금한 내용을 적어주세요" autocomplete="off" maxlength="200" enterkeyhint="send"><button type="submit" aria-label="문의 보내기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></form></footer></dialog>
   <div class="loading-overlay" id="loading-overlay" hidden role="status" aria-live="polite"><div class="loading-card"><div class="loading-scene"><img src="assets/quokka-car-ui.png" alt=""><div class="loading-road"></div></div><span class="loading-dots" aria-hidden="true"><i></i><i></i><i></i></span><h2 id="loading-title">잠시만 기다려주세요</h2><p id="loading-description">쿼카가 준비하고 있어요.</p></div></div>
   <dialog class="app-dialog" id="app-dialog" aria-labelledby="dialog-title"><header><h2 id="dialog-title">내 차량</h2><button class="round-button" type="button" id="close-dialog" aria-label="닫기"><i data-lucide="x" aria-hidden="true"></i></button></header><div id="dialog-content"></div></dialog>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>

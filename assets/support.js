@@ -8,34 +8,60 @@
   let started = false;
   let topic = '', lastQuestion = '';
   const topics = [
-    ['정산 버튼을 눌러도 정산이 되지 않아요', 'payment'],
-    ['주차금액이 추가로 결제됐어요', 'extra'],
-    ['쿠폰이 적용되지 않아요', 'coupon'],
-    ['정산했는데 출차가 안 돼요', 'exit']
+    ['정산', 'keyword-payment'], ['추가 결제', 'keyword-extra'],
+    ['쿠폰', 'keyword-coupon'], ['출차', 'keyword-exit']
   ];
+  const timeLabel = () => new Intl.DateTimeFormat('ko-KR', {timeZone:'Asia/Seoul',hour:'2-digit',minute:'2-digit'}).format(new Date());
   function add(text, user = false) {
     const item = document.createElement('div'); item.className = user ? 'support-message is-user' : 'support-message';
     const p = document.createElement('p'); p.textContent = text; item.append(p);
-    if (user) log.append(item);
+    if (user) {
+      log.querySelectorAll('[data-support-action]').forEach(button => { button.disabled = true; });
+      const time = document.createElement('span'); time.className = 'support-user-time'; time.textContent = timeLabel(); item.append(time); log.append(item);
+    }
     else {
       const row = document.createElement('div'); row.className = 'support-reply';
       const avatar = document.createElement('img'); avatar.src = 'assets/quokka-support.png'; avatar.alt = ''; avatar.className = 'support-reply-avatar';
       const body = document.createElement('div'); body.className = 'support-reply-body';
       const name = document.createElement('span'); name.className = 'support-reply-name'; name.textContent = '쿼카 도우미';
+      const time = document.createElement('span'); time.className = 'support-message-time'; time.textContent = timeLabel(); name.append(time);
       body.append(name, item); row.append(avatar, body); log.append(row);
     }
     while (log.children.length > 60) log.firstElementChild.remove();
     log.scrollTop = log.scrollHeight;
   }
-  function options(items) {
-    const group = document.createElement('div'); group.className = 'support-options';
+  function options(items, keywords = false) {
+    const group = document.createElement('div'); group.className = keywords ? 'support-options support-keywords' : 'support-options support-questions';
+    group.setAttribute('role','group'); group.setAttribute('aria-label', keywords ? '문의 키워드' : '관련 질문과 동작');
     items.forEach(([label, action]) => {const button = document.createElement('button'); button.type = 'button'; button.textContent = label; button.dataset.supportAction = action; group.append(button);});
     log.append(group); log.scrollTop = log.scrollHeight;
   }
   const finish = () => options([['도움이 됐어요', 'resolved'], ['아직 해결되지 않았어요', 'unresolved'], ['다른 문의 보기', 'topics']]);
-  function welcome() { add('안녕하세요! 주차 도우미 쿼카예요.\n어떤 점이 불편하신가요?\n아래에서 선택하거나 짧게 적어주세요.'); options(topics); }
+  function welcome() {
+    const date = document.createElement('p'); date.className = 'support-date';
+    date.textContent = new Intl.DateTimeFormat('ko-KR', {timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric',weekday:'long'}).format(new Date()); log.append(date);
+    add('안녕하세요! 주차 도우미 쿼카예요.\n무엇을 도와드릴까요?\n궁금한 키워드를 선택해 주세요.'); options(topics, true);
+  }
   function answer(action) {
-    if (action === 'topics') { add('어떤 도움이 필요하세요?'); options(topics); return; }
+    if (action === 'topics') { add('어떤 도움이 필요하세요?'); options(topics, true); return; }
+    if (action === 'keyword-payment') {
+      topic = '정산 문의'; add('정산에 대해 궁금하신가요?\n아래에서 지금 상황에 맞는 질문을 골라주세요.');
+      options([['정산 버튼을 눌러도 정산이 되지 않아요', 'payment'], ['정산했는데 출차가 안 돼요', 'exit']]); return;
+    }
+    if (action === 'keyword-extra') {
+      topic = '추가 결제'; add('추가로 결제된 금액이 있으신가요?\n어떤 상황인지 선택해 주세요.');
+      options([['주차금액이 추가로 결제됐어요', 'extra'], ['같은 금액이 두 번 결제됐어요', 'duplicate'], ['예상한 주차요금과 달라요', 'unexpected']]); return;
+    }
+    if (action === 'keyword-coupon') {
+      topic = '쿠폰 문의'; add('쿠폰에 대해 어떤 점이 궁금하세요?');
+      options([['쿠폰이 적용되지 않아요', 'coupon'], ['발급받은 쿠폰은 어디에서 확인하나요?', 'coupon-location']]); return;
+    }
+    if (action === 'coupon-location') { add('혜택 화면의 내 쿠폰에서 발급받은 쿠폰을 확인할 수 있어요.\n정산할 때 이용 현황의 쿠폰 선택에서 사용할 쿠폰을 골라주세요.'); options([['혜택에서 쿠폰 확인', 'benefits']]); finish(); return; }
+    if (action === 'keyword-exit') {
+      topic = '출차 문의'; add('출차에 대해 어떤 도움이 필요하세요?');
+      options([['정산했는데 출차가 안 돼요', 'exit'], ['정산 후 언제까지 출차해야 하나요?', 'exit-time']]); return;
+    }
+    if (action === 'exit-time') { add('정산 후 3분 안에 출차해 주세요.\n홈에서 출차 가능 시간을 확인할 수 있어요. 차단기 문제가 생기면 현장 호출 버튼으로 관리자에게 문의해 주세요.'); options([['홈에서 출차 상태 확인', 'home']]); finish(); return; }
     if (action === 'payment') {
       topic = '정산 오류'; add('먼저 결제 내역을 확인해 주세요. 승인 내역이 있다면 중복 결제를 막기 위해 정산 버튼을 다시 누르지 마세요.\n카드 승인 또는 앱 이용 기록이 있나요?');
       options([['이용·결제 내역 확인', 'history'], ['승인 내역이 있어요', 'approved'], ['승인 내역이 없어요', 'not-approved']]); return;
@@ -64,7 +90,7 @@
       const target = action === 'history' ? root.querySelector('[data-dialog="history"]') : root.querySelector(`[data-screen="${action}"]`);
       target?.click(); return;
     }
-    add('조금 더 구체적으로 알려주세요. 아래 항목에서 골라주셔도 돼요.'); options(topics);
+    add('조금 더 구체적으로 알려주세요. 아래 항목에서 골라주셔도 돼요.'); options(topics, true);
   }
   function close() { panel.close(); launcher.setAttribute('aria-expanded','false'); launcher.focus({preventScroll:true}); }
   launcher.addEventListener('click', () => { if (!started) {welcome(); started = true;} panel.showModal(); launcher.setAttribute('aria-expanded','true'); log.scrollTop = log.scrollHeight; });
@@ -72,7 +98,7 @@
   document.getElementById('support-close').addEventListener('click', close);
   panel.addEventListener('cancel', event => {event.preventDefault(); close();});
   document.getElementById('support-restart').addEventListener('click', () => {log.replaceChildren(); topic = ''; lastQuestion = ''; welcome();});
-  log.addEventListener('click', event => {const button = event.target.closest('[data-support-action]'); if (!button) return; add(button.textContent, true); answer(button.dataset.supportAction);});
+  log.addEventListener('click', event => {const button = event.target.closest('[data-support-action]'); if (!button || button.disabled) return; add(button.textContent, true); answer(button.dataset.supportAction);});
   document.getElementById('support-form').addEventListener('submit', event => {
     event.preventDefault(); const text = input.value.trim(); if (!text) return; input.value = ''; lastQuestion = text; add(text, true);
     const action = /추가|두 번|두번|중복|더 결제/.test(text) ? 'extra' : /쿠폰|할인/.test(text) ? 'coupon' : /출차|차단기/.test(text) ? 'exit' : /정산|결제|승인/.test(text) ? 'payment' : /문의|상담원|상담/.test(text) ? 'summary' : 'fallback';

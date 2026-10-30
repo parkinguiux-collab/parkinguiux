@@ -18,3 +18,22 @@
 .support-reply-body{display:grid;gap:5px;min-width:0;flex:1}
 .support-reply-name{font-size:12px;line-height:18px;font-weight:600;color:#52627a}
 .support-reply .support-message{max-width:100%;width:fit-content;min-width:0}
+
+/* Keyword-led chat: topic chips lead to complete questions, then a guided reply. */
+.support-dialog{background:#eef3fb}
+.support-header{gap:8px;padding:14px 12px}
+.support-header>img{width:38px;height:38px}
+.support-header #support-restart{width:auto;min-width:62px;padding:0 6px;font-size:12px;line-height:18px;color:#1557e8;white-space:nowrap}
+.support-header #support-close{width:34px}
+.support-date{align-self:center;font-size:12px;line-height:18px;color:#52627a;margin:0 0 6px;text-align:center}
+.support-options{display:flex;flex-wrap:wrap;gap:8px}
+.support-options button{width:auto;max-width:100%;border-radius:22px;padding:10px 14px;word-break:keep-all;overflow-wrap:anywhere}
+.support-keywords button{background:#fff;border:1px solid #c2d6f6;color:#174fa9;font-weight:600}
+.support-questions button{background:#fff;border-color:#d8e4f5;font-weight:400}
+.support-options button:disabled{opacity:1;cursor:default;color:#52627a;background:#f4f6fb;border-color:#dce4ef}
+.support-message-time{font-size:12px;line-height:18px;font-weight:400;color:#52627a;margin-left:8px;white-space:nowrap}
+.support-user-time{display:block;font-size:12px;line-height:18px;color:#e4edff;text-align:right;margin-top:5px}
+.support-message p{word-break:keep-all;overflow-wrap:anywhere}
+.support-reply{animation:support-reply-in .18s ease-out both}
+@keyframes support-reply-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.support-reply{animation:none}}
