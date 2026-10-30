@@ -25,7 +25,7 @@
     log.append(group); log.scrollTop = log.scrollHeight;
   }
   const finish = () => options([['도움이 됐어요', 'resolved'], ['아직 해결되지 않았어요', 'unresolved'], ['다른 문의 보기', 'topics']]);
-  function welcome() { add('안녕하세요! 주차 도우미 쿼카예요.\n어떤 점이 불편하신가요? 아래에서 선택하거나 짧게 적어주세요.'); options(topics); }
+  function welcome() { add('안녕하세요! 주차 도우미 쿼카예요.\n어떤 점이 불편하신가요?\n아래에서 선택하거나 짧게 적어주세요.'); options(topics); }
   function answer(action) {
     if (action === 'topics') { add('어떤 도움이 필요하세요?'); options(topics); return; }
     if (action === 'payment') {
