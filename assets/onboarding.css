@@ -170,24 +170,27 @@
 /* Slide 2: type a destination, reveal its result, then demonstrate one click. */
 #parking-first-visit .pv-search-demo{overflow:hidden}
 #parking-first-visit .pv-search-typed{display:inline-flex;position:relative;min-height:22px;align-items:center}
-#parking-first-visit .pv-search-typed>span{display:block;width:3em;white-space:nowrap;overflow:hidden}
+#parking-first-visit .pv-search-typed>span{display:inline;white-space:nowrap}
 #parking-first-visit .pv-search-typed::after{content:"";height:16px;width:2px;background:var(--park-blue);margin-left:2px}
 #parking-first-visit .pv-search-found{position:relative;box-shadow:0 0 0 2px transparent}
 #parking-first-visit .pv-demo-pointer{position:absolute;right:28px;bottom:26px;display:block;width:38px;height:38px;pointer-events:none;filter:drop-shadow(0 3px 4px #1557e830)}
 #parking-first-visit .pv-demo-pointer svg{width:100%;height:100%}
 #parking-first-visit .pv-demo-click{position:absolute;right:28px;top:26px;width:24px;height:24px;border:2px solid #2375f5;border-radius:50%;opacity:0;pointer-events:none}
-#parking-first-visit .pv-slide:not([hidden]) .pv-search-typed>span{animation:pv-type-destination 900ms 200ms steps(3,end) both}
+#parking-first-visit .pv-typed-char{display:inline}
+#parking-first-visit .pv-slide:not([hidden]) .pv-typed-char{animation:pv-type-character 140ms 200ms ease-out both}
+#parking-first-visit .pv-slide:not([hidden]) .pv-typed-char:nth-child(2){animation-delay:500ms}
+#parking-first-visit .pv-slide:not([hidden]) .pv-typed-char:nth-child(3){animation-delay:800ms}
 #parking-first-visit .pv-slide:not([hidden]) .pv-search-typed::after{animation:pv-type-caret 1200ms both}
 #parking-first-visit .pv-slide:not([hidden]) .pv-search-found{animation:pv-reveal-result 320ms 1150ms both,pv-select-result 550ms 2450ms both}
 #parking-first-visit .pv-slide:not([hidden]) .pv-demo-pointer{animation:pv-point-result 1700ms 1200ms both}
 #parking-first-visit .pv-slide:not([hidden]) .pv-demo-click{animation:pv-result-ripple 650ms 2500ms both}
-@keyframes pv-type-destination{from{width:0}to{width:3em}}
+@keyframes pv-type-character{from{opacity:0}to{opacity:1}}
 @keyframes pv-type-caret{0%,35%,70%{opacity:1}20%,55%,100%{opacity:0}}
 @keyframes pv-reveal-result{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pv-select-result{0%,100%{box-shadow:0 0 0 2px #2375f500;background:#fff}45%{box-shadow:0 0 0 2px #2375f53b;background:#edf4ff}}
 @keyframes pv-point-result{0%{opacity:0;transform:translate(38px,35px)}20%{opacity:1}65%,75%{opacity:1;transform:translate(0,0) scale(1)}82%{opacity:1;transform:translate(0,0) scale(.84)}92%,100%{opacity:1;transform:translate(0,0) scale(1)}}
 @keyframes pv-result-ripple{0%{opacity:.7;transform:scale(.3)}100%{opacity:0;transform:scale(1.9)}}
 @media(prefers-reduced-motion:reduce){
- #parking-first-visit .pv-slide:not([hidden]) :is(.pv-search-typed>span,.pv-search-typed::after,.pv-search-found,.pv-demo-pointer,.pv-demo-click){animation:none}
+ #parking-first-visit .pv-slide:not([hidden]) :is(.pv-typed-char,.pv-search-typed::after,.pv-search-found,.pv-demo-pointer,.pv-demo-click){animation:none}
  #parking-first-visit .pv-search-typed::after{display:none}
 }
