@@ -219,10 +219,8 @@
       return { offer, reason, quote };
     }).sort((a, b) => Number(!!a.reason) - Number(!!b.reason) || b.quote.discount - a.quote.discount);
     const option = ({offer, reason, quote}) => `<button class="coupon-option" type="button" data-select-coupon="${offer.id}" aria-pressed="${selectedCouponId === offer.id}" ${reason ? 'disabled' : ''}><strong>${escape(offer.title)}</strong><span class="${reason ? '' : 'coupon-discount'}">${reason || `${money(quote.discount)}원 할인`}</span></button>`;
-    const withoutCoupon = `<button class="coupon-option" type="button" data-select-coupon="" aria-pressed="${!selectedCouponId}"><strong>쿠폰 사용 안 함</strong><span>할인 없이 정산</span></button>`;
-    // Put the best eligible coupon first and the opt-out second; unavailable coupons stay last.
-    const first = rows[0] && !rows[0].reason ? option(rows.shift()) : '';
-    content.innerHTML = `<p class="dialog-description">한 번 정산할 때 쿠폰 1장을 사용할 수 있어요.<br>현재 주차요금 ${money(fee)}원 기준입니다.</p>${first}${withoutCoupon}${rows.map(option).join('')}<button class="text-button centered" type="button" id="get-more-coupons">받을 수 있는 혜택 보러 가기</button>`;
+    // Eligible coupons lead the list, with the largest discount first.
+    content.innerHTML = `<p class="dialog-description">한 번 정산할 때 쿠폰 1장을 사용할 수 있어요.<br>현재 주차요금 ${money(fee)}원 기준입니다.</p>${rows.length ? rows.map(option).join('') : '<p class="dialog-description">아직 발급받은 쿠폰이 없어요.</p>'}<button class="text-button centered" type="button" id="get-more-coupons">받을 수 있는 혜택 보러 가기</button>`;
   }
   function receiptText(item) {
     const details = item.settlement;
